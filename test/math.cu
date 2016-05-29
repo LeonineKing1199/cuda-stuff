@@ -3,9 +3,9 @@
 #include <cassert>
 #include <iostream>
 
-#include "../math/math.hpp"
+#include "../math/math.hpp" // det3
 #include "test.hpp"
-#include "../include/helpers.hpp"
+#include "../include/helpers.hpp" // get_tid, get_stride
 
 __global__
 void calc_det3(float const* matrices, unsigned int const num_matrices, float* dets) {
@@ -16,7 +16,7 @@ void calc_det3(float const* matrices, unsigned int const num_matrices, float* de
 			vals[i] = matrices[i * num_matrices + tid];
 		}
 
-		dets[tid] = det3<float>(vals);
+		dets[tid] = det3(vals);
 	}
 }
 
