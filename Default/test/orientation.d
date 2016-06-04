@@ -122,8 +122,7 @@ test/orientation.o : ../test/orientation.cu \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/texture_indirect_functions.h \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/surface_indirect_functions.h \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/device_launch_parameters.h \
-    ../test/../include/point.hpp \
-    /usr/include/c++/4.8/type_traits \
     ../test/../include/tetra.hpp \
-    ../test/../include/helpers.hpp \
+    ../test/../include/globals.hpp \
+    /usr/include/c++/4.8/type_traits \
     ../test/test.hpp

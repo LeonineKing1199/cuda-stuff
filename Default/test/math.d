@@ -610,5 +610,6 @@ test/math.o : ../test/math.cu \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/thrust/detail/device_free.inl \
     /usr/local/cuda-8.0/bin/../targets/x86_64-linux/include/thrust/detail/device_vector.inl \
     ../test/../math/math.hpp \
+    ../test/../math/../include/globals.hpp \
     ../test/test.hpp \
-    ../test/../include/helpers.hpp
+    ../test/../include/globals.hpp

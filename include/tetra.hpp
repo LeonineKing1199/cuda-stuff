@@ -8,9 +8,7 @@
 #ifndef TETRA_HPP_
 #define TETRA_HPP_
 
-// some convenience typedefs for easier refactoring in the future
-typedef unsigned int integral;
-typedef uint4 integral4;
+#include "globals.hpp"
 
 size_t const num_vertices = 4;
 size_t const num_neighbours = 4;

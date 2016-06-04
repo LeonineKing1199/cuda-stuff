@@ -5,8 +5,10 @@
  *      Author: christian
  */
 
-#ifndef HELPERS_HPP_
-#define HELPERS_HPP_
+#ifndef GLOBALS_HPP_
+#define GLOBALS_HPP_
+
+#include <type_traits>
 
 // blocks per grid
 int const static bpg = 512;
@@ -22,5 +24,13 @@ unsigned int get_tid(void);
 __device__
 unsigned int get_stride(void);
 
+namespace reg {
+	template <bool B, typename T = void >
+	using enable_if_t = typename std::enable_if<B, T>::type;
+}
 
-#endif /* HELPERS_HPP_ */
+// some convenience typedefs for easier refactoring in the future
+typedef unsigned int integral;
+typedef uint4 integral4;
+
+#endif /* GLOBALS_HPP_ */

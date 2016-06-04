@@ -1,4 +1,4 @@
-#include "../include/helpers.hpp"
+#include "../include/globals.hpp"
 
 __device__
 unsigned int get_tid(void) {

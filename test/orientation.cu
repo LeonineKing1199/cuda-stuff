@@ -1,6 +1,5 @@
-#include "../include/point.hpp"
 #include "../include/tetra.hpp"
-#include "../include/helpers.hpp"
+#include "../include/globals.hpp"
 #include "test.hpp"
 
 
