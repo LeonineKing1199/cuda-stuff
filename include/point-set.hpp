@@ -32,14 +32,7 @@ protected:
 
 	size_t size_ = 0;
 
-public:
-	point_set(void) = default;
-
-	// single-parameter constructor reserves memory in
-	// each vector
-	point_set(size_t const size) {
-		size_ = size;
-
+	void reserve(size_t const size) {
 		h_x_.reserve(size);
 		h_y_.reserve(size);
 		h_z_.reserve(size);
@@ -47,6 +40,32 @@ public:
 		d_x_.reserve(size);
 		d_y_.reserve(size);
 		d_z_.reserve(size);
+	}
+
+	void resize(size_t const size) {
+		h_x_.resize(size);
+		h_y_.resize(size);
+		h_z_.resize(size);
+
+		d_x_.resize(size);
+		d_y_.resize(size);
+		d_z_.resize(size);
+	}
+
+	void copy_host_to_device(void) {
+		d_x_ = h_x_;
+		d_y_ = h_y_;
+		d_z_ = h_z_;
+	}
+
+public:
+	point_set(void) = default;
+
+	// single-parameter constructor reserves memory in
+	// each vector
+	point_set(size_t const size) {
+		size_ = size;
+		reserve(size_);
 	}
 
 	size_t size(void) const {

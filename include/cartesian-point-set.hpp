@@ -22,17 +22,21 @@ public:
 
 	cartesian_point_set(int const a, int const b) {
 		int const grid_length{b - a};
+
 		point_set<T>::size_ = grid_length * grid_length * grid_length;
+		point_set<T>::resize(point_set<T>::size_);
 
-		point_set<T>::h_x_.reserve(point_set<T>::size_);
+		for (decltype(point_set<T>::size_) i = 0; i < point_set<T>::size_; ++i) {
+			unsigned int const x = i / (grid_length * grid_length);
+			unsigned int const y = (i - x * (grid_length * grid_length)) / grid_length;
+			unsigned int const z = i - x * (grid_length * grid_length) - y * grid_length;
 
-		for (int i = a; i < b; ++i) {
-			for (int j = a; j < b; ++j) {
-				for (int k = a; k < b; ++k) {
-
-				}
-			}
+			point_set<T>::h_x_[i] = x;
+			point_set<T>::h_y_[i] = y;
+			point_set<T>::h_z_[i] = z;
 		}
+
+		point_set<T>::copy_host_to_device();
 	}
 
 	size_t size(void) const {
