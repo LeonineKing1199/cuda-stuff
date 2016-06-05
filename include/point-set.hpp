@@ -22,13 +22,15 @@ template <
 	typename = reg::enable_if_t<std::is_floating_point<T>::value>>
 class point_set {
 protected:
-	thrust::host_vector<T> h_x;
-	thrust::host_vector<T> h_y;
-	thrust::host_vector<T> h_z;
+	thrust::host_vector<T> h_x_;
+	thrust::host_vector<T> h_y_;
+	thrust::host_vector<T> h_z_;
 
-	thrust::device_vector<T> d_x;
-	thrust::device_vector<T> d_y;
-	thrust::device_vector<T> d_z;
+	thrust::device_vector<T> d_x_;
+	thrust::device_vector<T> d_y_;
+	thrust::device_vector<T> d_z_;
+
+	size_t size_ = 0;
 
 public:
 	point_set(void) = default;
@@ -36,13 +38,19 @@ public:
 	// single-parameter constructor reserves memory in
 	// each vector
 	point_set(size_t const size) {
-		h_x.reserve(size);
-		h_y.reserve(size);
-		h_z.reserve(size);
+		size_ = size;
 
-		d_x.reserve(size);
-		d_y.reserve(size);
-		d_z.reserve(size);
+		h_x_.reserve(size);
+		h_y_.reserve(size);
+		h_z_.reserve(size);
+
+		d_x_.reserve(size);
+		d_y_.reserve(size);
+		d_z_.reserve(size);
+	}
+
+	size_t size(void) const {
+		return size_;
 	}
 };
 
