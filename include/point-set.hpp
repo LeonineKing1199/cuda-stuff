@@ -21,7 +21,7 @@ template <
 	typename T,
 	typename = reg::enable_if_t<std::is_floating_point<T>::value>>
 class point_set {
-private:
+protected:
 	thrust::host_vector<T> h_x;
 	thrust::host_vector<T> h_y;
 	thrust::host_vector<T> h_z;
@@ -37,6 +37,12 @@ public:
 	// each vector
 	point_set(size_t const size) {
 		h_x.reserve(size);
+		h_y.reserve(size);
+		h_z.reserve(size);
+
+		d_x.reserve(size);
+		d_y.reserve(size);
+		d_z.reserve(size);
 	}
 };
 
