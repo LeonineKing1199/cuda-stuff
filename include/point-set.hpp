@@ -10,6 +10,7 @@
 
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
+#include <thrust/tuple.h>
 
 #include "globals.hpp"
 
@@ -70,6 +71,14 @@ public:
 
 	size_t size(void) const {
 		return size_;
+	}
+
+	thrust::tuple<T*, T*, T*> get_host_ptrs(void) {
+		return thrust::tuple<T*, T*, T*>{h_x_.data(), h_y_.data(), h_z_.data()};
+	}
+
+	thrust::tuple<T*, T*, T*> get_device_ptrs(void) {
+		return thrust::tuple<T*, T*, T*>{d_x_.data().get(), d_y_.data().get(), d_z_.data().get()};
 	}
 };
 

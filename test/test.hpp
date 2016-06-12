@@ -10,5 +10,6 @@
 
 void determinant_tests(void);
 void point_set_tests(void);
+void tet_tests(void);
 
 #endif /* TEST_HPP_ */

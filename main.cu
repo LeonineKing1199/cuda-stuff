@@ -4,6 +4,7 @@
 int main(void) {
 	determinant_tests();
 	point_set_tests();
+	tet_tests();
 	std::cout << "Tests completed successfully!" << std::endl;
 	return 0;
 }

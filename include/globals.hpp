@@ -8,6 +8,7 @@
 #ifndef GLOBALS_HPP_
 #define GLOBALS_HPP_
 
+#include <thrust/tuple.h>
 #include <type_traits>
 
 // blocks per grid
@@ -27,6 +28,11 @@ unsigned int get_stride(void);
 namespace reg {
 	template <bool B, typename T = void >
 	using enable_if_t = typename std::enable_if<B, T>::type;
+
+	template <
+		typename T,
+		typename = enable_if_t<std::is_floating_point<T>::value>>
+	using point_tuple = typename thrust::tuple<T*, T*, T*>;
 }
 
 // some convenience typedefs for easier refactoring in the future

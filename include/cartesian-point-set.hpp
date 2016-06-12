@@ -8,6 +8,8 @@
 #ifndef CARTESIAN_POINT_SET_HPP_
 #define CARTESIAN_POINT_SET_HPP_
 
+#include <iostream>
+
 #include "point-set.hpp"
 
 template <
