@@ -8,20 +8,20 @@
 #ifndef TET_MATH_HPP_
 #define TET_MATH_HPP_
 
+#include <array>
+
 #include "../include/globals.hpp"
 
 /**
  * Function that returns orientation of the current tetrahedron
+ *
+ * We take tet to be a 12 element array and pt to be a 3 element array
  */
 template <
 	typename T,
 	typename = reg::enable_if_t<std::is_floating_point<T>::value>>
-T ort(integral4 tet, reg::point_tuple<T> pts) {
-	T* x = thrust::get<0>(pts);
-	T* y = thrust::get<1>(pts);
-	T* z = thrust::get<2>(pts);
-
-
+__host__ __device__
+T ort(std::array<T, 12> tet, std::array<T, 3> pt) {
 
 	return T{};
 }
