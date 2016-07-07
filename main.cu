@@ -1,10 +1,6 @@
-#include <iostream>
-#include "test/test.hpp"
+#include "tests/test-suite.hpp"
 
 int main(void) {
-	determinant_tests();
-	point_set_tests();
-	tet_tests();
-	std::cout << "Tests completed successfully!" << std::endl;
+	test_suite();
 	return 0;
 }
