@@ -1,17 +1,13 @@
-/*
- * test-suite.hpp
- *
- *  Created on: Jun 29, 2016
- *      Author: christian
- */
-
-#ifndef TEST_SUITE_HPP_
-#define TEST_SUITE_HPP_
+#ifndef REGULUS_TEST_SUITE_HPP_
+#define REGULUS_TEST_SUITE_HPP_
 
 #include <iostream>
+#include <cassert>
+
+#include "../include/common.hpp"
 
 auto test_suite(void) -> void;
 auto domain_tests(void) -> void;
 
+#endif // REGULUS_TEST_SUITE_HPP_
 
-#endif /* TEST_SUITE_HPP_ */
