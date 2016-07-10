@@ -1,3 +1,0 @@
-/home/christian/cuda/regulus/build/CMakeFiles/edit_cache.dir
-/home/christian/cuda/regulus/build/CMakeFiles/rebuild_cache.dir
-/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir
