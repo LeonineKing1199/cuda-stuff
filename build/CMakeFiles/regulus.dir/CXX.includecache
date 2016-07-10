@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christian/cuda/regulus/tests/test-suite.cpp
+iostream
+-
+test-suite.hpp
+/home/christian/cuda/regulus/tests/test-suite.hpp
+
+/home/christian/cuda/regulus/tests/test-suite.hpp
+
