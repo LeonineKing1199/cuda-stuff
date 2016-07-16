@@ -34,6 +34,7 @@ cuda_add_executable(
 
   include/common.hpp
   include/domain.hpp
+  include/timer.hpp
   
   tests/test-suite.hpp
   

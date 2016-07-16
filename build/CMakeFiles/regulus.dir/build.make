@@ -1514,6 +1514,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: ../tests/test-su
 
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: ../include/common.hpp
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: ../include/domain.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: ../include/timer.hpp
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: ../tests/domain-tests.cu
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: ../tests/test-suite.hpp
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/_G_config.h
@@ -1585,6 +1586,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cassert
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/chrono
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cmath
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cstddef
@@ -1592,6 +1594,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cstdio
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cstdlib
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cstring
+CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/ctime
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cwchar
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cwctype
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/debug/debug.h
@@ -1615,6 +1618,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/memory
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/new
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/ostream
+CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/ratio
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/set
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/stdexcept
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/streambuf
