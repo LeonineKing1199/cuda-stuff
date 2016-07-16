@@ -2359,6 +2359,7 @@ regulus: CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o
 regulus: CMakeFiles/regulus.dir/regulus_intermediate_link.o
 regulus: CMakeFiles/regulus.dir/build.make
 regulus: /usr/local/cuda/lib64/libcudart.so
+regulus: /usr/local/cuda/lib64/libcudart.so
 regulus: CMakeFiles/regulus.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable regulus"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/regulus.dir/link.txt --verbose=$(VERBOSE)

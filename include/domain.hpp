@@ -10,12 +10,13 @@
 
 using peanokey = long long int;
 
+__host__ __device__
+auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
+
 auto operator==(reg::point_t<float> const& a, reg::point_t<float> const& b) -> bool;
 auto operator==(reg::point_t<double> const& a, reg::point_t<double> const& b) -> bool;
 auto operator<<(std::ostream& os, reg::point_t<float> const& p) -> std::ostream&;
 auto operator<<(std::ostream& os, reg::point_t<double> const& p) -> std::ostream&;
-
-auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
 
 /**
   This function has a hard return type because we make the logical assumption
@@ -49,15 +50,18 @@ struct peanokey_hash : public thrust::unary_function<reg::point_t<T>, peanokey>
   __host__ __device__
   peanokey operator()(point_t p) const
   {
-    //return peano_hilbert_key(p.x, p.y, p.z, 23);
-    return peanokey{};
+    return peano_hilbert_key(p.x, p.y, p.z, 23);
   }
 };
 
-template <typename T>
-auto sort_by_peanokey(thrust::device_vector<reg::point_t<T>>& domain) -> void
+template <
+  typename T,
+  typename PointContainer,
+  typename KeyContainer
+>
+auto sort_by_peanokey(PointContainer& domain) -> void
 {
-  thrust::device_vector<peanokey> keys{
+  KeyContainer keys{
     thrust::make_transform_iterator(domain.begin(), peanokey_hash<T>{}),
     thrust::make_transform_iterator(domain.end(), peanokey_hash<T>{})};
     

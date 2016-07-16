@@ -55,13 +55,14 @@ auto domain_tests(void) -> void
     assert((pts[7] == point{1, 1, 1}));
   }
   
-  // We should be able to sort by the Peanokey of each point
+  // We should be able to sort by the Peanokey of each point (device version)
   {
     using real = float;
+    using pt_container = thrust::device_vector<reg::point_t<real>>;
+    using key_container = thrust::device_vector<peanokey>;
     int const gl = 12;
     
-    thrust::device_vector<reg::point_t<real>> pts{gen_cartesian_domain<real>(gl)};
-    
-    sort_by_peanokey<real>(pts);
+    pt_container pts{gen_cartesian_domain<real>(gl)};
+    sort_by_peanokey<real, pt_container, key_container>(pts);
   }
 }

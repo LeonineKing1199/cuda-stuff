@@ -87,7 +87,7 @@ endif()
 
 # This is the list of host compilation flags.  It C or CXX should already have
 # been chosen by FindCUDA.cmake.
-set(CMAKE_HOST_FLAGS  -std=c++11 -Wall -Wextra -Wno-unused-parameter )
+set(CMAKE_HOST_FLAGS  -Wall -Wextra -Wno-unused-parameter )
 set(CMAKE_HOST_FLAGS_DEBUG -g)
 set(CMAKE_HOST_FLAGS_MINSIZEREL -Os -DNDEBUG)
 set(CMAKE_HOST_FLAGS_RELEASE -O3 -DNDEBUG)
