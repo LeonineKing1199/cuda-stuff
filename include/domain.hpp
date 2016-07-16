@@ -1,8 +1,8 @@
 #ifndef REGULUS_DOMAIN_HPP_
 #define REGULUS_DOMAIN_HPP_
 
-#include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
+#include <thrust/host_vector.h>
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/sort.h>
 
@@ -10,6 +10,19 @@
 
 using peanokey = long long int;
 
+auto operator==(reg::point_t<float> const& a, reg::point_t<float> const& b) -> bool;
+auto operator==(reg::point_t<double> const& a, reg::point_t<double> const& b) -> bool;
+auto operator<<(std::ostream& os, reg::point_t<float> const& p) -> std::ostream&;
+auto operator<<(std::ostream& os, reg::point_t<double> const& p) -> std::ostream&;
+
+auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
+
+/**
+  This function has a hard return type because we make the logical assumption
+  that the user will need _at least_ a host copy of the points. A GPU-based
+  allocation can easily be accomplished by forwarding it to the constructor
+  of thrust::device_vector
+*/
 template <typename T>
 auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<reg::point_t<T>>
 {
@@ -28,9 +41,6 @@ auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<reg::poi
   return domain;
 }
 
-__host__ __device__
-auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
-
 template <typename T>
 struct peanokey_hash : public thrust::unary_function<reg::point_t<T>, peanokey>
 {
@@ -39,7 +49,8 @@ struct peanokey_hash : public thrust::unary_function<reg::point_t<T>, peanokey>
   __host__ __device__
   peanokey operator()(point_t p) const
   {
-    return peano_hilbert_key(p.x, p.y, p.z, 23);
+    //return peano_hilbert_key(p.x, p.y, p.z, 23);
+    return peanokey{};
   }
 };
 

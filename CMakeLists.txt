@@ -1,39 +1,46 @@
 cmake_minimum_required(VERSION 2.8)
-find_package(CUDA)
 
-set (CMAKE_CXX_STANDARD 11)
+project(regulus)
+
+find_package(CUDA REQUIRED)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CUDA_HOST_COMPILATION_CPP ON)
 set(CUDA_SEPARABLE_COMPILATION ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Wno-unused-parameter")
+
 # Pass options to NVCC
-set(
+list(APPEND
     CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS};
-    -rdc=true 
-    -lcudart 
-    -lcudadevrt 
-    -gencode 
-    arch=compute_50,code=sm_50 
+    -gencode arch=compute_50,code=sm_50 
     -std=c++11 
-    -O2 
-    --compiler-options "-Wall" 
-    --compiler-options "-Wextra"
+    -O2
     )
 
 # Specify include directories
 include_directories(
-  src
-  include
-  tests
+  "${CMAKE_SOURCE_DIR}/include"
+  "${CMAKE_SOURCE_DIR}/tests"
+  /usr/local/cuda/include
   )
 
 
 cuda_add_executable(
   regulus
+  
   main.cu
+
   include/common.hpp
-  src/domain.cu
-  src/peano.cu
+  include/domain.hpp
+  
   tests/test-suite.hpp
+  
+  src/common.cu
+  src/peano.cu
+  
   tests/test-suite.cu
-  tests/domain-tests.cu)
+  tests/domain-tests.cu
+  )
 

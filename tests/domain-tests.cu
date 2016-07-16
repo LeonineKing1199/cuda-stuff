@@ -7,7 +7,7 @@ auto domain_tests(void) -> void
 
   // We should be able to declare a point type
   {
-    typename point_type<float>::type point{0, 1, 2};
+    typename reg::point_type<float>::type point{0, 1, 2};
 
     assert(point.x == 0);
     assert(point.y == 1);
@@ -15,7 +15,7 @@ auto domain_tests(void) -> void
   }
 
   {
-    typename point_type<double>::type point{0, 1, 2};
+    typename reg::point_type<double>::type point{0, 1, 2};
 
     assert(point.x == 0);
     assert(point.y == 1);

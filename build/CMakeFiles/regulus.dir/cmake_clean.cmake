@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/regulus.dir/regulus_generated_main.cu.o"
-  "CMakeFiles/regulus.dir/src/regulus_generated_domain.cu.o"
+  "CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o"
   "CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o"
   "CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o"
   "CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o"

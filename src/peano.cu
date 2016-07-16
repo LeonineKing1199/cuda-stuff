@@ -6,7 +6,6 @@
 
 #include "../include/domain.hpp"
 
-__device__
 const int quadrants[24][2][2][2] = {
   /* rotx=0, roty=0-3 */
   {{{0, 7}, {1, 6}}, {{3, 4}, {2, 5}}},
@@ -40,28 +39,23 @@ const int quadrants[24][2][2][2] = {
   {{{5, 2}, {6, 1}}, {{4, 3}, {7, 0}}}
 };
 
-__device__
 const int rotxmap_table[24] = { 4, 5, 6, 7, 8, 9, 10, 11,
   12, 13, 14, 15, 0, 1, 2, 3, 17, 18, 19, 16, 23, 20, 21, 22
 };
 
-__device__
 const int rotymap_table[24] = { 1, 2, 3, 0, 16, 17, 18, 19,
   11, 8, 9, 10, 22, 23, 20, 21, 14, 15, 12, 13, 4, 5, 6, 7
 };
 
-__device__
+
 const int rotx_table[8] = { 3, 0, 0, 2, 2, 0, 0, 1 };
-__device__
 const int roty_table[8] = { 0, 1, 1, 2, 2, 3, 3, 0 };
 
-__device__
 const int sense_table[8] = { -1, -1, -1, +1, +1, -1, -1, -1 };
 
 /*! This function computes a Peano-Hilbert key for an integer triplet (x,y,z),
  *  with x,y,z in the range between 0 and 2^bits-1.
  */
-__device__
 auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey
 {
   int i, quad, bitx, bity, bitz;
