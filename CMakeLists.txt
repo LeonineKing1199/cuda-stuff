@@ -35,6 +35,7 @@ cuda_add_executable(
   include/common.hpp
   include/domain.hpp
   include/timer.hpp
+  include/mesher.hpp
   
   tests/test-suite.hpp
   
@@ -43,6 +44,7 @@ cuda_add_executable(
   
   tests/test-suite.cu
   tests/domain-tests.cu
+  tests/mesher-tests.cu
   )
 
 target_link_libraries(

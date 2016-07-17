@@ -3,4 +3,5 @@
 auto test_suite(void) -> void
 {
   domain_tests();
+  mesher_tests();
 }

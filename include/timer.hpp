@@ -4,6 +4,11 @@
 #include <ctime>
 #include <chrono>
 
+/**
+  I have little to no idea how this code actually works.
+  I largely copy-pasted code from cppreference.com
+*/
+
 using namespace std::chrono;
 
 class timer
@@ -25,9 +30,9 @@ public:
     end_ = high_resolution_clock::now();
   }
   
-  auto get_duration(void) -> duration<double>
+  auto get_duration(void) -> double
   {
-    return duration_cast<duration<double>>(end_ - start_);
+    return duration_cast<duration<double>>(end_ - start_).count();
   }
 };
 

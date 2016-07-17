@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/christian/cuda/regulus/build
 CMakeFiles/regulus.dir/all:
 	$(MAKE) -f CMakeFiles/regulus.dir/build.make CMakeFiles/regulus.dir/depend
 	$(MAKE) -f CMakeFiles/regulus.dir/build.make CMakeFiles/regulus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target regulus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8 "Built target regulus"
 .PHONY : CMakeFiles/regulus.dir/all
 
 # Include target in all.
@@ -76,7 +76,7 @@ all: CMakeFiles/regulus.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/regulus.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/christian/cuda/regulus/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/christian/cuda/regulus/build/CMakeFiles 8
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/regulus.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/christian/cuda/regulus/build/CMakeFiles 0
 .PHONY : CMakeFiles/regulus.dir/rule
