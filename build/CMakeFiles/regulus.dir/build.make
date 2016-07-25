@@ -107,6 +107,7 @@ CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/bits/st
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/cassert
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/cfloat
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/cmath
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/c++/4.8/cstdint
@@ -213,6 +214,7 @@ CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/x86_64-linux-gn
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/include/xlocale.h
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
 CMakeFiles/regulus.dir/regulus_generated_main.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
@@ -318,6 +320,7 @@ CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/b
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/bits/stringfwd.h
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/cfloat
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/cmath
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/c++/4.8/cstdint
@@ -424,6 +427,7 @@ CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/x86_64-li
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/include/xlocale.h
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
 CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
@@ -553,6 +557,7 @@ CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/bi
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/cassert
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/cfloat
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/cmath
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/c++/4.8/cstddef
@@ -674,6 +679,7 @@ CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/x86_64-lin
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/include/xlocale.h
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
 CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
@@ -1349,6 +1355,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/cassert
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/cfloat
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/cmath
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/c++/4.8/cstdint
@@ -1455,6 +1462,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/x86
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/include/xlocale.h
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
 CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
@@ -1586,6 +1594,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cassert
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cfloat
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/chrono
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/c++/4.8/cmath
@@ -1710,6 +1719,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/x
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/include/xlocale.h
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
 CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
@@ -2337,6 +2347,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o: ../tests/domai
 
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../include/common.hpp
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../include/domain.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../include/math.hpp
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../include/mesher.hpp
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../tests/mesher-tests.cu
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../tests/test-suite.hpp
@@ -2409,6 +2420,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/cassert
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/cctype
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/cfloat
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/clocale
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/cmath
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/c++/4.8/cstddef
@@ -2530,6 +2542,7 @@ CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/x
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/include/xlocale.h
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
 CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
@@ -3155,14 +3168,233 @@ CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o: ../tests/meshe
 	cd /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests && /usr/bin/cmake -E make_directory /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/.
 	cd /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests && /usr/bin/cmake -D verbose:BOOL=$(VERBOSE) -D build_configuration:STRING= -D generated_file:STRING=/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_mesher-tests.cu.o -D generated_cubin_file:STRING=/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_mesher-tests.cu.o.cubin.txt -P /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o.cmake
 
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: ../include/common.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: ../include/math.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: ../tests/math-tests.cu
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: ../tests/test-suite.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/_G_config.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/alloca.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/asm-generic/errno-base.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/asm-generic/errno.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/assert.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/array
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/backward/binders.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/allocator.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/atomic_lockfree_defines.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/basic_ios.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/basic_ios.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/basic_string.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/basic_string.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/char_traits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/concept_check.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/cpp_type_traits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/cxxabi_forced.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/exception_defines.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/exception_ptr.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/functexcept.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/functional_hash.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/hash_bytes.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/ios_base.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/istream.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/locale_classes.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/locale_classes.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/locale_facets.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/locale_facets.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/localefwd.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/memoryfwd.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/move.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/nested_exception.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/ostream.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/ostream_insert.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/postypes.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/range_access.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stl_algobase.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stl_function.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stl_iterator.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stl_iterator_base_funcs.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stl_iterator_base_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stl_pair.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/streambuf.tcc
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/streambuf_iterator.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/bits/stringfwd.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cassert
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cctype
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cerrno
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cfloat
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/clocale
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cmath
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cstdint
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cstdio
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cstdlib
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cwchar
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/cwctype
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/debug/debug.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/exception
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ext/atomicity.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ext/new_allocator.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ext/numeric_traits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ext/string_conversions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ext/type_traits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/initializer_list
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ios
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/iosfwd
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/iostream
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/istream
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/new
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/ostream
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/stdexcept
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/streambuf
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/string
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/c++/4.8/type_traits
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/ctype.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/endian.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/errno.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/features.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/libio.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/limits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/linux/errno.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/linux/limits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/locale.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/math.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/pthread.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/sched.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/stdc-predef.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/stdint.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/stdio.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/stdlib.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/string.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/time.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/wchar.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/wctype.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/asm/errno.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/byteswap-16.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/byteswap.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/endian.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/errno.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/huge_val.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/huge_valf.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/huge_vall.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/inf.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/local_lim.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/locale.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/math-vector.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/mathcalls.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/mathdef.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/mathinline.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/nan.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/posix1_lim.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/posix2_lim.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/sched.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/select.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/select2.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/setjmp.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/sigset.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/stdio.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/stdio2.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/stdio_lim.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/stdlib-float.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/stdlib.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/string3.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/sys_errlist.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/time.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/timex.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/typesizes.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/waitflags.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/waitstatus.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/wchar.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/wchar2.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/wordsize.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/bits/xopen_lim.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/atomic_word.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/c++allocator.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/c++config.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/c++locale.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/cpu_defines.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/ctype_base.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/ctype_inline.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/gthr-default.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/gthr.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/c++/4.8/bits/os_defines.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/gnu/stubs-64.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/gnu/stubs.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/sys/cdefs.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/sys/select.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/sys/sysmacros.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/x86_64-linux-gnu/sys/types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/include/xlocale.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/limits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed/syslimits.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdarg.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stdint.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/builtin_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/channel_descriptor.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/common_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/cuda_device_runtime_api.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/cuda_runtime.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/cuda_runtime_api.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/cuda_surface_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/cuda_texture_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_atomic_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_atomic_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_double_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_double_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_launch_parameters.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/device_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/driver_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/driver_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/host_config.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/host_defines.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/library_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/math_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/math_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/math_functions_dbl_ptx3.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/math_functions_dbl_ptx3.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_20_atomic_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_20_atomic_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_20_intrinsics.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_20_intrinsics.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_30_intrinsics.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_30_intrinsics.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_32_atomic_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_32_atomic_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_32_intrinsics.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_32_intrinsics.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_35_atomic_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_35_intrinsics.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_60_atomic_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/sm_60_atomic_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/surface_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/surface_indirect_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/surface_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/texture_fetch_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/texture_indirect_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/texture_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/vector_functions.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/vector_functions.hpp
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: /usr/local/cuda/include/vector_types.h
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o.cmake
+CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o: ../tests/math-tests.cu
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building NVCC (Device) object CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o"
+	cd /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests && /usr/bin/cmake -E make_directory /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/.
+	cd /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests && /usr/bin/cmake -D verbose:BOOL=$(VERBOSE) -D build_configuration:STRING= -D generated_file:STRING=/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_math-tests.cu.o -D generated_cubin_file:STRING=/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_math-tests.cu.o.cubin.txt -P /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o.cmake
+
 CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/regulus_generated_main.cu.o
 CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o
 CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o
 CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o
 CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o
 CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building NVCC intermediate link file CMakeFiles/regulus.dir/regulus_intermediate_link.o"
-	/usr/local/cuda/bin/nvcc -gencode arch=compute_50,code=sm_50 -std=c++11 -O2 -m64 -ccbin "/usr/local/cuda-8.0/bin/gcc" -dlink /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir//./regulus_generated_main.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/src/./regulus_generated_common.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/src/./regulus_generated_peano.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_test-suite.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_domain-tests.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_mesher-tests.cu.o -o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/./regulus_intermediate_link.o
+CMakeFiles/regulus.dir/regulus_intermediate_link.o: CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building NVCC intermediate link file CMakeFiles/regulus.dir/regulus_intermediate_link.o"
+	/usr/local/cuda/bin/nvcc -gencode arch=compute_50,code=sm_50 -std=c++11 -O2 -m64 -ccbin "/usr/local/cuda-8.0/bin/gcc" -dlink /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir//./regulus_generated_main.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/src/./regulus_generated_common.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/src/./regulus_generated_peano.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_test-suite.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_domain-tests.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_mesher-tests.cu.o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/./regulus_generated_math-tests.cu.o -o /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/./regulus_intermediate_link.o
 
 # Object files for target regulus
 regulus_OBJECTS =
@@ -3175,6 +3407,7 @@ regulus_EXTERNAL_OBJECTS = \
 "/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o" \
 "/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o" \
 "/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o" \
+"/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o" \
 "/home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/regulus_intermediate_link.o"
 
 regulus: CMakeFiles/regulus.dir/regulus_generated_main.cu.o
@@ -3183,12 +3416,13 @@ regulus: CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o
 regulus: CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o
 regulus: CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o
 regulus: CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o
+regulus: CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o
 regulus: CMakeFiles/regulus.dir/regulus_intermediate_link.o
 regulus: CMakeFiles/regulus.dir/build.make
 regulus: /usr/local/cuda/lib64/libcudart.so
 regulus: /usr/local/cuda/lib64/libcudart.so
 regulus: CMakeFiles/regulus.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable regulus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/christian/cuda/regulus/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable regulus"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/regulus.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -3210,6 +3444,7 @@ CMakeFiles/regulus.dir/depend: CMakeFiles/regulus.dir/src/regulus_generated_pean
 CMakeFiles/regulus.dir/depend: CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o
 CMakeFiles/regulus.dir/depend: CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o
 CMakeFiles/regulus.dir/depend: CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o
+CMakeFiles/regulus.dir/depend: CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o
 CMakeFiles/regulus.dir/depend: CMakeFiles/regulus.dir/regulus_intermediate_link.o
 	cd /home/christian/cuda/regulus/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/christian/cuda/regulus /home/christian/cuda/regulus /home/christian/cuda/regulus/build /home/christian/cuda/regulus/build /home/christian/cuda/regulus/build/CMakeFiles/regulus.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/regulus.dir/depend

@@ -95,4 +95,6 @@ auto domain_tests(void) -> void
     assert((pts[6] == point{0, 1, 1}));
     assert((pts[7] == point{0, 0, 1}));
   }
+  
+  std::cout << "Completed domain tests!\n" << std::endl;
 }

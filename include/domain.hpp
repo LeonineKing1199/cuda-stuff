@@ -13,11 +13,6 @@ using peanokey = long long int;
 __host__ __device__
 auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
 
-auto operator==(reg::point_t<float> const& a, reg::point_t<float> const& b) -> bool;
-auto operator==(reg::point_t<double> const& a, reg::point_t<double> const& b) -> bool;
-auto operator<<(std::ostream& os, reg::point_t<float> const& p) -> std::ostream&;
-auto operator<<(std::ostream& os, reg::point_t<double> const& p) -> std::ostream&;
-
 /**
   This function has a hard return type because we make the logical assumption
   that the user will need _at least_ a host copy of the points. A GPU-based

@@ -15,6 +15,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/regulus.dir/src/regulus_generated_common.cu.o.depend"
   "CMakeFiles/regulus.dir/src/regulus_generated_peano.cu.o.depend"
   "CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o.depend"
+  "CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o.depend"
   "CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o.depend"
   "CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o.depend"
   "/usr/share/cmake-3.5/Modules/CMakeCInformation.cmake"
@@ -53,6 +54,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o.cmake"
   "CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o.cmake"
   "CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o.cmake"
+  "CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 

@@ -5,6 +5,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/regulus.dir/tests/regulus_generated_test-suite.cu.o"
   "CMakeFiles/regulus.dir/tests/regulus_generated_domain-tests.cu.o"
   "CMakeFiles/regulus.dir/tests/regulus_generated_mesher-tests.cu.o"
+  "CMakeFiles/regulus.dir/tests/regulus_generated_math-tests.cu.o"
   "CMakeFiles/regulus.dir/regulus_intermediate_link.o"
   "regulus.pdb"
   "regulus"

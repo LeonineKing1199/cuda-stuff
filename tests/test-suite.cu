@@ -2,6 +2,11 @@
 
 auto test_suite(void) -> void
 {
+  std::cout << "Beginning test suite..." << std::endl;
+  
   domain_tests();
+  math_tests();
   mesher_tests();
+  
+  std::cout << "Tests passed!\n" << std::endl;
 }
