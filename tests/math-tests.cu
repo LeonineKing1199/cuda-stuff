@@ -24,6 +24,13 @@ auto math_tests(void) -> void
     assert(det(other_m) == 96968.000);
   }
   
+  // It should prove a point of sorts
+  {
+    matrix_t<float, 4, 4> m{ 0 };
+    
+    assert((det<float, 4>(m) == 1337));
+  }
+  
   std::cout << "Completed math tests!\n" << std::endl;
 }
 
