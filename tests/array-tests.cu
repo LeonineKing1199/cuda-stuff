@@ -4,9 +4,8 @@
 #include "test-suite.hpp"
 #include "../include/array.hpp"
 
-template <typename DerivedPolicy>
 __host__ __device__
-auto array_tests_impl(const thrust::detail::execution_policy_base<DerivedPolicy> exec) -> void
+auto array_tests_impl(void) -> void
 {
   // we should  be able to construct an array
   {
@@ -30,12 +29,14 @@ auto array_tests_impl(const thrust::detail::execution_policy_base<DerivedPolicy>
     reg::array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
     reg::array<float, 4> b{ 0 };
 
-    auto distance = a.end() - a.begin();
-    auto b_iter = b.begin();
-    
-    for (int i = 0; i < distance; ++i) {
-      b_iter[i] = a[i] * a[i];      
-    }
+    thrust::transform(
+      thrust::seq,
+      a.begin(), a.end(),
+      b.begin(),
+      [](float const f) -> float
+      {
+        return f * f;
+      });
     
     assert((b == reg::array<float, 4>{ 1.0f, 4.0f, 9.0f, 16.0f }));
   }
@@ -44,14 +45,14 @@ auto array_tests_impl(const thrust::detail::execution_policy_base<DerivedPolicy>
 __global__
 void test_kernel(void)
 {
-  array_tests_impl(thrust::device);
+  array_tests_impl();
 }
 
 auto array_tests(void) -> void
 {
   std::cout << "Beginning array tests!" << std::endl;
   
-  array_tests_impl(thrust::host);
+  array_tests_impl();
 
   // we should be able to do everything on the device as well
   {
