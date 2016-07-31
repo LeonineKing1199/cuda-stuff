@@ -37,6 +37,7 @@ cuda_add_executable(
   include/domain.hpp
   include/timer.hpp
   include/mesher.hpp
+  include/array.hpp
   include/math.hpp
   include/math/matrix.hpp
   
@@ -50,6 +51,7 @@ cuda_add_executable(
   tests/mesher-tests.cu
   tests/math-tests.cu
   tests/matrix-tests.cu
+  tests/array-tests.cu
   )
 
 target_link_libraries(
