@@ -7,6 +7,7 @@ auto test_suite(void) -> void
   domain_tests();
   math_tests();
   mesher_tests();
+  matrix_tests();
   
   std::cout << "Tests passed!\n" << std::endl;
 }

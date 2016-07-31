@@ -23,6 +23,7 @@ list(APPEND
 include_directories(
   "${CMAKE_SOURCE_DIR}/include"
   "${CMAKE_SOURCE_DIR}/tests"
+  "${CMAKE_SOURCE_DIR}/include/math"
   /usr/local/cuda/include
   )
 
@@ -37,6 +38,7 @@ cuda_add_executable(
   include/timer.hpp
   include/mesher.hpp
   include/math.hpp
+  include/math/matrix.hpp
   
   tests/test-suite.hpp
   
@@ -47,6 +49,7 @@ cuda_add_executable(
   tests/domain-tests.cu
   tests/mesher-tests.cu
   tests/math-tests.cu
+  tests/matrix-tests.cu
   )
 
 target_link_libraries(

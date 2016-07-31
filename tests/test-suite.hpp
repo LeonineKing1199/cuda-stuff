@@ -10,6 +10,7 @@ auto test_suite(void) -> void;
 auto domain_tests(void) -> void;
 auto mesher_tests(void) -> void;
 auto math_tests(void) -> void;
+auto matrix_tests(void) -> void;
 
 #endif // REGULUS_TEST_SUITE_HPP_
 
