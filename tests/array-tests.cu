@@ -43,7 +43,7 @@ auto array_tests_impl(void) -> void
 }
 
 __global__
-void test_kernel(void)
+void array_test_kernel(void)
 {
   array_tests_impl();
 }
@@ -56,7 +56,7 @@ auto array_tests(void) -> void
 
   // we should be able to do everything on the device as well
   {
-    test_kernel<<<1, 256>>>();
+    array_test_kernel<<<1, 256>>>();
     cudaDeviceSynchronize();
   }
   

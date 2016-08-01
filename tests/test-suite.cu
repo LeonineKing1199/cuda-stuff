@@ -2,7 +2,7 @@
 
 auto test_suite(void) -> void
 {
-  std::cout << "Beginning test suite..." << std::endl;
+  std::cout << "Beginning test suite...\n" << std::endl;
   
   domain_tests();
   math_tests();

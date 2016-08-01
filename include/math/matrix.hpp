@@ -2,14 +2,14 @@
 #define REGULUS_MATRIX_HPP_
 
 #include <type_traits>
-#include <array>
-#include <utility>
-#include <algorithm>
-#include <numeric>
-#include <functional>
+#include <thrust/execution_policy.h>
+#include <thrust/transform.h>
+#include <thrust/functional.h>
+#include <thrust/reduce.h>
 
 #include "../common.hpp"
-/*
+#include "../array.hpp"
+
 // we create a forward declaration so that we may create a
 // specialization that we also wish to use in the
 // implementation
@@ -17,7 +17,7 @@ template <
   typename T,
   int N,
   int M,
-  typename QQ
+  typename
 >
 class matrix;
 
@@ -30,12 +30,17 @@ template <
   typename T,
   int N,
   int M,
-  typename QQ = reg::enable_if_t<std::is_floating_point<T>::value>
+  typename = reg::enable_if_t<std::is_floating_point<T>::value>
 >
 struct matrix
-{  
-public:
-  std::array<T, N * M> data;
+{ 
+  using array_type = typename reg::array<T, N * M>;
+  using value_type = typename array_type::value_type;
+  using size_type = typename array_type::size_type;
+  using reference = value_type&;
+  using const_reference = value_type const&;
+
+  reg::array<T, N * M> data;
     
   __host__ __device__
   auto operator==(matrix<T, N, M> const& other) -> bool
@@ -43,7 +48,7 @@ public:
     bool not_equal = false;
     auto const& other_data = other.data;
     
-    for (int i = 0; i < data.size(); ++i) {
+    for (size_type i = 0; i < data.size(); ++i) {
       not_equal = not_equal || (data[i] != other_data[i] );
       
       if (not_equal) {
@@ -101,12 +106,13 @@ auto operator*(
 {
   vector<T, L> c{ T{} };
   
-  std::transform(
-    a.data.begin(), a.data.end(), b.data.begin(), // we read from this range
-    c.data.begin(),                               // we write to this one
-    std::multiplies<T>{});                        // we apply this binary functor
+  thrust::transform(
+    thrust::seq,
+    a.data.begin(), a.data.end(), b.data.begin(),    // we read from this range
+    c.data.begin(),                                  // we write to this one
+    thrust::multiplies<T>{});                        // we apply this binary functor
   
-  return std::accumulate(c.data.begin(), c.data.end(), 0);
+  return thrust::reduce(thrust::seq, c.data.begin(), c.data.end());
 }
 
 template <typename T, int N, int M, int P>
@@ -126,5 +132,5 @@ auto operator*(
   
   return std::move(c);
 }
-*/
+
 #endif // REGULUS_MATRIX_HPP_

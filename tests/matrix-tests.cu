@@ -1,26 +1,9 @@
 #include "test-suite.hpp"
 #include "../include/math/matrix.hpp"
 
-/*__global__
-void test_kernel(void)
+__host__ __device__
+auto matrix_tests_impl(void) -> void
 {
-  matrix<float, 2, 3> const a{ 1.0f, 2.0f, 3.0f,
-                               4.0f, 5.0f, 6.0f };
-                               
-  matrix<float, 3, 2> const b{ 7.0f, 8.0f,
-                               9.0f, 10.0f,
-                               11.0f, 12.0f };
-                               
-  matrix<float, 2, 2> const c{  58.0f,  64.0f,
-                               139.0f, 154.0f };
-                               
-  assert((a * b == c));
-}*/
-
-auto matrix_tests(void) -> void
-{
-  std::cout << "Beginning matrix tests!" << std::endl;
-  /*
   // we should be able to construct a matrix type
   {
     float a = 1;
@@ -65,12 +48,25 @@ auto matrix_tests(void) -> void
                                  
     assert((a * b == c));
   }
+}
+
+__global__
+void matrix_test_kernel(void)
+{
+  matrix_tests_impl();
+}
+
+auto matrix_tests(void) -> void
+{
+  std::cout << "Beginning matrix tests!" << std::endl;
+  
+  matrix_tests_impl();
   
   // this should also work on the device as well
   {
-    //test_kernel<<<1, 256>>>();
-    //cudaDeviceSynchronize();
+    matrix_test_kernel<<<1, 256>>>();
+    cudaDeviceSynchronize();
   }
   
-  std::cout << "Passed tests!\n" << std::endl;*/
+  std::cout << "Passed tests!\n" << std::endl;
 }
