@@ -151,7 +151,7 @@ auto create_diagonal(void) -> matrix<T, N, N>
   matrix<T, N, N> p;
   
   for (int i = 0; i < N; ++i) {
-    for (int j = 0; j < N; ++i) {
+    for (int j = 0; j < N; ++j) {
       p[i * N + j] = (i == j);
     }
   }
@@ -164,7 +164,13 @@ template <typename T, int N>
 __host__ __device__
 auto pivot(matrix<T, N, N> const& a) -> matrix<T, N, N>
 {
-  matrix<T, N, N> p = create_diagonal<T, N>();
+  matrix<T, N, N> p;
+  
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < N; ++j) {
+      p[i * N + j] = (i == j);
+    }
+  }
   
   for (int i = 0; i < N; ++i) {
     int max_j = i;
@@ -199,7 +205,34 @@ auto LU_decompose(
   matrix<T, N, N>& U)
 -> void
 {
+  U = { 0 };
   L = create_diagonal<T, N>();
+  
+  auto const ap = pivot(a) * a;
+  
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < N; ++j) {
+      T s;
+      
+      if (j <= i) {
+        s = 0;
+        for (int k = 0; k < j; ++k) {
+          s += L[j * N + k] * U[k * N + i];
+        }
+        
+        U[j * N + i] = ap[j * N + i] - s;
+      }
+      
+      if (j >= i) {
+        s = 0;
+        for (int k = 0; k < i; ++k) {
+          s += L[j * N + k] * U[k * N + i];
+        }
+        
+        L[j * N + i] = (ap[j * N + i] - s) / U[i * N + i];
+      }
+    }
+  }
 }
 
 #endif // REGULUS_MATRIX_HPP_

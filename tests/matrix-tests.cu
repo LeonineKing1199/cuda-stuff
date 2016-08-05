@@ -61,6 +61,22 @@ auto matrix_tests_impl(void) -> void
                                       1.0f, 0.0f, 0.0f,
                                       0.0f, 0.0f, 1.0f }));
   }
+  
+  // we should be able to take the LU decomposition
+  {
+    matrix<float, 3, 3> const a{ 1.0f, 3.0f, 5.0f,
+                                 2.0f, 4.0f, 7.0f,
+                                 1.0f, 1.0f, 0.0f };
+                                 
+    matrix<float, 3, 3> L{ 0 };
+    matrix<float, 3, 3> U{ 0 };
+    
+    LU_decompose<float, 3>(a, L, U);
+    
+    assert((L == matrix<float, 3, 3>{ 1.0f, 0.0f, 0.0f,
+                                      0.5f, 1.0f, 0.0f,
+                                      0.5f, -1.0f, 1.0f }));
+  }
 }
 
 __global__
