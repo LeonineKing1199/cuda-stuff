@@ -48,6 +48,19 @@ auto matrix_tests_impl(void) -> void
                                  
     assert((a * b == c));
   }
+  
+  // we should be able to create a pivot matrix
+  {
+    matrix<float, 3, 3> const a{ 1.0f, 3.0f, 5.0f,
+                                 2.0f, 4.0f, 7.0f,
+                                 1.0f, 1.0f, 0.0f };
+                                 
+    auto p = pivot(a);
+    
+    assert((p == matrix<float, 3, 3>{ 0.0f, 1.0f, 0.0f,
+                                      1.0f, 0.0f, 0.0f,
+                                      0.0f, 0.0f, 1.0f }));
+  }
 }
 
 __global__

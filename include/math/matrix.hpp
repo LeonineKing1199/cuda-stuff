@@ -7,6 +7,8 @@
 #include <thrust/functional.h>
 #include <thrust/reduce.h>
 
+#include <cmath>
+
 #include "../common.hpp"
 #include "../array.hpp"
 
@@ -72,6 +74,12 @@ struct matrix
   }
   
   __host__ __device__
+  auto operator[](int const idx) const -> T const&
+  {
+    return data[idx];
+  }
+  
+  __host__ __device__
   auto row(int const idx) const -> vector<T, M>
   {
     vector<T, M> r{ T{} };
@@ -97,6 +105,7 @@ struct matrix
 };
 
 
+// dot product
 template <typename T, int L>
 __host__ __device__
 auto operator*(
@@ -115,6 +124,7 @@ auto operator*(
   return thrust::reduce(thrust::seq, c.data.begin(), c.data.end());
 }
 
+// matrix multiplication
 template <typename T, int N, int M, int P>
 __host__ __device__
 auto operator*(
@@ -131,6 +141,65 @@ auto operator*(
   }
   
   return std::move(c);
+}
+
+// create initial triangular matrix
+template <typename T, int N>
+__host__ __device__
+auto create_diagonal(void) -> matrix<T, N, N>
+{
+  matrix<T, N, N> p;
+  
+  for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < N; ++i) {
+      p[i * N + j] = (i == j);
+    }
+  }
+  
+  return std::move(p);
+}
+
+// pivoting routine for LU decomposition
+template <typename T, int N>
+__host__ __device__
+auto pivot(matrix<T, N, N> const& a) -> matrix<T, N, N>
+{
+  matrix<T, N, N> p = create_diagonal<T, N>();
+  
+  for (int i = 0; i < N; ++i) {
+    int max_j = i;
+    for (int j = i; j < N; ++j) {
+      if (fabs(a[j * N + i]) > fabs(a[max_j * N + i])) {
+        max_j = j;
+      }
+    }
+    
+    if (max_j != i) {
+      for (int k = 0; k < N; ++k) {
+        auto tmp = p[i * N + k];
+        p[i * N + k] = p[max_j * N + k];
+        p[max_j * N + k] = tmp;
+      }
+    }
+  }
+  
+  return std::move(p);
+}
+
+// LU decomposition
+// because working with arrays and tuples has always
+// felt awkward to me, pass in L and U as mutable references
+// to matrices
+// even with move semantics, no one wants to deal with std::pair
+template <typename T, int N>
+__host__ __device__
+auto LU_decompose(
+  matrix<T, N, N> const& a,
+  matrix<T, N, N>& L,
+  matrix<T, N, N>& U)
+-> void
+{
+  L = create_diagonal<T, N>();
 }
 
 #endif // REGULUS_MATRIX_HPP_
