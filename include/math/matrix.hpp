@@ -9,6 +9,8 @@
 #include <thrust/swap.h>
 
 #include <cmath>
+#include <limits>
+#include <cstdint>
 
 #include "../common.hpp"
 #include "../array.hpp"
@@ -52,8 +54,14 @@ struct matrix
     auto const& other_data = other.data;
     
     for (size_type i = 0; i < data.size(); ++i) {
-      // TODO: somehow replace 1e-5 with something more accurate
-      not_equal = not_equal || !(fabs(data[i] - other_data[i]) < 1e-5);
+      auto const x = data[i];
+      auto const y = other_data[i];
+      
+      // this code was ripped from cppreference.com
+      // I had to modify it slightly. Not sure of quality.
+      bool equal = fabs(x - y) < (FLT_EPSILON * fabs(x + y) * 8) || fabs(x - y) < (FLT_MIN * 128);
+                    
+      not_equal = not_equal || !equal;
       
       if (not_equal) {
         return false;
@@ -118,6 +126,24 @@ struct matrix
       first_a,
       last_a,
       first_b);
+  }
+  
+  __host__ __device__
+  auto det(void) const -> T
+  {
+    matrix P{ 0 };
+    matrix L{ 0 };
+    matrix U{ 0 };
+    
+    int const num_perms = pivot(*this, P);
+    LU_decompose(*this, P, L, U);
+    
+    T det = U[0];
+    for (int i = 1; i < N; ++i) {
+      det *= U[i * N + i];
+    }
+    
+    return (num_perms % 2 == 0 ? 1 : -1) * det;
   }
 };
 
@@ -214,6 +240,50 @@ auto pivot(matrix<T, N, N> const& A) -> matrix<T, N, N>
   return std::move(P);
 }
 
+// takes a matrix A and a reference to a matrix P
+// and mutates P into a permutation matrix of A,
+// returns number of row swaps
+template <typename T, int N>
+__host__ __device__
+auto pivot(
+  matrix<T, N, N> const& A,
+  matrix<T, N, N>& P)
+-> int
+{
+  // create an initial diagonal matrix
+  P = create_diagonal<T, N>();
+  
+  int num_swaps = 0;
+  
+  // for every column in A
+  for (int j = 0; j < N; ++j) {
+    // get the j-th column
+    auto col = A.col(j);
+    
+    // we start with the j-th row
+    int row_idx = j;
+    
+    // for every row in A after j...
+    // (remember, a column's length is number of rows)
+    for (int i = j; i < N; ++i) {
+      // if the current column's value exceeds our current max
+      if (fabs(col[i]) > fabs(col[row_idx])) {
+        // reassign the max index
+        row_idx = i;
+      }
+    }
+    
+    // if the maximum index isn't the location of the initial
+    // 1 in the diagonal matrix, swap the rows
+    if (row_idx != j) {
+      P.swap_rows(row_idx, j);
+      ++num_swaps;
+    }
+  }
+  
+  return num_swaps;
+}
+
 // LU decomposition
 // because working with arrays and tuples has always
 // felt awkward to me, pass in L and U as mutable references
@@ -223,6 +293,7 @@ template <typename T, int N>
 __host__ __device__
 auto LU_decompose(
   matrix<T, N, N> const& a,
+  matrix<T, N, N> const& p,
   matrix<T, N, N>& L,
   matrix<T, N, N>& U)
 -> void
@@ -230,7 +301,7 @@ auto LU_decompose(
   U = { 0 };
   L = create_diagonal<T, N>();
   
-  auto const ap = pivot(a) * a;
+  auto const ap = p * a;
   
   for (int i = 0; i < N; ++i) {
     for (int j = 0; j < N; ++j) {
@@ -255,6 +326,17 @@ auto LU_decompose(
       }
     }
   }
+}
+
+template <typename T, int N>
+__host__ __device__
+auto LU_decompose(
+  matrix<T, N, N> const& a,
+  matrix<T, N, N>& L,
+  matrix<T, N, N>& U)
+-> void
+{
+  LU_decompose(a, pivot(a), L, U);
 }
 
 #endif // REGULUS_MATRIX_HPP_

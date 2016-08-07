@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "test-suite.hpp"
 #include "../include/math/matrix.hpp"
 
@@ -104,7 +106,7 @@ auto matrix_tests_impl(void) -> void
   
   // we should be able to take the LU decomposition (#2)
   {
-    matrix<float, 4, 4> a{ 11.0f,  9.0f, 24.0f, 2.0f,
+    matrix<double, 4, 4> a{ 11.0f,  9.0f, 24.0f, 2.0f,
                             1.0f,  5.0f,  2.0f, 6.0f,
                             3.0f, 17.0f, 18.0f, 1.0f,
                             2.0f,  5.0f,  7.0f, 1.0f };
@@ -119,16 +121,33 @@ auto matrix_tests_impl(void) -> void
                                      
     LU_decompose(a, L, U);
     
-    assert((L == decltype(L){     1.0f,     0.0f,    0.0f, 0.0f,
-                              0.27273f,     1.0f,    0.0f, 0.0f,
-                              0.09091f,  0.2875f,    1.0f, 0.0f,
-                              0.18182f, 0.23125f, 0.0036f, 1.0f }));
+    assert((L == decltype(L){ 1.0f, 0.0f, 0.0f, 0.0f,
+                              0.272727272727273f, 1.0f, 0.0f, 0.0f,
+                              0.090909090909091f, 0.287500000000000f, 1.0f, 0.0f,
+                              0.181818181818182f, 0.231250000000000f, 0.003597122302158f, 1.0f }));
                              
 
-    assert((U == decltype(U){ 11.0f,      9.0f,     24.0f,     2.0f,
-                               0.0f, 14.54545f, 11.45455f, 0.45455f,
-                               0.0f,      0.0f,   -3.475f,  5.6875f,
-                               0.0f,      0.0f,      0.0f, 0.51079f }));                             
+    assert((U == decltype(U){ 11.0f,  9.0f, 24.0f,  2.0f,
+                              0.0f, 14.545454545454500f, 11.454545454545500f,  0.454545454545455,
+                              0.0f,  0.0f, -3.475000000000000,  5.687500000000000,
+                              0.0f, 0.0f,  0.0f,  0.510791366906476f }));                             
+  }
+  
+  // we should be able to take the determinant
+  {
+    matrix<float, 4, 4> t{ 1.0f, 0.0f, 0.0f, 0.0f,
+                           1.0f, 9.0f, 0.0f, 0.0f,
+                           1.0f, 0.0f, 9.0f, 0.0f,
+                           1.0f, 0.0f, 0.0f, 9.0f };
+                           
+    assert(t.det() == 729);
+    
+    matrix<float, 4, 4> r{ 0.0, 1.85, 0.63, 2.65,
+                           1.92, 1.57, 1.15, 2.94,
+                           2.7, 2.45, 0.57, 2.81,
+                           2.33, 1.68, 1.0, 0.05 };
+                          
+    assert(fabs(r.det() - -10.9277941) < (1e-6));
   }
 }
 
