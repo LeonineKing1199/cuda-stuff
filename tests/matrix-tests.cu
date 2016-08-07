@@ -8,17 +8,21 @@ auto matrix_tests_impl(void) -> void
 {
   // we should be able to construct a matrix type
   {
-    float a = 1;
-    float b = 2;
-    float c = 3;
-    float d = 4;
-    float e = 5;
-    float f = 6;
+    float a = 1.0;
+    float b = 2.0;
+    float c = 3.0;
+    float d = 4.0;
+    float e = 5.0;
+    float f = 6.0;
     
     matrix<float, 2, 3> m{ a, b, c, d, e, f };
     
+    assert(m.data.size() == 6);
     assert((m == matrix<float, 2, 3>{ a, b, c, d, e, f }));
-    assert((m != matrix<float, 2, 3>{ a, b, c, d, e, (float ) 7 }));
+    
+    matrix<float, 2, 3> const not_m{ a, b, c, d, e, 7.0 };
+        
+    assert((m != not_m));
     
     assert((m.row(0) == vector<float, 3>{ a, b, c }));
     assert((m.row(1) == vector<float, 3>{ d, e, f }));
@@ -26,6 +30,18 @@ auto matrix_tests_impl(void) -> void
     assert((m.col(0) == vector<float, 2>{ a, d }));
     assert((m.col(1) == vector<float, 2>{ b, e }));
     assert((m.col(2) == vector<float, 2>{ c, f }));
+  }
+  
+  // we should be able to compare double types as well
+  {
+    vector<double, 4> x{ 1.0/7, 2.0/3, 3.0/4, 5.0/8 };
+    for (int i = 0; i < 4; ++i) {
+      x[i] = round_to(x[i], 9);
+    }
+    assert((x == decltype(x){ 0.142857143,
+                              0.666666667,
+                              0.75,
+                              0.625 }));
   }
   
   // we should be able to take the dot product of two vectors
@@ -121,16 +137,22 @@ auto matrix_tests_impl(void) -> void
                                      
     LU_decompose(a, L, U);
     
-    assert((L == decltype(L){ 1.0f, 0.0f, 0.0f, 0.0f,
-                              0.272727272727273f, 1.0f, 0.0f, 0.0f,
-                              0.090909090909091f, 0.287500000000000f, 1.0f, 0.0f,
-                              0.181818181818182f, 0.231250000000000f, 0.003597122302158f, 1.0f }));
+    for (int i = 0; i < 16; ++i) {
+      L[i] = round_to(L[i], 5);
+      U[i] = round_to(U[i], 5);
+    }
+    
+    
+    assert((L == decltype(L){ 1.0, 0.0, 0.0, 0.0,
+                              0.27273, 1.0, 0.0, 0.0,
+                              0.09091, 0.28750, 1.0, 0.0,
+                              0.18182, 0.23125, 0.00360, 1.0 }));
                              
 
-    assert((U == decltype(U){ 11.0f,  9.0f, 24.0f,  2.0f,
-                              0.0f, 14.545454545454500f, 11.454545454545500f,  0.454545454545455,
-                              0.0f,  0.0f, -3.475000000000000,  5.687500000000000,
-                              0.0f, 0.0f,  0.0f,  0.510791366906476f }));                             
+    assert((U == decltype(U){ 11.0, 9.0, 24.0, 2.0,
+                              0.0, 14.54545, 11.45455, 0.45455,
+                              0.0, 0.0, -3.47500, 5.68750,
+                              0.0, 0.0, 0.0, 0.51079 }));                             
   }
   
   // we should be able to take the determinant
@@ -146,8 +168,15 @@ auto matrix_tests_impl(void) -> void
                            1.92, 1.57, 1.15, 2.94,
                            2.7, 2.45, 0.57, 2.81,
                            2.33, 1.68, 1.0, 0.05 };
-                          
-    assert(fabs(r.det() - -10.9277941) < (1e-6));
+           
+    assert(eq<float>(r.det(), -10.927794456481934));
+    
+    matrix<float, 4, 4> u{ 1.0, 0.0, 0.0, 0.0,
+                           1.0, 9.0, 0.0, 0.0,
+                           1.0, 0.0, 9.0, 0.0,
+                           1.0, 3.0, 3.0, 0.0 };
+                           
+    assert(eq<float>(u.det(), 0.0));
   }
 }
 

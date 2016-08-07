@@ -40,6 +40,7 @@ cuda_add_executable(
   include/array.hpp
   include/math.hpp
   include/math/matrix.hpp
+  include/math/equals.hpp
   
   tests/test-suite.hpp
   

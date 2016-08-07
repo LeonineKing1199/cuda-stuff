@@ -14,6 +14,7 @@
 
 #include "../common.hpp"
 #include "../array.hpp"
+#include "equals.hpp"
 
 // we create a forward declaration so that we may create a
 // specialization that we also wish to use in the
@@ -50,22 +51,14 @@ struct matrix
   __host__ __device__
   auto operator==(matrix<T, N, M> const& other) const -> bool
   {
-    bool not_equal = false;
     auto const& other_data = other.data;
     
     for (size_type i = 0; i < data.size(); ++i) {
-      auto const x = data[i];
-      auto const y = other_data[i];
-      
-      // this code was ripped from cppreference.com
-      // I had to modify it slightly. Not sure of quality.
-      bool equal = fabs(x - y) < (FLT_EPSILON * fabs(x + y) * 8) || fabs(x - y) < (FLT_MIN * 128);
-                    
-      not_equal = not_equal || !equal;
-      
-      if (not_equal) {
+      T const x = data[i];
+      T const y = other_data[i];
+            
+      if (!eq(x, y))
         return false;
-      }
     }
       
     return true; 
