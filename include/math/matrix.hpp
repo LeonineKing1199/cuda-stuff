@@ -6,6 +6,7 @@
 #include <thrust/transform.h>
 #include <thrust/functional.h>
 #include <thrust/reduce.h>
+#include <thrust/swap.h>
 
 #include <cmath>
 
@@ -45,13 +46,14 @@ struct matrix
   reg::array<T, N * M> data;
     
   __host__ __device__
-  auto operator==(matrix<T, N, M> const& other) -> bool
+  auto operator==(matrix<T, N, M> const& other) const -> bool
   {
     bool not_equal = false;
     auto const& other_data = other.data;
     
     for (size_type i = 0; i < data.size(); ++i) {
-      not_equal = not_equal || (data[i] != other_data[i] );
+      // TODO: somehow replace 1e-5 with something more accurate
+      not_equal = not_equal || !(fabs(data[i] - other_data[i]) < 1e-5);
       
       if (not_equal) {
         return false;
@@ -62,7 +64,7 @@ struct matrix
   }
   
   __host__ __device__
-  auto operator!=(matrix<T, N, M> const& other) -> bool
+  auto operator!=(matrix<T, N, M> const& other) const -> bool
   {
     return !(*this == other);
   }
@@ -101,6 +103,21 @@ struct matrix
     }
     
     return std::move(c);
+  }
+  
+  __host__ __device__
+  auto swap_rows(size_type const a_idx, size_type const b_idx) -> void
+  {
+    auto first_a = data.begin() + a_idx * M;
+    auto last_a = first_a + M;
+    
+    auto first_b = data.begin() + b_idx * M;
+    
+    thrust::swap_ranges(
+      thrust::seq,
+      first_a,
+      last_a,
+      first_b);
   }
 };
 
@@ -159,37 +176,42 @@ auto create_diagonal(void) -> matrix<T, N, N>
   return std::move(p);
 }
 
-// pivoting routine for LU decomposition
+// return a matrix P such that PA returns a permutation of A
+// where every diagonal element is the largest value in its
+// respective column of A
 template <typename T, int N>
 __host__ __device__
-auto pivot(matrix<T, N, N> const& a) -> matrix<T, N, N>
+auto pivot(matrix<T, N, N> const& A) -> matrix<T, N, N>
 {
-  matrix<T, N, N> p;
+  // create an initial diagonal matrix
+  matrix<T, N, N> P = create_diagonal<T, N>();
   
-  for (int i = 0; i < N; ++i) {
-    for (int j = 0; j < N; ++j) {
-      p[i * N + j] = (i == j);
-    }
-  }
-  
-  for (int i = 0; i < N; ++i) {
-    int max_j = i;
-    for (int j = i; j < N; ++j) {
-      if (fabs(a[j * N + i]) > fabs(a[max_j * N + i])) {
-        max_j = j;
+  // for every column in A
+  for (int j = 0; j < N; ++j) {
+    // get the j-th column
+    auto col = A.col(j);
+    
+    // we start with the j-th row
+    int row_idx = j;
+    
+    // for every row in A after j...
+    for (int i = j; i < N; ++i) {
+      // if the current column's value exceeds our current max
+      if (fabs(col[i]) > fabs(col[row_idx])) {
+        // reassign the max index
+        row_idx = i;
       }
     }
     
-    if (max_j != i) {
-      for (int k = 0; k < N; ++k) {
-        auto tmp = p[i * N + k];
-        p[i * N + k] = p[max_j * N + k];
-        p[max_j * N + k] = tmp;
-      }
+    // if the maximum index isn't the location of the initial
+    // 1 in the diagonal matrix, swap the rows
+    if (row_idx != j) {
+      P.swap_rows(row_idx, j);
     }
   }
   
-  return std::move(p);
+  // forward P to the caller
+  return std::move(P);
 }
 
 // LU decomposition
