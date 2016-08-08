@@ -41,6 +41,7 @@ cuda_add_executable(
   include/math.hpp
   include/math/matrix.hpp
   include/math/equals.hpp
+  include/math/tetra.hpp
   
   tests/test-suite.hpp
   
@@ -53,6 +54,7 @@ cuda_add_executable(
   tests/math-tests.cu
   tests/matrix-tests.cu
   tests/array-tests.cu
+  tests/tetra-tests.cu
   )
 
 target_link_libraries(

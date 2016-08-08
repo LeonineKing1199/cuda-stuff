@@ -9,6 +9,7 @@ auto test_suite(void) -> void
   mesher_tests();
   array_tests();
   matrix_tests();
+  tetra_tests();
   
   std::cout << "Tests passed!\n" << std::endl;
 }

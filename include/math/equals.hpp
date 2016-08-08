@@ -13,13 +13,13 @@ struct epsilon {};
 template <>
 struct epsilon<float>
 {
-  constexpr float static const e = FLT_EPSILON;
+  constexpr float static const e = FLT_EPSILON * 2;
 };
 
 template <>
 struct epsilon<double>
 {
-  constexpr double static const e = DBL_EPSILON;
+  constexpr double static const e = DBL_EPSILON * 2;
 };
 
 template <typename T>
@@ -28,7 +28,7 @@ __inline__
 auto eq(T const x, T const y) -> bool
 {
   T const a = x - y;
-  return (absolute(a) < (epsilon<T>::e * 2));
+  return (absolute(a) < epsilon<T>::e);
 }
 
 template <typename T>
