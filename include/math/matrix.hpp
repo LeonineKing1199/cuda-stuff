@@ -91,7 +91,7 @@ struct matrix
       r[i] = data[idx * M + i];
     }
     
-    return std::move(r);
+    return r;
   }
   
   __host__ __device__
@@ -103,7 +103,7 @@ struct matrix
       c[i] = data[i * M + idx];
     }
     
-    return std::move(c);
+    return c;
   }
   
   __host__ __device__
@@ -176,7 +176,7 @@ auto operator*(
     }
   }
   
-  return std::move(c);
+  return c;
 }
 
 // create initial triangular matrix
@@ -192,7 +192,7 @@ auto create_diagonal(void) -> matrix<T, N, N>
     }
   }
   
-  return std::move(p);
+  return p;
 }
 
 // return a matrix P such that PA returns a permutation of A
@@ -230,7 +230,7 @@ auto pivot(matrix<T, N, N> const& A) -> matrix<T, N, N>
   }
   
   // forward P to the caller
-  return std::move(P);
+  return P;
 }
 
 // takes a matrix A and a reference to a matrix P
