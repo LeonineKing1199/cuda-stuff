@@ -10,23 +10,20 @@
 
 #include "common.hpp"
 
-namespace reg
-{
-  template <int N>
-  struct greater_than_three
-    : std::integral_constant<bool, (N > 3)>
-  {};
-  
-  template <int N>
-  struct greater_than_zero
-    : std::integral_constant<bool, (N > 0)>
-  {};
-}
+template <int N>
+struct greater_than_three
+  : std::integral_constant<bool, (N > 3)>
+{};
+
+template <int N>
+struct greater_than_zero
+  : std::integral_constant<bool, (N > 0)>
+{};
 
 // N x M matrix of type T
 template <
   typename T, int N, int M,
-  typename = reg::enable_if_t<std::is_floating_point<T>::value>
+  typename = enable_if_t<std::is_floating_point<T>::value>
 >
 using matrix_t = std::array<T, N * M>;
 
@@ -181,7 +178,7 @@ auto det(matrix_t<T, 3, 3>& m) -> T
 template <
   typename T,
   int N,
-  typename = reg::enable_if_t<reg::greater_than_three<N>::value>
+  typename = enable_if_t<greater_than_three<N>::value>
 >
 auto det(matrix_t<T, N, N>& m) -> T
 {

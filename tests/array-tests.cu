@@ -9,8 +9,8 @@ auto array_tests_impl(void) -> void
 {
   // we should  be able to construct an array
   {
-    reg::array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
-    reg::array<float, 4> b = a;
+    array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
+    array<float, 4> b = a;
     
     assert((a == b));
     
@@ -26,8 +26,8 @@ auto array_tests_impl(void) -> void
   
   // it should be transformable
   {
-    reg::array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
-    reg::array<float, 4> b{ 0 };
+    array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
+    array<float, 4> b{ 0 };
 
     thrust::transform(
       thrust::seq,
@@ -38,7 +38,7 @@ auto array_tests_impl(void) -> void
         return f * f;
       });
     
-    assert((b == reg::array<float, 4>{ 1.0f, 4.0f, 9.0f, 16.0f }));
+    assert((b == array<float, 4>{ 1.0f, 4.0f, 9.0f, 16.0f }));
   }
 }
 

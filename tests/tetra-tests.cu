@@ -5,7 +5,7 @@ __host__ __device__
 auto tetra_tests_impl(void) -> void
 {
   using real = float;
-  using point_t = reg::point_t<real>;
+  using point_t = point_t<real>;
   
   // We should be able to determine the orientation
   // of a tetrahedron correctly
@@ -42,6 +42,57 @@ auto tetra_tests_impl(void) -> void
     
     point_t const z = b;
     assert(insphere<real>(a, b, c, d, z) == orientation::zero);
+  }
+  
+  // Okay, now for location code testing!
+  // For any tetrahedron, we have:
+  // 4 vertices
+  // 4 faces
+  // 6 edges
+  // an internal region
+  // outside the tetrahedron
+  // We must make sure our loc routine can accurately
+  // solve these
+  {
+    point_t const a{ 0.0, 0.0, 0.0 };
+    point_t const b{ 9.0, 0.0, 0.0 };
+    point_t const c{ 0.0, 9.0, 0.0 };
+    point_t const d{ 0.0, 0.0, 9.0 };
+    
+    assert(orient<real>(a, b, c, d) == orientation::positive);
+    
+    // We should be able to accurately determine all 6 edge intersections
+    {
+      point_t const e10{ 4.5, 0.0, 0.0 };
+      point_t const e20{ 0.0, 4.5, 0.0 };
+      point_t const e30{ 0.0, 0.0, 4.5 };
+      point_t const e21{ 4.5, 4.5, 0.0 };
+      point_t const e31{ 4.5, 0.0, 4.5 };
+      point_t const e23{ 0.0, 4.5, 4.5 };
+      
+      printf("%f\n", matrix<real, 4, 4>{ 1.0, 0.0, 0.0, 0.0,
+                                         1.0, 0.0, 9.0, 0.0,
+                                         1.0, 0.0, 0.0, 9.0,
+                                         1.0, 4.5, 0.0, 0.0 }.det());
+      
+      assert((
+        matrix<real, 4, 4>{ 1, 0, 0, 0,
+                            1, 0, 9, 0,
+                            1, 0, 0, 9,
+                            1, 4.5, 0, 0 }.det() > 0.0));
+      
+      assert(orient<real>(d, c, b, e10) == orientation::positive);
+      assert(orient<real>(a, c, d, e10) == orientation::positive);
+      assert(orient<real>(a, d, b, e10) == orientation::zero);
+      assert(orient<real>(a, b, c, e10) == orientation::zero);
+      
+      assert(loc<real>(a, b, c, d, e10) == 3);
+      assert(loc<real>(a, b, c, d, e20) == 5);
+      assert(loc<real>(a, b, c, d, e30) == 9);
+      assert(loc<real>(a, b, c, d, e21) == 6);
+      assert(loc<real>(a, b, c, d, e31) == 10);
+      assert(loc<real>(a, b, c, d, e23) == 12);
+    }
   }
 }
 

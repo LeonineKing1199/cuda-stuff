@@ -130,10 +130,10 @@ auto matrix_tests_impl(void) -> void
     decltype(a) L{ 0 };
     decltype(a) U{ 0 };
     
-    assert((pivot(a) == decltype(a){ 1.0f, 0.0f, 0.0f, 0.0f,
-                                     0.0f, 0.0f, 1.0f, 0.0f,
-                                     0.0f, 1.0f, 0.0f, 0.0f,
-                                     0.0f, 0.0f, 0.0f, 1.0f }));
+    assert((pivot(a) == decltype(a){ 1, 0, 0, 0,
+                                     0, 0, 1, 0,
+                                     0, 1, 0, 0,
+                                     0, 0, 0, 1 }));
                                      
     LU_decompose(a, L, U);
     
@@ -169,7 +169,7 @@ auto matrix_tests_impl(void) -> void
                            2.7, 2.45, 0.57, 2.81,
                            2.33, 1.68, 1.0, 0.05 };
            
-    assert(eq<float>(r.det(), -10.927794456481934));
+    assert(eq<float>(round_to<float>(r.det(), 3), -10.928));
     
     matrix<float, 4, 4> u{ 1.0, 0.0, 0.0, 0.0,
                            1.0, 9.0, 0.0, 0.0,
@@ -177,6 +177,31 @@ auto matrix_tests_impl(void) -> void
                            1.0, 3.0, 3.0, 0.0 };
                            
     assert(eq<float>(u.det(), 0.0));
+  }
+  
+  // we shouldn't get weird undefined behavior
+  { 
+    matrix<float, 4, 4> const A{ 1, 0, 0, 0,
+                                 1, 4.5, 0, 0,
+                                 1, 0, 9, 0,
+                                 1, 0, 0, 9 };
+                                 
+    auto const P = pivot(A);
+    
+    matrix<float, 4, 4> L;
+    matrix<float, 4, 4> U;
+                           
+    LU_decompose(A, P, L, U);
+    
+    assert((L == decltype(A){ 1, 0, 0, 0,
+                              1, 1, 0, 0,
+                              1, 0, 1, 0,
+                              1, 0, 0, 1 }));
+                             
+    assert((U == decltype(A){ 1, 0, 0, 0,
+                              0, 4.5, 0, 0,
+                              0, 0, 9, 0,
+                              0, 0, 0, 9 }));
   }
 }
 

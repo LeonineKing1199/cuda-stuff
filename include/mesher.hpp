@@ -14,14 +14,14 @@ class mesher
 {
 public:
   using integral = int;
-  using point_t = reg::point_t<T>;
-  using tetra_t = reg::tetra_t;
+  using point_t = point_t<T>;
+  using tetra_t = tetra_t;
   
   using host_pts_t = thrust::host_vector<point_t>;
   using device_pts_t = thrust::device_vector<point_t>;
   
-  using host_tetra_t = thrust::host_vector<reg::tetra_t>;
-  using device_tetra_t = thrust::device_vector<reg::tetra_t>;
+  using host_tetra_t = thrust::host_vector<tetra_t>;
+  using device_tetra_t = thrust::device_vector<tetra_t>;
   
   using device_int_vector_t = thrust::device_vector<integral>;
   

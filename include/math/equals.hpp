@@ -5,7 +5,7 @@
 #include <limits>
 #include <cstdint>
 
-#define absolute(a) (a >= 0.0 ? a : -a)
+#define absolute(a)  ((a) >= 0.0 ? (a) : -(a))
 
 template <typename T>
 struct epsilon {};

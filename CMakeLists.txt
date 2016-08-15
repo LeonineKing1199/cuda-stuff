@@ -16,7 +16,7 @@ list(APPEND
     ${CUDA_NVCC_FLAGS};
     -gencode arch=compute_50,code=sm_50 
     -std=c++11 
-    -O2
+    -O3
     )
 
 # Specify include directories

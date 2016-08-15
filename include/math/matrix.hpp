@@ -29,24 +29,24 @@ class matrix;
 
 // we treat vectors as 1 x L matrices
 template <typename T, int L>
-using vector = matrix<T, 1, L, reg::enable_if_t<std::is_floating_point<T>::value>>;
+using vector = matrix<T, 1, L, enable_if_t<std::is_floating_point<T>::value>>;
 
 // our formal matrix definition
 template <
   typename T,
   int N,
   int M,
-  typename = reg::enable_if_t<std::is_floating_point<T>::value>
+  typename = enable_if_t<std::is_floating_point<T>::value>
 >
 struct matrix
 { 
-  using array_type = typename reg::array<T, N * M>;
+  using array_type = array<T, N * M>;
   using value_type = typename array_type::value_type;
   using size_type = typename array_type::size_type;
   using reference = value_type&;
   using const_reference = value_type const&;
 
-  reg::array<T, N * M> data;
+  array<T, N * M> data;
     
   __host__ __device__
   auto operator==(matrix<T, N, M> const& other) const -> bool
@@ -107,7 +107,7 @@ struct matrix
   }
   
   __host__ __device__
-  auto swap_rows(size_type const a_idx, size_type const b_idx) -> void
+  auto swap_rows(size_type const a_idx, size_type const b_idx) -> matrix&
   {
     auto first_a = data.begin() + a_idx * M;
     auto last_a = first_a + M;
@@ -119,6 +119,8 @@ struct matrix
       first_a,
       last_a,
       first_b);
+    
+    return *this;
   }
   
   __host__ __device__
@@ -198,38 +200,29 @@ auto create_diagonal(void) -> matrix<T, N, N>
 // return a matrix P such that PA returns a permutation of A
 // where every diagonal element is the largest value in its
 // respective column of A
+// ripped from rosettacode.org on LU decomposition page
 template <typename T, int N>
 __host__ __device__
 auto pivot(matrix<T, N, N> const& A) -> matrix<T, N, N>
 {
-  // create an initial diagonal matrix
   matrix<T, N, N> P = create_diagonal<T, N>();
   
-  // for every column in A
-  for (int j = 0; j < N; ++j) {
-    // get the j-th column
-    auto col = A.col(j);
+  for (int i = 0; i < N; ++i) {
+    T max = A[i * N + i];
+    int row_idx = i;
     
-    // we start with the j-th row
-    int row_idx = j;
-    
-    // for every row in A after j...
-    for (int i = j; i < N; ++i) {
-      // if the current column's value exceeds our current max
-      if (fabs(col[i]) > fabs(col[row_idx])) {
-        // reassign the max index
-        row_idx = i;
+    for (int j = i; j < N; ++j) {
+      if (absolute(A[j * N + i]) > absolute(max)) {
+        max = A[j * N + i];
+        row_idx = j;
       }
     }
     
-    // if the maximum index isn't the location of the initial
-    // 1 in the diagonal matrix, swap the rows
-    if (row_idx != j) {
-      P.swap_rows(row_idx, j);
+    if (row_idx != i) {
+      P.swap_rows(i, row_idx);
     }
   }
   
-  // forward P to the caller
   return P;
 }
 
@@ -307,7 +300,7 @@ auto LU_decompose(
         }
         
         U[j * N + i] = ap[j * N + i] - s;
-      }
+      } 
       
       if (j >= i) {
         s = 0;

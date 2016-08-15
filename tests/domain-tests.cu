@@ -8,7 +8,7 @@ auto domain_tests(void) -> void
 
   // We should be able to declare a point type
   {
-    typename reg::point_type<float>::type point{0, 1, 2};
+    typename point_type<float>::type point{0, 1, 2};
 
     assert(point.x == 0);
     assert(point.y == 1);
@@ -16,7 +16,7 @@ auto domain_tests(void) -> void
   }
 
   {
-    typename reg::point_type<double>::type point{0, 1, 2};
+    typename point_type<double>::type point{0, 1, 2};
 
     assert(point.x == 0);
     assert(point.y == 1);
@@ -28,11 +28,11 @@ auto domain_tests(void) -> void
     using real = float;
     int const gl = 2;
 
-    thrust::host_vector<reg::point_t<real>> pts = gen_cartesian_domain<real>(gl);
+    thrust::host_vector<point_t<real>> pts = gen_cartesian_domain<real>(gl);
 
     assert(pts.size() == 8);
 
-    using point = reg::point_t<real>;
+    using point = point_t<real>;
 
     /* 
       Point set should be:
@@ -59,7 +59,7 @@ auto domain_tests(void) -> void
   // We should be able to sort by the Peanokey of each point (device version)
   {
     using real = float;
-    using pt_container = thrust::device_vector<reg::point_t<real>>;
+    using pt_container = thrust::device_vector<point_t<real>>;
     using key_container = thrust::device_vector<peanokey>;
     
     timer t;
@@ -77,8 +77,8 @@ auto domain_tests(void) -> void
   // We should be able to sort by the Peanokey of each point (host version)
   {
     using real = float;
-    using point = reg::point_t<real>;
-    using pt_container = thrust::host_vector<reg::point_t<real>>;
+    using point = point_t<real>;
+    using pt_container = thrust::host_vector<point_t<real>>;
     using key_container = thrust::host_vector<peanokey>;
     
     int const gl = 2;

@@ -20,16 +20,16 @@ auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
   of thrust::device_vector
 */
 template <typename T>
-auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<reg::point_t<T>>
+auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<point_t<T>>
 {
   int const num_points = grid_length * grid_length * grid_length;
-  thrust::host_vector<reg::point_t<T>> domain;
+  thrust::host_vector<point_t<T>> domain;
   domain.reserve(num_points);
 
   for (int x = 0; x < grid_length; ++x)
     for (int y = 0; y < grid_length; ++y)
       for (int z = 0; z < grid_length; ++z)
-        domain.push_back(reg::point_t<T>{
+        domain.push_back(point_t<T>{
           static_cast<T>(x), 
           static_cast<T>(y), 
           static_cast<T>(z)});
@@ -38,9 +38,9 @@ auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<reg::poi
 }
 
 template <typename T>
-struct peanokey_hash : public thrust::unary_function<reg::point_t<T>, peanokey>
+struct peanokey_hash : public thrust::unary_function<point_t<T>, peanokey>
 {
-  using point_t = reg::point_t<T>;
+  using point_t = point_t<T>;
 
   __host__ __device__
   peanokey operator()(point_t p) const
