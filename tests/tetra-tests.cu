@@ -69,18 +69,13 @@ auto tetra_tests_impl(void) -> void
       point_t const e21{ 4.5, 4.5, 0.0 };
       point_t const e31{ 4.5, 0.0, 4.5 };
       point_t const e23{ 0.0, 4.5, 4.5 };
-      
-      printf("%f\n", matrix<real, 4, 4>{ 1.0, 0.0, 0.0, 0.0,
-                                         1.0, 0.0, 9.0, 0.0,
-                                         1.0, 0.0, 0.0, 9.0,
-                                         1.0, 4.5, 0.0, 0.0 }.det());
-      
+            
       assert((
-        matrix<real, 4, 4>{ 1, 0, 0, 0,
-                            1, 0, 9, 0,
-                            1, 0, 0, 9,
-                            1, 4.5, 0, 0 }.det() > 0.0));
-      
+        eq<real>(det(matrix<real, 4, 4>{ 1, 0, 0, 0,
+                                         1, 0, 9, 0,
+                                         1, 0, 0, 9,
+                                         1, 4.5, 0, 0 }), 364.5)));
+                                         
       assert(orient<real>(d, c, b, e10) == orientation::positive);
       assert(orient<real>(a, c, d, e10) == orientation::positive);
       assert(orient<real>(a, d, b, e10) == orientation::zero);

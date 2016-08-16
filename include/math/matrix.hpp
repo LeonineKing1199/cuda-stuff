@@ -181,7 +181,7 @@ auto operator*(
   return c;
 }
 
-// create initial triangular matrix
+// create identity matrix
 template <typename T, int N>
 __host__ __device__
 auto create_diagonal(void) -> matrix<T, N, N>
@@ -195,6 +195,57 @@ auto create_diagonal(void) -> matrix<T, N, N>
   }
   
   return p;
+}
+
+// interim determinant routine until I get this LU decomp stuff working
+template <typename T>
+__host__ __device__
+auto det(matrix<T, 2, 2> const& m) -> T
+{
+  return m.data[0] * m.data[3] - m.data[1] * m.data[2];
+}
+
+template <typename T>
+__host__ __device__
+auto det(matrix<T, 3, 3> const& m) -> T
+{
+  array<T, 9> const& d = m.data;
+  return (
+    d[0] * d[4] * d[8] +
+    d[1] * d[5] * d[6] +
+    d[2] * d[3] * d[7] -
+    d[2] * d[4] * d[6] -
+    d[1] * d[3] * d[8] -
+    d[0] * d[5] * d[7]);
+}
+
+template <typename T, int N>
+__host__ __device__
+auto det(matrix<T, N, N> const& m) -> T
+{  
+  array<T, N * N> const& d = m.data;
+  matrix<T, N - 1, N - 1> buff{ 0 };
+  T det_value{ 0 };
+  
+  for (int col = 0; col < N; ++col) {
+    
+    int buff_size = 0;
+    for (int i = 1; i < N; ++i) {
+      for (int j = 0; j < N; ++j) {
+        if (j == col)
+          continue;
+        
+        buff[buff_size] = d[i * N + j];
+        ++buff_size;
+      }
+    }
+    
+    T const det_term = d[col] * det(buff);
+    
+    det_value += (col % 2 == 0 ? det_term : -det_term);
+  }
+  
+  return det_value;
 }
 
 // return a matrix P such that PA returns a permutation of A

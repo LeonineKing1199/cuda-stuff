@@ -24,10 +24,10 @@ auto orient(
                            1, c.x, c.y, c.z,
                            1, d.x, d.y, d.z };
 
-  auto const det = m.det();
-  auto const not_equal_to_zero = !eq<T>(det, 0.0);
+  T const det_value = det<T, 4>(m);
+  auto const not_equal_to_zero = !eq<T>(det_value, 0.0);
   
-  if (det > 0.0 && not_equal_to_zero) {
+  if (det_value > 0.0 && not_equal_to_zero) {
     return orientation::positive;
     
   } else if (!not_equal_to_zero) {
@@ -68,10 +68,10 @@ auto insphere(
     1.0, d.x, d.y, d.z, mag<T>(d),
     1.0, p.x, p.y, p.z, mag<T>(p) };
     
-  auto const det = m.det();
-  auto const not_equal_to_zero = !eq<T>(det, 0.0);
+  auto const det_value = det<T, 5>(m);
+  auto const not_equal_to_zero = !eq<T>(det_value, 0.0);
   
-  if (det > 0.0 && not_equal_to_zero) {
+  if (det_value > 0.0 && not_equal_to_zero) {
     return orientation::positive;
     
   } else if (!not_equal_to_zero) {

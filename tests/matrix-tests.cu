@@ -162,21 +162,21 @@ auto matrix_tests_impl(void) -> void
                            1.0f, 0.0f, 9.0f, 0.0f,
                            1.0f, 0.0f, 0.0f, 9.0f };
                            
-    assert(t.det() == 729);
+    assert(det(t) == 729);
     
     matrix<float, 4, 4> r{ 0.0, 1.85, 0.63, 2.65,
                            1.92, 1.57, 1.15, 2.94,
                            2.7, 2.45, 0.57, 2.81,
                            2.33, 1.68, 1.0, 0.05 };
            
-    assert(eq<float>(round_to<float>(r.det(), 3), -10.928));
+    assert(eq<float>(round_to<float>(det(r), 3), -10.928));
     
     matrix<float, 4, 4> u{ 1.0, 0.0, 0.0, 0.0,
                            1.0, 9.0, 0.0, 0.0,
                            1.0, 0.0, 9.0, 0.0,
                            1.0, 3.0, 3.0, 0.0 };
                            
-    assert(eq<float>(u.det(), 0.0));
+    assert(eq<float>(det(u), 0.0));
   }
   
   // we shouldn't get weird undefined behavior
