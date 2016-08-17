@@ -40,13 +40,6 @@ struct point_type<double>
 template <typename T>
 using point_t = typename point_type<T>::type;
 
-// our tetrahedral structure
-struct tetra_t
-{
-  int4 v;
-};
-
-
 auto operator==(point_t<float> const& a, point_t<float> const& b) -> bool;
 auto operator==(point_t<double> const& a, point_t<double> const& b) -> bool;
 auto operator<<(std::ostream& os, point_t<float> const& p) ->  std::ostream&;

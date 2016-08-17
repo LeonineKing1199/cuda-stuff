@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cassert>
 
-#include "../include/common.hpp"
+#include "../include/math/point.hpp"
 
 auto test_suite(void) -> void;
 auto domain_tests(void) -> void;

@@ -1,7 +1,7 @@
 #ifndef REGULUS_TETRA_HPP_
 #define REGULUS_TETRA_HPP_
 
-#include "../common.hpp"
+#include "point.hpp"
 #include "../array.hpp"
 #include "matrix.hpp"
 #include "equals.hpp"

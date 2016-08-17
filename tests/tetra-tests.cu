@@ -88,6 +88,46 @@ auto tetra_tests_impl(void) -> void
       assert(loc<real>(a, b, c, d, e31) == 10);
       assert(loc<real>(a, b, c, d, e23) == 12);
     }
+    
+    // We should be able to determine all 4 face intersections
+    {
+      point_t const f321{ 3, 3, 3 };
+      point_t const f023{ 0, 4.5, 3 };
+      point_t const f031{ 4.5, 0, 3 };
+      point_t const f012{ 3, 3, 0 };
+      
+      assert(loc<real>(a, b, c, d, f321) == 14);
+      assert(loc<real>(a, b, c, d, f023) == 13);
+      assert(loc<real>(a, b, c, d, f031) == 11);
+      assert(loc<real>(a, b, c, d, f012) == 7);
+    }
+    
+    // We should be able to determine all 4 vertex intersections
+    {
+      point_t const v0 = a;
+      point_t const v1 = b;
+      point_t const v2 = c;
+      point_t const v3 = d;
+      
+      assert(loc<real>(a, b, c, d, v0) == 1);
+      assert(loc<real>(a, b, c, d, v1) == 2);
+      assert(loc<real>(a, b, c, d, v2) == 4);
+      assert(loc<real>(a, b, c, d, v3) == 8);
+    }
+    
+    // We should be able to determine if a point is inside a tetrahedron
+    {
+      point_t const p{ 1, 1, 1 };
+      
+      assert(loc<real>(a, b, c, d, p) == 15);
+    }
+    
+    // We should be able to determine if a point is outside a tetrahedron
+    {
+      point_t const p{ 15, 15, 15 };
+      
+      assert(loc<real>(a, b, c, d, p) == 255);
+    }
   }
 }
 

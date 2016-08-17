@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../include/common.hpp"
+#include "../include/math/point.hpp"
 
 auto operator==(point_t<float> const& a, point_t<float> const& b) -> bool
 {

@@ -12,7 +12,7 @@
 #include <limits>
 #include <cstdint>
 
-#include "../common.hpp"
+#include "point.hpp"
 #include "../array.hpp"
 #include "equals.hpp"
 
@@ -123,7 +123,7 @@ struct matrix
     return *this;
   }
   
-  __host__ __device__
+  /*__host__ __device__
   auto det(void) const -> T
   {
     matrix P{ 0 };
@@ -139,7 +139,7 @@ struct matrix
     }
     
     return (num_perms % 2 == 0 ? 1 : -1) * det;
-  }
+  }*/
 };
 
 

@@ -24,7 +24,6 @@ include_directories(
   "${CMAKE_SOURCE_DIR}/include"
   "${CMAKE_SOURCE_DIR}/tests"
   "${CMAKE_SOURCE_DIR}/include/math"
-  /usr/local/cuda/include
   )
 
 
@@ -33,19 +32,19 @@ cuda_add_executable(
   
   main.cu
 
-  include/common.hpp
   include/domain.hpp
   include/timer.hpp
   include/mesher.hpp
   include/array.hpp
-  include/math.hpp
+  include/math/math.hpp
+  include/math/point.hpp
   include/math/matrix.hpp
   include/math/equals.hpp
   include/math/tetra.hpp
   
   tests/test-suite.hpp
   
-  src/common.cu
+  src/point.cu
   src/peano.cu
   
   tests/test-suite.cu

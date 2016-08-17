@@ -6,7 +6,7 @@
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/sort.h>
 
-#include "common.hpp"
+#include "math/point.hpp"
 
 using peanokey = long long int;
 
@@ -40,10 +40,8 @@ auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<point_t<
 template <typename T>
 struct peanokey_hash : public thrust::unary_function<point_t<T>, peanokey>
 {
-  using point_t = point_t<T>;
-
   __host__ __device__
-  peanokey operator()(point_t p) const
+  peanokey operator()(point_t<T> p) const
   {
     return peano_hilbert_key(p.x, p.y, p.z, 23);
   }
