@@ -47,6 +47,8 @@ struct peanokey_hash : public thrust::unary_function<point_t<T>, peanokey>
   }
 };
 
+// probably just refactor this into rote
+// function overloads for both host and device code
 template <
   typename T,
   typename PointContainer,

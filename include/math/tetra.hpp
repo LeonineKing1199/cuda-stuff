@@ -6,6 +6,8 @@
 #include "matrix.hpp"
 #include "equals.hpp"
 
+using tetra = int4;
+
 enum class orientation { positive = 1, zero = 0, negative = 2 };
 
 // Routine that calculates whether the point d

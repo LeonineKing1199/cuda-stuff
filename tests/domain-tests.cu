@@ -71,7 +71,7 @@ auto domain_tests(void) -> void
     sort_by_peanokey<real, pt_container, key_container>(pts);
     
     t.end();
-    std::cout << "Device spatial sorting completed in : " << t.get_duration() << " seconds" << std::endl;
+    //std::cout << "Device spatial sorting completed in : " << t.get_duration() << " seconds" << std::endl;
   }
   
   // We should be able to sort by the Peanokey of each point (host version)
