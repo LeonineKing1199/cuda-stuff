@@ -67,5 +67,17 @@ auto sort_by_peanokey(thrust::device_vector<point_t<T>>& domain) -> void
   thrust::sort_by_key(keys.begin(), keys.end(), domain.begin());
 }
 
+template <typename T>
+auto sort_by_peanokey(
+  thrust::device_ptr<point_t<T>> first,
+  thrust::device_ptr<point_t<T>> last) -> void
+{ 
+  auto begin = thrust::make_transform_iterator(first, peanokey_hash<T>{});
+  auto end = thrust::make_transform_iterator(last, peanokey_hash<T>{});
+  
+  thrust::device_vector<peanokey> keys{begin, end};
+  thrust::sort_by_key(keys.begin(), keys.end(), first);
+}
+
 #endif // REGULUS_DOMAIN_HPP_
 

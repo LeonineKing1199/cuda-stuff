@@ -92,5 +92,23 @@ auto domain_tests(void) -> void
     assert((pts[7] == point{0, 0, 1}));
   }
   
+  // We should be able to sort by a device-based range
+  {
+    using point = point_t<float>;
+    
+    thrust::device_vector<point> pts{gen_cartesian_domain<float>(2)};
+    
+    sort_by_peanokey<float>(pts.data(), pts.data() + pts.size());
+    
+    assert((pts[0] == point{0, 0, 0}));
+    assert((pts[1] == point{0, 1, 0}));
+    assert((pts[2] == point{1, 1, 0}));
+    assert((pts[3] == point{1, 0, 0}));
+    assert((pts[4] == point{1, 0, 1}));
+    assert((pts[5] == point{1, 1, 1}));
+    assert((pts[6] == point{0, 1, 1}));
+    assert((pts[7] == point{0, 0, 1}));
+  }
+  
   std::cout << "Completed domain tests!\n" << std::endl;
 }

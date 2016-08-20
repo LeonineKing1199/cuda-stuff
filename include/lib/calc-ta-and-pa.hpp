@@ -13,7 +13,8 @@ void calc_ta_and_pa(
   int const num_pts,
   unsigned char* __restrict__ la,
   int* __restrict__ pa,
-  int* __restrict__ ta)
+  int* __restrict__ ta,
+  bool* __restrict__ nm)
 {
   for (auto tid = get_tid(); tid < num_pts; tid += grid_stride()) {
     auto const a = pts[t.x];
@@ -25,6 +26,7 @@ void calc_ta_and_pa(
     
     pa[tid] = tid;
     ta[tid] = 0;
+    nm[tid] = false;
   }
 }
 
