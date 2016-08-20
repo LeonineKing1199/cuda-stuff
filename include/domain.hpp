@@ -47,16 +47,20 @@ struct peanokey_hash : public thrust::unary_function<point_t<T>, peanokey>
   }
 };
 
-// probably just refactor this into rote
-// function overloads for both host and device code
-template <
-  typename T,
-  typename PointContainer,
-  typename KeyContainer
->
-auto sort_by_peanokey(PointContainer& domain) -> void
+template <typename T>
+auto sort_by_peanokey(thrust::host_vector<point_t<T>>& domain) -> void
 {
-  KeyContainer keys{
+  thrust::host_vector<peanokey> keys{
+    thrust::make_transform_iterator(domain.begin(), peanokey_hash<T>{}),
+    thrust::make_transform_iterator(domain.end(), peanokey_hash<T>{})};
+    
+  thrust::sort_by_key(keys.begin(), keys.end(), domain.begin());
+}
+
+template <typename T>
+auto sort_by_peanokey(thrust::device_vector<point_t<T>>& domain) -> void
+{
+  thrust::device_vector<peanokey> keys{
     thrust::make_transform_iterator(domain.begin(), peanokey_hash<T>{}),
     thrust::make_transform_iterator(domain.end(), peanokey_hash<T>{})};
     

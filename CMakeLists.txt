@@ -24,6 +24,7 @@ include_directories(
   "${CMAKE_SOURCE_DIR}/include"
   "${CMAKE_SOURCE_DIR}/tests"
   "${CMAKE_SOURCE_DIR}/include/math"
+  "${CMAKE_SOURCE_DIR}/include/lib"
   )
 
 
@@ -36,11 +37,15 @@ cuda_add_executable(
   include/timer.hpp
   include/mesher.hpp
   include/array.hpp
+  include/globals.hpp
+  
   include/math/math.hpp
   include/math/point.hpp
   include/math/matrix.hpp
   include/math/equals.hpp
   include/math/tetra.hpp
+  
+  include/lib/calc-ta-and-pa.hpp
   
   tests/test-suite.hpp
   

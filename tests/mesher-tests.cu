@@ -24,9 +24,26 @@ auto mesher_tests(void) -> void
     int const c{(int ) pts.size() - 2};
     int const d{(int ) pts.size() - 1};
     
-    thrust::host_vector<tetra> mesh{pts.size(), tetra{a, b, c, d}};
+    tetra const root_tet{a, b, c, d};
     
-    mesher<real> m{pts, mesh};
+    mesher<real> m{pts, root_tet};
+    
+    // do a quick check that all of our points are actually in the
+    // root tetrahedron
+    {
+      auto const& pa = pts[root_tet.x];
+      auto const& pb = pts[root_tet.y];
+      auto const& pc = pts[root_tet.z];
+      auto const& pd = pts[root_tet.w];
+      
+      assert(orient<real>(pa, pb, pc, pd) == orientation::positive);
+      
+      for (int i = 0; i < 10 * 10 * 10; ++i) {
+        assert(loc<real>(pa, pb, pc, pd, pts[i]) != 255);      
+      }
+    }
+    
+    assert(m.size() == 1);
     
     // pray for the best!
     m.triangulate();
