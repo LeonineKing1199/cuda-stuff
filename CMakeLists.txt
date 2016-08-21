@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 
 project(regulus)
 
@@ -18,15 +18,6 @@ list(APPEND
     -std=c++11 
     -O3
     )
-
-# Specify include directories
-include_directories(
-  "${CMAKE_SOURCE_DIR}/include"
-  "${CMAKE_SOURCE_DIR}/tests"
-  "${CMAKE_SOURCE_DIR}/include/math"
-  "${CMAKE_SOURCE_DIR}/include/lib"
-  )
-
 
 cuda_add_executable(
   regulus
@@ -66,4 +57,5 @@ cuda_add_executable(
 target_link_libraries(
   regulus
   ${CUDA_LIBRARIES}
+  ${CUDA_curand_LIBRARY}
   )

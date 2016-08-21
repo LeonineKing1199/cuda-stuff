@@ -8,7 +8,7 @@
 #include <functional>
 #include <numeric>
 
-#include "math/point.hpp"
+#include "point.hpp"
 
 template <int N>
 struct greater_than_three

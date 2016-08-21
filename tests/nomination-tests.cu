@@ -60,5 +60,23 @@ auto nomination_tests(void) -> void
     }
   }
   
+  // Stress testing nomination routine for accuracy
+  {
+      int const range_min = 0;
+      int const range_max = 5000;
+      
+      
+      int const assoc_size = 5000;
+      
+      thrust::device_vector<int> ta;
+      thrust::device_vector<int> pa;
+      ta.reserve(assoc_size);
+      pa.reserve(assoc_size);
+      
+      for (int i = 0; i < assoc_size; ++i) {
+        
+      }
+  }
+  
   std::cout << "Tests Passed!\n" << std::endl;
 }

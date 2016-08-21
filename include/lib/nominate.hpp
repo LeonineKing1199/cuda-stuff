@@ -22,7 +22,7 @@ void nominate(
     // this thread was the first one to find this tetrahedron
     if (atomicCAS(address, compare, val) == 0) {
       if (atomicOr(nm + pa[tid], 1) == 0) {
-        atomicAnd(nm + pa[tid], 1);
+        atomicAnd(nm + pa[tid], 0);
       }
     } else {
       atomicAnd(nm + pa[tid], 0);
