@@ -46,6 +46,7 @@ cuda_add_executable(
   include/math/tetra.hpp
   
   include/lib/calc-ta-and-pa.hpp
+  include/lib/nominate.hpp
   
   tests/test-suite.hpp
   
@@ -59,6 +60,7 @@ cuda_add_executable(
   tests/matrix-tests.cu
   tests/array-tests.cu
   tests/tetra-tests.cu
+  tests/nomination-tests.cu
   )
 
 target_link_libraries(

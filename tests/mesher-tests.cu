@@ -43,8 +43,6 @@ auto mesher_tests(void) -> void
       }
     }
     
-    assert(m.size() == 1);
-    
     // pray for the best!
     m.triangulate();
   }

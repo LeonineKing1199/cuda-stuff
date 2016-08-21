@@ -5,6 +5,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/device_ptr.h>
 #include <thrust/copy.h>
+#include <thrust/fill.h>
 
 #include "math/point.hpp"
 #include "math/tetra.hpp"
@@ -19,24 +20,62 @@ public:
   using size_type = int;
   
 private:
-  point_t<T>* pts_;
   tetra* tets_;
+  
+  point_t<T>* pts_;
+  int* nm_;
   
   size_type* pa_;
   size_type* ta_;
   unsigned char* la_;
-  bool* nm_;
   
   size_type num_pts_;
-  size_type size_; // num tetrahedra
-  size_type capacity_;
+  size_type num_tets_;
   
-  auto alloc_ta_and_pa(void) -> void
+  size_type assoc_size_;
+  size_type assoc_capacity_;
+  
+  auto init_pts(thrust::host_vector<point_t<T>> const& pts) -> void
   {
-    cudaMalloc(&pa_, capacity_ * sizeof(*pa_));
-    cudaMalloc(&ta_, capacity_ * sizeof(*ta_));
-    cudaMalloc(&la_, capacity_ * sizeof(*la_));
-    cudaMalloc(&nm_, capacity_ * sizeof(*nm_));
+    num_pts_ = pts.size();
+    cudaMalloc(&pts_, num_pts_ * sizeof(*pts_));
+    thrust::copy(pts.begin(), pts.end(), thrust::device_ptr<point_t<T>>(pts_));
+    
+    cudaMalloc(&nm_, num_pts_ * sizeof(*nm_));
+    thrust::fill(
+      thrust::device_ptr<int>(nm_), thrust::device_ptr<int>(nm_ + num_pts_),
+      1);
+  }
+  
+  // assume num_pts_ has been constructed
+  auto init_tets(tetra const t) -> void
+  {
+    size_type const est_num_tetra = 8 * num_pts_;
+    cudaMalloc(&tets_, est_num_tetra * sizeof(*tets_));
+    *thrust::device_ptr<tetra>(tets_) = t;
+    num_tets_ = 1;
+  }
+  
+  auto init_assoc(tetra const t) -> void
+  {
+    // eh, on average 8 associations per point seems reasonable
+    // for most cases
+    size_type const est_num_associations = 8 * num_pts_;
+    size_type const bytes = est_num_associations * sizeof(size_type);
+    
+    cudaMalloc(&la_, bytes);
+    cudaMalloc(&ta_, bytes);
+    cudaMalloc(&pa_, bytes);
+    
+    calc_initial_assoc<T><<<bpg, tpb>>>(
+      pts_, num_pts_,
+      t,
+      pa_, ta_, la_);
+    
+    cudaDeviceSynchronize();
+    
+    assoc_size_ = num_pts_;
+    assoc_capacity_ = est_num_associations;
   }
   
 public:
@@ -44,36 +83,10 @@ public:
   mesher(
     thrust::host_vector<point_t<T>> const& h_pts,
     tetra const& root_tet)
-  : num_pts_{(int ) h_pts.size()}, size_{0}
   {
-    cudaMalloc(&pts_, num_pts_ * sizeof(*pts_));
-    thrust::copy(
-      h_pts.begin(), h_pts.end(),
-      thrust::device_ptr<point_t<T>>(pts_));
-    
-    // guestimate about 8 tetrahedra per point
-    int const new_mesh_size{8 * num_pts_};
-    
-    // allocate a preemptive amount of space for our growing mesh
-    cudaMalloc(&tets_, new_mesh_size * sizeof(*tets_));
-    capacity_ = new_mesh_size;
-    
-    *thrust::device_ptr<tetra>(tets_) = root_tet;
-    size_ = 1;
-    
-    alloc_ta_and_pa();
-    
-    sort_by_peanokey<T>(
-      thrust::device_ptr<point_t<T>>{pts_},
-      thrust::device_ptr<point_t<T>>{pts_ + num_pts_});
-    
-    calc_ta_and_pa<T><<<bpg, tpb>>>(
-      pts_,
-      root_tet,
-      size_,
-      la_, pa_, ta_, nm_);
-    
-    cudaDeviceSynchronize();
+    init_pts(h_pts);
+    init_tets(root_tet);
+    init_assoc(root_tet);
   }
   
   ~mesher(void)
@@ -85,17 +98,7 @@ public:
     cudaFree(la_);
     cudaFree(nm_);
   }
-  
-  auto size(void) const -> size_type
-  {
-    return size_;
-  }
-  
-  auto capacity(void) const -> size_type
-  {
-    return capacity_;
-  }
-  
+    
   auto triangulate(void) -> void
   {
     // need to select points

@@ -13,6 +13,7 @@ auto math_tests(void) -> void;
 auto array_tests(void) -> void;
 auto matrix_tests(void) -> void;
 auto tetra_tests(void) -> void;
+auto nomination_tests(void) -> void;
 
 #endif // REGULUS_TEST_SUITE_HPP_
 

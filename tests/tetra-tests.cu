@@ -124,7 +124,7 @@ auto tetra_tests_impl(void) -> void
     
     // We should be able to determine if a point is outside a tetrahedron
     {
-      point_t const p{ 15, 15, 15 };
+      point_t const p{ 3.01, 3.01, 3.01 };
       
       assert(loc<real>(a, b, c, d, p) == 255);
     }

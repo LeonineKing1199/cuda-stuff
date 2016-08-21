@@ -7,14 +7,13 @@
 
 template <typename T>
 __global__
-void calc_ta_and_pa(
+void calc_initial_assoc(
   point_t<T> const* __restrict__ pts,
-  tetra const t,
   int const num_pts,
-  unsigned char* __restrict__ la,
+  tetra const t,
   int* __restrict__ pa,
   int* __restrict__ ta,
-  bool* __restrict__ nm)
+  unsigned char* __restrict__ la)
 {
   for (auto tid = get_tid(); tid < num_pts; tid += grid_stride()) {
     auto const a = pts[t.x];
@@ -22,11 +21,9 @@ void calc_ta_and_pa(
     auto const c = pts[t.z];
     auto const d = pts[t.w];
     
-    la[tid] = loc<T>(a, b, c, d, pts[tid]);
-    
     pa[tid] = tid;
     ta[tid] = 0;
-    nm[tid] = false;
+    la[tid] = loc<T>(a, b, c, d, pts[tid]);
   }
 }
 
