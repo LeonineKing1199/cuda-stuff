@@ -1,7 +1,25 @@
 #include <thrust/device_vector.h>
+#include <thrust/random.h>
+#include <thrust/iterator/counting_iterator.h>
 
 #include "test-suite.hpp"
 #include "../include/lib/nominate.hpp"
+#include "../include/globals.hpp"
+
+int const static range_min = 0;
+int const static range_max = 2500;
+
+struct rand_gen
+{
+  __device__
+  auto operator()(int const idx) -> int
+  { 
+    thrust::default_random_engine rng;
+    thrust::uniform_int_distribution<int> dist{range_min, range_max};
+    rng.discard(idx);
+    return dist(rng);
+  }
+};
 
 auto nomination_tests(void) -> void
 {
@@ -42,7 +60,7 @@ auto nomination_tests(void) -> void
     
     thrust::device_vector<int> nm_ta{num_tets, 0};
     
-    nominate<float><<<bpg, tpb>>>(
+    nominate<<<bpg, tpb>>>(
       10,
       ta.data().get(),
       pa.data().get(),
@@ -62,20 +80,37 @@ auto nomination_tests(void) -> void
   
   // Stress testing nomination routine for accuracy
   {
-      int const range_min = 0;
-      int const range_max = 5000;
+    int const assoc_size = 5000;
+    
+    thrust::device_vector<int> ta{assoc_size};
+    thrust::device_vector<int> pa{assoc_size};
+       
+    // TODO: refactor this random number gen stuff into a helper
+    thrust::transform(
+      thrust::make_counting_iterator(0),
+      thrust::make_counting_iterator(assoc_size),
+      ta.begin(),
+      rand_gen{});
+          
+    thrust::transform(
+      thrust::make_counting_iterator(0),
+      thrust::make_counting_iterator(assoc_size),
+      pa.begin(),
+      rand_gen{});
       
-      
-      int const assoc_size = 5000;
-      
-      thrust::device_vector<int> ta;
-      thrust::device_vector<int> pa;
-      ta.reserve(assoc_size);
-      pa.reserve(assoc_size);
-      
-      for (int i = 0; i < assoc_size; ++i) {
-        
-      }
+    thrust::device_vector<int> nm{range_max, 1};
+    thrust::device_vector<int> nm_ta{range_max, 0};
+     
+    nominate<<<bpg, tpb>>>(
+      assoc_size,
+      ta.data().get(),
+      pa.data().get(),
+      nm_ta.data().get(),
+      nm.data().get());
+     
+    cudaDeviceSynchronize();
+    
+    
   }
   
   std::cout << "Tests Passed!\n" << std::endl;

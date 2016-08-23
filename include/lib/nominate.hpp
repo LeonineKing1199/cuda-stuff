@@ -5,7 +5,6 @@
 #include "../math/tetra.hpp"
 #include "../globals.hpp"
 
-template <typename T>
 __global__
 void nominate(
   int const assoc_size,
