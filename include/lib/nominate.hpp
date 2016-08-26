@@ -1,6 +1,8 @@
 #ifndef REGULUS_LIB_NOMINATE_HPP_
 #define REGULUS_LIB_NOMINATE_HPP_
 
+#include "stdio.h"
+
 #include "../math/point.hpp"
 #include "../math/tetra.hpp"
 #include "../globals.hpp"
@@ -20,6 +22,10 @@ void nominate(
     
     // this thread was the first one to find this tetrahedron
     if (atomicCAS(address, compare, val) == 0) {
+      // we then want to nominate this point
+      // but because we initialize pa to being all true, if any
+      // entry was previously 0, we know it was marked false by
+      // another thread so we set it back to being false
       if (atomicOr(nm + pa[tid], 1) == 0) {
         atomicAnd(nm + pa[tid], 0);
       }

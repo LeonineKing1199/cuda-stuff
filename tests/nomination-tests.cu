@@ -1,6 +1,8 @@
 #include <thrust/device_vector.h>
 #include <thrust/random.h>
 #include <thrust/iterator/counting_iterator.h>
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/tuple.h>
 
 #include "test-suite.hpp"
 #include "../include/lib/nominate.hpp"
@@ -15,11 +17,27 @@ struct rand_gen
   auto operator()(int const idx) -> int
   { 
     thrust::default_random_engine rng;
-    thrust::uniform_int_distribution<int> dist{range_min, range_max};
-    rng.discard(idx);
+    thrust::uniform_int_distribution<int> dist{range_min, range_max - 1};
+    rng.discard(idx * 2);
     return dist(rng);
   }
 };
+
+
+__global__
+void assert_unique(
+  int const assoc_size,
+  int const* __restrict__ pa,
+  int const* __restrict__ nm,
+  int const* __restrict__ ta,
+  int* __restrict__ nm_ta)
+{
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
+    if (nm[pa[tid]]) {
+      assert(atomicCAS(nm_ta + ta[tid], 0, 1) == 0);
+    }
+  }
+}
 
 auto nomination_tests(void) -> void
 {
@@ -86,21 +104,31 @@ auto nomination_tests(void) -> void
     thrust::device_vector<int> pa{assoc_size};
        
     // TODO: refactor this random number gen stuff into a helper
+    auto it = thrust::make_counting_iterator(0);
     thrust::transform(
-      thrust::make_counting_iterator(0),
-      thrust::make_counting_iterator(assoc_size),
+      it,
+      it + assoc_size,
       ta.begin(),
       rand_gen{});
           
+    it = thrust::make_counting_iterator(assoc_size);
     thrust::transform(
-      thrust::make_counting_iterator(0),
-      thrust::make_counting_iterator(assoc_size),
+      it,
+      it + assoc_size,
       pa.begin(),
       rand_gen{});
       
     thrust::device_vector<int> nm{range_max, 1};
     thrust::device_vector<int> nm_ta{range_max, 0};
-     
+    
+    for (auto t : ta) {
+      assert(nm_ta[t] == 0);    
+    }
+    
+    for (auto p : pa) {
+      assert(nm[p] == 1);
+    }
+    
     nominate<<<bpg, tpb>>>(
       assoc_size,
       ta.data().get(),
@@ -110,7 +138,22 @@ auto nomination_tests(void) -> void
      
     cudaDeviceSynchronize();
     
+    thrust::fill(nm_ta.begin(), nm_ta.end(), 0);
     
+    assert_unique<<<bpg, tpb>>>(
+      assoc_size,
+      pa.data().get(),
+      nm.data().get(),
+      ta.data().get(),
+      nm_ta.data().get());
+      
+    cudaDeviceSynchronize();
+    
+    /*thrust::sort_by_key(pa.begin(), pa.end(), ta.begin());
+      
+    for (int i = 0; i < assoc_size; ++i) {
+      std::cout << "(" << pa[i] << ", " << ta[i] << " : " << nm[pa[i]] << std::endl;
+    }*/
   }
   
   std::cout << "Tests Passed!\n" << std::endl;
