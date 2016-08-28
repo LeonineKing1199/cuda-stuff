@@ -46,6 +46,7 @@ cuda_add_executable(
   src/point.cu
   src/peano.cu
   src/nominate.cu
+  src/fract-locations.cu
   
   tests/test-suite.cu
   tests/domain-tests.cu
