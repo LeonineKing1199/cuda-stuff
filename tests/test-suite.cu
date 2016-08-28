@@ -10,6 +10,7 @@ auto test_suite(void) -> void
   matrix_tests();
   tetra_tests();
   nomination_tests();
+  fract_location_tests();
   mesher_tests();
   
   std::cout << "Tests passed!\n" << std::endl;

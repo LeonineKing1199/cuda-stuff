@@ -1,14 +1,7 @@
 #ifndef REGULUS_MATH_HPP_
 #define REGULUS_MATH_HPP_
 
-#include <array>
 #include <type_traits>
-#include <cmath>
-#include <algorithm>
-#include <functional>
-#include <numeric>
-
-#include "point.hpp"
 
 template <int N>
 struct greater_than_three
