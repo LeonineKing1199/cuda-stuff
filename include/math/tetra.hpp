@@ -105,7 +105,7 @@ auto loc(
   point_t<T> const& c,
   point_t<T> const& d,
   point_t<T> const& p)
--> unsigned char
+-> int
 {
   int const face_ids[12] = { 3, 2, 1,
                              0, 2, 3,
@@ -115,7 +115,7 @@ auto loc(
   int const num_pts{4};
   array<point_t<T>, num_pts> const pts{a, b, c, d};
   
-  unsigned char loc{0};
+  int loc{0};
   
   for (int i = 0; i < num_pts; ++i) {
     orientation const ort{orient<T>(

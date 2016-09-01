@@ -17,7 +17,7 @@ list(APPEND
     -gencode arch=compute_50,code=sm_50 
     -std=c++11 
     -O3
-    --expt-extended-lambda 
+    --expt-extended-lambda
     )
 
 cuda_add_executable(
@@ -40,6 +40,8 @@ cuda_add_executable(
   include/lib/calc-ta-and-pa.hpp
   include/lib/nominate.hpp
   include/lib/fract-locations.hpp
+  include/lib/fracture.hpp
+  include/lib/redistribute-pts.hpp
   
   tests/test-suite.hpp
   
@@ -57,6 +59,8 @@ cuda_add_executable(
   tests/tetra-tests.cu
   tests/nomination-tests.cu
   tests/fract-location-tests.cu
+  tests/fracture-tests.cu
+  tests/redistribute-pts-tests.cu
   )
 
 target_link_libraries(

@@ -38,11 +38,11 @@ auto fract_locations(
       thrust::device_ptr<int const>{pa},
       thrust::device_ptr<int const>{la}));
   
-  auto const begin = thrust::make_transform_iterator(zip_begin, fs);
+  auto begin = thrust::make_transform_iterator(zip_begin, fs);
   
   // perform our exclusive_scan and write the result to fl
   thrust::exclusive_scan(
     thrust::device,
     begin, begin + assoc_size,
-    thrust::device_ptr<int>{fl});
+    fl);
 }

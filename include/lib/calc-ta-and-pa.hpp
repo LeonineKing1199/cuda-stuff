@@ -13,7 +13,7 @@ void calc_initial_assoc(
   tetra const t,
   int* __restrict__ pa,
   int* __restrict__ ta,
-  unsigned char* __restrict__ la)
+  int* __restrict__ la)
 {
   for (auto tid = get_tid(); tid < num_pts; tid += grid_stride()) {
     auto const a = pts[t.x];

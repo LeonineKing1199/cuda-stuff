@@ -76,7 +76,7 @@ auto nomination_tests(void) -> void
     pa[8] = 3;
     pa[9] = 3;
     
-    thrust::device_vector<int> nm_ta{num_tets, 0};
+    thrust::device_vector<int> nm_ta{num_tets, -1};
     
     nominate<<<bpg, tpb>>>(
       10,
@@ -106,23 +106,21 @@ auto nomination_tests(void) -> void
     // TODO: refactor this random number gen stuff into a helper
     auto it = thrust::make_counting_iterator(0);
     thrust::transform(
-      it,
-      it + assoc_size,
+      it, it + assoc_size,
       ta.begin(),
       rand_gen{});
           
     it = thrust::make_counting_iterator(assoc_size);
     thrust::transform(
-      it,
-      it + assoc_size,
+      it, it + assoc_size,
       pa.begin(),
       rand_gen{});
       
     thrust::device_vector<int> nm{range_max, 1};
-    thrust::device_vector<int> nm_ta{range_max, 0};
+    thrust::device_vector<int> nm_ta{range_max, -1};
     
     for (auto t : ta) {
-      assert(nm_ta[t] == 0);    
+      assert(nm_ta[t] == -1);    
     }
     
     for (auto p : pa) {

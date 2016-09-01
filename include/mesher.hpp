@@ -12,6 +12,8 @@
 #include "domain.hpp"
 #include "globals.hpp"
 #include "lib/calc-ta-and-pa.hpp"
+#include "lib/nominate.hpp"
+#include "lib/fract-locations.hpp"
 
 template <typename T>
 class mesher
@@ -27,13 +29,22 @@ private:
   
   size_type* pa_;
   size_type* ta_;
-  unsigned char* la_;
+  size_type* la_;
   
   size_type num_pts_;
   size_type num_tets_;
   
   size_type assoc_size_;
   size_type assoc_capacity_;
+  
+  auto sort_by_peanokey(void) -> void
+  {
+    auto const keys_begin = thrust::make_transform_iterator(
+      thrust::device_ptr<point_t<T>>(pts_), peanokey_hash<T>{});
+    
+    thrust::device_vector<peanokey> keys{keys_begin, keys_begin + num_pts_};
+    thrust::sort_by_key(keys.begin(), keys.end(), thrust::device_ptr<point_t<T>>(pts_));
+  }
   
   auto init_pts(thrust::host_vector<point_t<T>> const& pts) -> void
   {
@@ -45,6 +56,8 @@ private:
     thrust::fill(
       thrust::device_ptr<int>(nm_), thrust::device_ptr<int>(nm_ + num_pts_),
       1);
+    
+    sort_by_peanokey();
   }
   
   // assume num_pts_ has been constructed
