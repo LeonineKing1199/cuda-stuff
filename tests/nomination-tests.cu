@@ -34,7 +34,22 @@ void assert_unique(
 {
   for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
     if (nm[pa[tid]]) {
-      assert(atomicCAS(nm_ta + ta[tid], 0, 1) == 0);
+      assert(atomicCAS(nm_ta + ta[tid], -1, 1) == -1);
+    }
+  }
+}
+
+__global__
+void assert_valid_nm_ta(
+  int const assoc_size,
+  int const* __restrict__ nm_ta,
+  int const* __restrict__ pa,
+  int const* __restrict__ ta,
+  int const* __restrict__ nm)
+{
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
+    if (nm[pa[tid]] == 1) {
+      assert(nm_ta[ta[tid]] == tid);    
     }
   }
 }
@@ -136,7 +151,7 @@ auto nomination_tests(void) -> void
      
     cudaDeviceSynchronize();
     
-    thrust::fill(nm_ta.begin(), nm_ta.end(), 0);
+    thrust::fill(nm_ta.begin(), nm_ta.end(), -1);
     
     assert_unique<<<bpg, tpb>>>(
       assoc_size,
@@ -144,7 +159,21 @@ auto nomination_tests(void) -> void
       nm.data().get(),
       ta.data().get(),
       nm_ta.data().get());
-      
+     
+    repair_nm_ta<<<bpg, tpb>>>(
+      assoc_size,
+      pa.data().get(),
+      ta.data().get(),
+      nm.data().get(),
+      nm_ta.data().get());
+     
+    assert_valid_nm_ta<<<bpg, tpb>>>(
+      assoc_size,
+      nm_ta.data().get(),
+      pa.data().get(),
+      ta.data().get(),
+      nm.data().get());
+     
     cudaDeviceSynchronize();
     
     /*thrust::sort_by_key(pa.begin(), pa.end(), ta.begin());

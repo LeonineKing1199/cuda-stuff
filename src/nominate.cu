@@ -27,3 +27,18 @@ void nominate(
     }
   }
 }
+
+__global__
+void repair_nm_ta(
+  int const assoc_size,
+  int const* __restrict__ pa,
+  int const* __restrict__ ta,
+  int const* __restrict__ nm,
+  int* __restrict__ nm_ta)
+{
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
+    if (nm[pa[tid]] == 1) {
+      nm_ta[ta[tid]] = tid;    
+    }
+  }
+}
