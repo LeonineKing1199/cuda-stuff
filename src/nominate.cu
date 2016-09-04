@@ -8,13 +8,9 @@ void nominate(
   int* nm_ta,
   int* nm)
 {
-  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
-    int* address = nm_ta + ta[tid];
-    int compare = -1;
-    int val = tid;
-    
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) { 
     // this thread was the first one to find this tetrahedron
-    if (atomicCAS(address, compare, val) == -1) {
+    if (atomicCAS(nm_ta + ta[tid], -1, tid) == -1) {
       // we then want to nominate this point
       // but because we initialize pa to being all true, if any
       // entry was previously 0, we know it was marked false by

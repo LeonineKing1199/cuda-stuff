@@ -126,7 +126,7 @@ auto tetra_tests_impl(void) -> void
     {
       point_t const p{ 3.01, 3.01, 3.01 };
       
-      assert(loc<real>(a, b, c, d, p) == 255);
+      assert(loc<real>(a, b, c, d, p) == -1);
     }
   }
 }

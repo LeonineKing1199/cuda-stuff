@@ -49,6 +49,7 @@ cuda_add_executable(
   src/peano.cu
   src/nominate.cu
   src/fract-locations.cu
+  src/fracture.cu
   
   tests/test-suite.cu
   tests/domain-tests.cu

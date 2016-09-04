@@ -6,6 +6,8 @@
 #include <thrust/device_ptr.h>
 #include <thrust/copy.h>
 #include <thrust/fill.h>
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/tuple.h>
 
 #include "math/point.hpp"
 #include "math/tetra.hpp"
@@ -79,6 +81,17 @@ private:
     cudaMalloc(&la_, bytes);
     cudaMalloc(&ta_, bytes);
     cudaMalloc(&pa_, bytes);
+    
+    auto begin = thrust::make_zip_iterator(
+      thrust::make_tuple(
+        thrust::device_ptr<int>{la_},
+        thrust::device_ptr<int>{ta_},
+        thrust::device_ptr<int>{pa_}));
+    
+    thrust::fill(
+      thrust::device,
+      begin, begin + est_num_associations,
+      thrust::make_tuple(-1, -1, -1));
     
     calc_initial_assoc<T><<<bpg, tpb>>>(
       pts_, num_pts_,

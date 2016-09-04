@@ -152,7 +152,6 @@ auto nomination_tests(void) -> void
     cudaDeviceSynchronize();
     
     thrust::fill(nm_ta.begin(), nm_ta.end(), -1);
-    
     assert_unique<<<bpg, tpb>>>(
       assoc_size,
       pa.data().get(),

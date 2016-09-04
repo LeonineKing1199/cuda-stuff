@@ -125,7 +125,7 @@ auto loc(
       p)};
     
     if (ort == orientation::negative) {
-      return 255;
+      return -1;
     }
     
     loc |= (static_cast<unsigned int>(ort) << i);
