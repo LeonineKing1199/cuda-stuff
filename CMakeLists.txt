@@ -67,5 +67,5 @@ cuda_add_executable(
 target_link_libraries(
   regulus
   ${CUDA_LIBRARIES}
-  ${CUDA_curand_LIBRARY}
+  cudadevrt
   )
