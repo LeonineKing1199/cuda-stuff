@@ -184,8 +184,13 @@ auto redistribute_pts_tests(void) -> void
       return pa_a < pa_b;
     });
     
-    for (int i = 0; i < pa.size(); ++i) {
-      std::cout << pa[i] << " " << ta[i] << " " << la[i] << std::endl;
+    for (int i = 0; i < (int ) pa.size(); ++i) {
+      if (la[i] == -1) {
+        continue;
+      }
+      
+      std::cout << i << " : " << pa[i] << " " << ta[i] << " " << la[i]
+                << " ? " << nm[pa[i]] << std::endl;
     }
   }
   

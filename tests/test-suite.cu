@@ -5,6 +5,7 @@ auto test_suite(void) -> void
   std::cout << "Beginning test suite...\n" << std::endl;
   
   array_tests();
+  stack_vector_tests();
   domain_tests();
   math_tests();
   matrix_tests();

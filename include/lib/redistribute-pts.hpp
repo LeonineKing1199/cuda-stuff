@@ -3,10 +3,13 @@
 
 #include <stdio.h>
 
+#include <thrust/copy.h>
+
 #include "../globals.hpp"
 #include "../math/tetra.hpp"
 #include "../math/point.hpp"
 #include "../array.hpp"
+#include "../stack-vector.hpp"
 
 template <typename T>
 __global__
@@ -58,42 +61,31 @@ void redistribute_pts(
 
     // we know that we wrote to mesh at ta_id and that we then wrote
     // past the end of the mesh at fl[tid] + { 0[, 1[, 2]] }
-    array<int, 4> local_pa{-1};
-    array<int, 4> local_ta{-1};
-    array<int, 4> local_la{-1};
+    stack_vector<int, 4> local_pa;
+    stack_vector<int, 4> local_ta;
+    stack_vector<int, 4> local_la;
     
-    int la_size = 0;
-    
-    array<tetra, 4> tets;
-    int tet_size = 0;
+    stack_vector<tetra, 4> tets;
 
     // load the tetrahedra onto the stack
     // I really wanna create a stack-based vector
     // to use for this though
-    tets[tet_size] = mesh[ta_id];
-    local_ta[tet_size] = ta_id;
-    local_pa[tet_size] = pa_id;
-    ++tet_size;
+    tets.push_back(mesh[ta_id]);
+    local_ta.push_back(ta_id);
+    local_pa.push_back(pa_id);
     
     int const fract_size = __popc(la[pa_tid]);
     int const mesh_offset = num_tetra + fl[pa_tid];
     
-    /*printf("pa_tid: %d, pa: %d, ta: %d, la: %d\n \
-fract_size: %d; mesh_offset: %d\n",
-           pa_tid, pa[pa_tid], ta[pa_tid], la[pa_tid],
-           fract_size, mesh_offset);*/
-    
-    
     for (int i = 0; i < (fract_size - 1); ++i) {
-      tets[tet_size] = mesh[mesh_offset + i];
-      local_ta[tet_size] = mesh_offset + i;
-      local_pa[tet_size] = pa_id;
-      ++tet_size;
+      tets.push_back(mesh[mesh_offset + i]);
+      local_ta.push_back(mesh_offset + i);
+      local_pa.push_back(pa_id);
     }
 
     // now we can begin testing each one
     point_t<T> const p = pts[pa_id];
-    for (int i = 0; i < tet_size; ++i) {
+    for (int i = 0; i < tets.size(); ++i) {
       tetra const t = tets[i];
       
       point_t<T> const a = pts[t.x];
@@ -101,24 +93,25 @@ fract_size: %d; mesh_offset: %d\n",
       point_t<T> const c = pts[t.z];
       point_t<T> const d = pts[t.w];
       
-      local_la[la_size] = loc<T>(a, b, c, d, p);
-      ++la_size;
+      local_la.push_back(loc<T>(a, b, c, d, p));
+    }
+
+    // this is some manual clean-up
+    // if the location code is -1, we should just
+    // null this assocation out completely
+    for (int i = 0; i < local_la.size(); ++i) {
+      if (local_la[i] == -1) {
+        local_pa[i] = -1;
+        local_ta[i] = -1;
+      }
     }
 
     // now we have to do a write-back to main memory
     int const assoc_offset = assoc_size + (4 * atomicAdd(num_redistributions, 1));
     
-    //printf("assoc_offset: %d\n", assoc_offset);
-    
-    for (int i = 0; i < 4; ++i) {
-      pa[assoc_offset + i] = local_pa[i];
-      ta[assoc_offset + i] = local_ta[i];
-      la[assoc_offset + i] = local_la[i];
-    }
-    
-    /**(reinterpret_cast<int4*>(pa + assoc_offset) = *reinterpret_cast<int4*>(local_pa.begin());
-    *(reinterpret_cast<int4*>(ta + assoc_offset) = *reinterpret_cast<int4*>(local_ta.begin());
-    *(reinterpret_cast<int4*>(la + assoc_offset) = *reinterpret_cast<int4*>(local_la.begin());*/
+    thrust::copy(thrust::seq, local_pa.begin(), local_pa.end(), pa + assoc_offset);
+    thrust::copy(thrust::seq, local_ta.begin(), local_ta.end(), ta + assoc_offset);
+    thrust::copy(thrust::seq, local_la.begin(), local_la.end(), la + assoc_offset);
   }
 }
 

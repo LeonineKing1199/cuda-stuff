@@ -2,11 +2,13 @@
 
 #include "../include/math/point.hpp"
 
+__host__ __device__
 auto operator==(point_t<float> const& a, point_t<float> const& b) -> bool
 {
   return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
+__host__ __device__
 auto operator==(point_t<double> const& a, point_t<double> const& b) -> bool
 {
   return a.x == b.x && a.y == b.y && a.z == b.z;

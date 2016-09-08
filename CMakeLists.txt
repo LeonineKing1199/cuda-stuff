@@ -30,6 +30,7 @@ cuda_add_executable(
   include/mesher.hpp
   include/array.hpp
   include/globals.hpp
+  include/stack-vector.hpp
   
   include/math/math.hpp
   include/math/point.hpp
@@ -62,6 +63,7 @@ cuda_add_executable(
   tests/fract-location-tests.cu
   tests/fracture-tests.cu
   tests/redistribute-pts-tests.cu
+  tests/stack-vector-tests.cu
   )
 
 target_link_libraries(
