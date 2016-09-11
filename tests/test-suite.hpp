@@ -18,6 +18,7 @@ auto fract_location_tests(void) -> void;
 auto fracture_tests(void) -> void;
 auto redistribute_pts_tests(void) -> void;
 auto stack_vector_tests(void) -> void;
+auto get_assoc_size_tests(void) -> void;
 
 #endif // REGULUS_TEST_SUITE_HPP_
 

@@ -37,12 +37,14 @@ cuda_add_executable(
   include/math/matrix.hpp
   include/math/equals.hpp
   include/math/tetra.hpp
+  include/math/rand-int-range.hpp
   
   include/lib/calc-ta-and-pa.hpp
   include/lib/nominate.hpp
   include/lib/fract-locations.hpp
   include/lib/fracture.hpp
   include/lib/redistribute-pts.hpp
+  include/lib/get-assoc-size.hpp
   
   tests/test-suite.hpp
   
@@ -51,6 +53,8 @@ cuda_add_executable(
   src/nominate.cu
   src/fract-locations.cu
   src/fracture.cu
+  src/get-assoc-size.cu
+  src/rand-int-range.cu
   
   tests/test-suite.cu
   tests/domain-tests.cu
@@ -64,6 +68,7 @@ cuda_add_executable(
   tests/fracture-tests.cu
   tests/redistribute-pts-tests.cu
   tests/stack-vector-tests.cu
+  tests/get-assoc-size-tests.cu
   )
 
 target_link_libraries(

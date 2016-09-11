@@ -1,28 +1,15 @@
 #include <thrust/device_vector.h>
-#include <thrust/random.h>
-#include <thrust/iterator/counting_iterator.h>
+#include <thrust/sort.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/tuple.h>
 
 #include "test-suite.hpp"
-#include "../include/lib/nominate.hpp"
 #include "../include/globals.hpp"
+#include "../include/lib/nominate.hpp"
+#include "../include/math/rand-int-range.hpp"
 
 int const static range_min = 0;
 int const static range_max = 2500;
-
-struct rand_gen
-{
-  __device__
-  auto operator()(int const idx) -> int
-  { 
-    thrust::default_random_engine rng;
-    thrust::uniform_int_distribution<int> dist{range_min, range_max - 1};
-    rng.discard(idx * 2);
-    return dist(rng);
-  }
-};
-
 
 __global__
 void assert_unique(
@@ -115,22 +102,12 @@ auto nomination_tests(void) -> void
   {
     int const assoc_size = 5000;
     
-    thrust::device_vector<int> ta{assoc_size};
-    thrust::device_vector<int> pa{assoc_size};
-       
-    // TODO: refactor this random number gen stuff into a helper
-    auto it = thrust::make_counting_iterator(0);
-    thrust::transform(
-      it, it + assoc_size,
-      ta.begin(),
-      rand_gen{});
-          
-    it = thrust::make_counting_iterator(assoc_size);
-    thrust::transform(
-      it, it + assoc_size,
-      pa.begin(),
-      rand_gen{});
+    thrust::device_vector<int> pa =
+      rand_int_range(range_min, range_max, assoc_size, 0);
       
+    thrust::device_vector<int> ta =
+      rand_int_range(range_min, range_max, assoc_size, assoc_size);
+             
     thrust::device_vector<int> nm{range_max, 1};
     thrust::device_vector<int> nm_ta{range_max, -1};
     
@@ -175,11 +152,11 @@ auto nomination_tests(void) -> void
      
     cudaDeviceSynchronize();
     
-    /*thrust::sort_by_key(pa.begin(), pa.end(), ta.begin());
+    thrust::sort_by_key(pa.begin(), pa.end(), ta.begin());
       
-    for (int i = 0; i < assoc_size; ++i) {
+    /*for (int i = 0; i < assoc_size; ++i) {
       std::cout << "(" << pa[i] << ", " << ta[i] << " : " << nm[pa[i]] << std::endl;
-    }*/
+    }//*/
   }
   
   std::cout << "Tests Passed!\n" << std::endl;
