@@ -10,6 +10,7 @@
 #include "../include/lib/fract-locations.hpp"
 #include "../include/lib/fracture.hpp"
 #include "../include/lib/redistribute-pts.hpp"
+#include "../include/lib/get-assoc-size.hpp"
 
 template <typename T>
 __global__
@@ -30,6 +31,43 @@ void assert_givens(
     point_t<T> const d = pts[t.w];
     
     assert(loc<T>(a, b, c, d, p) != -1);
+  }
+}
+
+template <typename T>
+__global__
+void assert_redistributed_assocs(
+  point_t<T> const* __restrict__ pts,
+  tetra const* __restrict__ mesh,
+  int const assoc_size,
+  int const* __restrict__ pa,
+  int const* __restrict__ ta,
+  int const* __restrict__ la,
+  int const* __restrict__ nm)
+{
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
+    int const pa_id = pa[tid];
+    int const ta_id = ta[tid];
+    int const la_id = la[tid];
+    
+    assert(pa_id != -1);
+    assert(ta_id != -1);
+    assert(la_id != -1);
+    
+    assert(nm[pa_id] == 0);
+    
+    tetra const t = mesh[ta_id];
+    
+    auto const a = pts[t.x];
+    auto const b = pts[t.y];
+    auto const c = pts[t.z];
+    auto const d = pts[t.w];
+    
+    assert((orient<T>(a, b, c, d) == orientation::positive));
+    
+    auto const p = pts[pa_id];
+    
+    assert((loc<T>(a, b, c, d, p) == la_id));
   }
 }
 
@@ -97,7 +135,7 @@ auto redistribute_pts_tests(void) -> void
     
     cudaDeviceSynchronize();
     
-    int const assoc_size = num_pts;
+    int assoc_size = num_pts;
 
     for (int i = 0; i < assoc_size; ++i) {
       assert(ta[i] == 0);
@@ -171,27 +209,37 @@ auto redistribute_pts_tests(void) -> void
     
     assert(num_redistributions[0] > 0);
     
-    auto begin = thrust::make_zip_iterator(
-      thrust::make_tuple(pa.begin(), ta.begin(), la.begin()));
+    assoc_size = get_assoc_size(
+      pa.data().get(),
+      ta.data().get(),
+      la.data().get(),
+      pa.capacity());
     
-    thrust::sort(begin, begin + pa.size(), [] __device__ (
-      thrust::tuple<int, int, int> const&a,
-      thrust::tuple<int, int, int> const&b) -> bool
-    {      
-      unsigned int const pa_a = reinterpret_cast<unsigned int const&>(thrust::get<0>(a));
-      unsigned int const pa_b = reinterpret_cast<unsigned int const&>(thrust::get<0>(b));
-      
-      return pa_a < pa_b;
-    });
+    auto zip_begin = thrust::make_zip_iterator(
+        thrust::make_tuple(pa.begin(), ta.begin(), la.begin()));
     
-    /*for (int i = 0; i < (int ) pa.size(); ++i) {
-      if (la[i] == -1) {
-        continue;
-      }
+    auto const* raw_nm = nm.data().get();
+    
+    assoc_size = thrust::distance(zip_begin, thrust::remove_if(
+      thrust::device,
+      zip_begin, zip_begin + assoc_size,
+      [=] __device__ (thrust::tuple<int, int, int> const& t) -> bool
+      {
+        return raw_nm[thrust::get<0>(t)] == 1;
+      }));
       
-      std::cout << i << " : " << pa[i] << " " << ta[i] << " " << la[i]
-                << " ? " << nm[pa[i]] << std::endl;
-    }*/
+    assert((assoc_size > 0 && assoc_size < (int ) pa.capacity()));
+    
+    assert_redistributed_assocs<real><<<bpg, tpb>>>(
+      pts.data().get(),
+      mesh.data().get(),
+      assoc_size,
+      pa.data().get(),
+      ta.data().get(),
+      la.data().get(),
+      nm.data().get());
+    
+    cudaDeviceSynchronize();
   }
   
   std::cout << "All tests passed!\n" << std::endl;
