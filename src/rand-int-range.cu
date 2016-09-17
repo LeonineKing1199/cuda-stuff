@@ -24,7 +24,7 @@ auto rand_int_range(
   int const num_vals,
   int const seed) -> thrust::device_vector<int>
 {
-  thrust::device_vector<int> rand_vals{num_vals};
+  thrust::device_vector<int> rand_vals{(long unsigned int ) num_vals};
   thrust::counting_iterator<int> it{seed};
   
   thrust::transform(

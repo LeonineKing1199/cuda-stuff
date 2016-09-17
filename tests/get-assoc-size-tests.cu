@@ -1,6 +1,9 @@
 #include <thrust/host_vector.h>
 #include <thrust/transform.h>
 #include <thrust/for_each.h>
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/tuple.h>
+#include <thrust/fill.h>
 
 #include "test-suite.hpp"
 #include "../include/lib/get-assoc-size.hpp"
@@ -46,6 +49,15 @@ auto get_assoc_size_tests(void) -> void
       ta.data().get(),
       la.data().get(),
       assoc_capacity);
+      
+      
+    auto zip_begin = thrust::make_zip_iterator(
+      thrust::make_tuple(pa.begin(), ta.begin(), la.begin()));
+      
+    thrust::fill(
+      zip_begin + assoc_size,
+      zip_begin + assoc_capacity,
+      thrust::make_tuple(-1, -1, -1));
       
     assert(assoc_size > 0);
       

@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
 list(APPEND
     CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS};
-    -gencode arch=compute_50,code=sm_50 
+    -gencode arch=compute_50,code=sm_50
     -std=c++11 
     -O3
     --expt-extended-lambda

@@ -78,8 +78,9 @@ void redistribute_pts(
     int const mesh_offset = num_tetra + fl[pa_tid];
     
     for (int i = 0; i < (fract_size - 1); ++i) {
-      tets.push_back(mesh[mesh_offset + i]);
-      local_ta.push_back(mesh_offset + i);
+      int const tet_idx = mesh_offset + i;
+      tets.push_back(mesh[tet_idx]);
+      local_ta.push_back(tet_idx);
       local_pa.push_back(pa_id);
     }
 

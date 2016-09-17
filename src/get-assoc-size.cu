@@ -58,11 +58,6 @@ auto get_assoc_size(
       
       return true;
     });
-    
-  thrust::fill(
-    thrust::device,
-    new_last, new_last + (assoc_capacity - assoc_size),
-    thrust::make_tuple(-1, -1, -1));
-  
+      
   return assoc_size;
 }
