@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include <thrust/copy.h>
+#include <cassert>
 
 #include "../globals.hpp"
 #include "../math/tetra.hpp"
@@ -35,25 +36,25 @@ void redistribute_pts(
     // i.e., if (nm[pa[tid]] == 1) then nm_ta[ta[tid]] == tid
     // and we want to test validity of nm_ta[ta[tid]] because we're going
     // in reverse
-    int const pa_tid = nm_ta[ta_id];
+    int const tuple_id = nm_ta[ta_id];
 
     // this means the tetrahedron was not even written to
-    if (pa_tid == -1) {
+    if (tuple_id == -1) {
       return;
     }
 
     // this point was not ultimately nominated even though it wrote
     // this check my ultimately be unnecessary but for now I'm going
     // to be safe (I think it's necessary)
-    if (nm[pa_tid] != 1) {
+    if (nm[pa[tuple_id]] != 1) {
       return;
     }
 
-    if (pa_tid == tid) {
+    if (tuple_id == tid) {
       return;
     }
 
-    // we now know that pa_tid is actually a valid tuple id!
+    // we now know that tuple_id is actually a valid tuple id!
     // invalidate this association
     ta[tid] = -1;
     pa[tid] = -1;
@@ -74,8 +75,8 @@ void redistribute_pts(
     local_ta.push_back(ta_id);
     local_pa.push_back(pa_id);
     
-    int const fract_size = __popc(la[pa_tid]);
-    int const mesh_offset = num_tetra + fl[pa_tid];
+    int const fract_size = __popc(la[tuple_id]);
+    int const mesh_offset = num_tetra + fl[tuple_id];
     
     for (int i = 0; i < (fract_size - 1); ++i) {
       int const tet_idx = mesh_offset + i;
@@ -106,6 +107,17 @@ void redistribute_pts(
         local_ta[i] = -1;
       }
     }
+    
+    for (int i = local_la.size(); i < 4; ++i) {
+      local_la.push_back(-1);
+      local_pa.push_back(-1);
+      local_ta.push_back(-1);
+    }
+
+    printf("New association tuple:\npa: %d %d %d %d\nta: %d %d %d %d\nla: %d %d %d %d\n\n",
+      local_pa[0], local_pa[1], local_pa[2], local_pa[3],
+      local_ta[0], local_ta[1], local_ta[2], local_ta[3],
+      local_la[0], local_la[1], local_la[2], local_la[3]);//*/
 
     // now we have to do a write-back to main memory
     int const assoc_offset = assoc_size + (4 * atomicAdd(num_redistributions, 1));
