@@ -12,6 +12,13 @@
 #include "../include/lib/redistribute-pts.hpp"
 #include "../include/lib/get-assoc-size.hpp"
 
+/*
+  Kinda funny but these tests are basically an entire runthrough
+  of the triangulation pipeline so this file makes a good reference
+  for a rough approximation of how the triangulation routine really
+  will work
+*/
+
 template <typename T>
 __global__
 void assert_givens(

@@ -32,12 +32,11 @@ void fracture(
       t_ids[1] = t.y;
       t_ids[2] = t.z;
       t_ids[3] = t.w;
-      
-      int const loc{la[tid]};
 
+      int const loc{la[tid]};
       array<tetra, 4> local_tets;
       int tets_size = 0;
-      
+printf("pa %d => ta %d => la %d\n", pa_id, ta_id, loc);     
       // check each bit of loc iteratively
       for (int i = 0; i < 4; ++i) {
         if (loc & (1 << i)) {          

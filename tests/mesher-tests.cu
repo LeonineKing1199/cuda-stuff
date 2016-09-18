@@ -25,7 +25,6 @@ auto mesher_tests(void) -> void
     int const d{(int ) pts.size() - 1};
     
     tetra const root_tet{a, b, c, d};
-    
     mesher<real> m{pts, root_tet};
     
     // do a quick check that all of our points are actually in the
@@ -39,7 +38,7 @@ auto mesher_tests(void) -> void
       assert(orient<real>(pa, pb, pc, pd) == orientation::positive);
       
       for (int i = 0; i < 10 * 10 * 10; ++i) {
-        assert(loc<real>(pa, pb, pc, pd, pts[i]) != 255);      
+        assert(loc<real>(pa, pb, pc, pd, pts[i]) != -1);      
       }
     }
     

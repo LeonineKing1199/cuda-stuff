@@ -1,4 +1,5 @@
 #include <thrust/device_vector.h>
+#include <bitset>
 
 #include "test-suite.hpp"
 #include "../include/globals.hpp"
@@ -102,6 +103,12 @@ auto fracture_tests(void) -> void
       
     cudaDeviceSynchronize();
             
+    
+    assert((
+      num_tetra +
+      fl[assoc_size - 1] +
+      nm[pa[assoc_size - 1]] * (std::bitset<4>{la[assoc_size - 1]}.count() - 1) == 4));
+    
     assert((mesh[0] == tetra{4, 3, 2, 0}));
     assert((mesh[1] == tetra{1, 3, 4, 0}));
     assert((mesh[2] == tetra{1, 4, 2, 0}));
