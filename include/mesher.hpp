@@ -162,7 +162,7 @@ private:
   {
     int const est_num_tetra = 8 * num_pts_;
     cudaMalloc(&tetra_, est_num_tetra * sizeof(*tetra_));
-    *thrust::device_ptr<tetra>(tetra_) = t;
+    *device_ptr<tetra>(tetra_) = t;
     num_tetra_ = 1;
   }
     
@@ -235,7 +235,7 @@ public:
       
       cudaDeviceSynchronize();
       
-      thrust::fill(nm_ta.begin(), nm_ta.end(), -1);
+      fill(nm_ta.begin(), nm_ta.end(), -1);
       assert_unique_mesher<<<bpg, tpb>>>(
         assoc_size,
         pa.data().get(),
@@ -320,7 +320,6 @@ public:
       auto const* raw_nm = nm.data().get();
       
       assoc_size = distance(zip_begin, remove_if(
-        thrust::device,
         zip_begin, zip_begin + assoc_size,
         [=] __device__ (tuple<int, int, int> const& t) -> bool
         {
@@ -330,7 +329,6 @@ public:
       std::cout << "Filling..." << std::endl;
       
       fill(
-        thrust::device,
         zip_begin + assoc_size, zip_begin + assoc_capacity,
         make_tuple(-1, -1, -1));
       
