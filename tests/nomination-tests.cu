@@ -2,6 +2,13 @@
 #include <thrust/sort.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/tuple.h>
+#include <thrust/execution_policy.h>
+#include <thrust/unique.h>
+#include <thrust/copy.h>
+#include <thrust/distance.h>
+#include <thrust/remove.h>
+#include <thrust/device_vector.h>
+#include <thrust/pair.h>
 
 #include "test-suite.hpp"
 #include "../include/globals.hpp"
@@ -10,6 +17,21 @@
 
 int const static range_min = 0;
 int const static range_max = 2500;
+
+using thrust::device_vector;
+using thrust::host_vector;
+using thrust::fill;
+using thrust::sort;
+using thrust::sort_by_key;
+using thrust::make_zip_iterator;
+using thrust::make_tuple;
+using thrust::tuple;
+using thrust::get;
+using thrust::copy_if;
+using thrust::distance;
+using thrust::unique_by_key_copy;
+using thrust::for_each;
+using thrust::pair;
 
 __global__
 void assert_unique(
@@ -100,16 +122,16 @@ auto nomination_tests(void) -> void
   
   // Stress testing nomination routine for accuracy
   {
-    int const assoc_size = 5000;
+    int const assoc_size{5000};
     
-    thrust::device_vector<int> pa =
+    device_vector<int> pa =
       rand_int_range(range_min, range_max, assoc_size, 0);
       
-    thrust::device_vector<int> ta =
+    device_vector<int> ta =
       rand_int_range(range_min, range_max, assoc_size, assoc_size);
              
-    thrust::device_vector<int> nm{range_max, 1};
-    thrust::device_vector<int> nm_ta{range_max, -1};
+    device_vector<int> nm{range_max, 1};
+    device_vector<int> nm_ta{range_max, -1};
     
     for (auto t : ta) {
       assert(nm_ta[t] == -1);    
@@ -128,7 +150,7 @@ auto nomination_tests(void) -> void
      
     cudaDeviceSynchronize();
     
-    thrust::fill(nm_ta.begin(), nm_ta.end(), -1);
+    fill(nm_ta.begin(), nm_ta.end(), -1);
     assert_unique<<<bpg, tpb>>>(
       assoc_size,
       pa.data().get(),
@@ -157,6 +179,84 @@ auto nomination_tests(void) -> void
     /*for (int i = 0; i < assoc_size; ++i) {
       std::cout << "(" << pa[i] << ", " << ta[i] << " : " << nm[pa[i]] << std::endl;
     }//*/
+  }
+  
+  
+  
+  {
+    int assoc_size{11};
+    int const ta_data[11] = { 0, 1, 2, 3, 2, 5, 6, 7, 8, 1, 8 };
+    int const pa_data[11] = { 0, 0, 0, 0, 2, 2, 3, 3, 3, 4, 4 };
+    
+    host_vector<int> h_ta{ta_data, ta_data + 11};
+    host_vector<int> h_pa{pa_data, pa_data + 11};
+    
+    device_vector<int> ta{h_ta};
+    device_vector<int> pa{h_pa};
+
+    device_vector<int> unq_ta{assoc_size, -1};
+    device_vector<int> unq_pa{assoc_size, -1};
+
+    int const num_pts{5};    
+    device_vector<int> num_pt_assocs{num_pts, 0};
+    device_vector<int> num_unq_pt_assocs{num_pts, 0};
+
+    auto const zip_begin =
+      make_zip_iterator(
+        make_tuple(
+          pa.begin(),
+          ta.begin()));
+    
+    sort(
+      zip_begin, zip_begin + assoc_size,
+      [] __device__ (
+        tuple<int, int> const& a,
+        tuple<int, int> const& b) -> bool
+      {
+        return get<1>(a) < get<1>(b);
+      });
+    
+    auto new_last = unique_by_key_copy(
+      ta.begin(), ta.end(),
+      pa.begin(),
+      unq_ta.begin(),
+      unq_pa.begin());
+    
+    int const unq_size{distance(unq_pa.begin(), get<1>(new_last))};
+      
+    for (int i = 0; i < 11; ++i) {
+      std:: cout << "(pa, ta) : " << unq_pa[i] << ", " << unq_ta[i] << "\n";
+    }
+    std::cout << std::endl;
+    
+    int* pt_cnt{num_pt_assocs.data().get()};
+    int* unq_pt_cnt{num_unq_pt_assocs.data().get()};
+    
+    for_each(
+      pa.begin(), pa.end(),
+      [=] __device__ (int const pa_id) -> void
+      {
+        atomicAdd(pt_cnt + pa_id, 1);
+      });
+      
+    for_each(
+      unq_pa.begin(), unq_pa.begin() + unq_size,
+      [=] __device__ (int const pa_id) -> void
+      {
+        atomicAdd(unq_pt_cnt + pa_id, 1);
+      });
+      
+    std::cout << "Before:\n";
+    for (unsigned i = 0; i < num_pt_assocs.size(); ++i) {
+      std::cout << "(pa id, cnt ) => " << i << ", " << num_pt_assocs[i] << "\n";
+    }
+    std::cout << "\n";
+    
+    std::cout << "After:\n";
+    for (unsigned i = 0; i < num_unq_pt_assocs.size(); ++i) {
+      std::cout << "(pa id, cnt ) => " << i << ", " << num_unq_pt_assocs[i] << "\n";
+    }
+    std::cout << "\n";
   }
   
   std::cout << "Tests Passed!\n" << std::endl;

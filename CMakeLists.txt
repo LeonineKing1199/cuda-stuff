@@ -27,7 +27,7 @@ cuda_add_executable(
 
   include/domain.hpp
   include/timer.hpp
-  include/mesher.hpp
+  #include/mesher.hpp
   include/array.hpp
   include/globals.hpp
   include/stack-vector.hpp
@@ -58,15 +58,15 @@ cuda_add_executable(
   
   tests/test-suite.cu
   tests/domain-tests.cu
-  tests/mesher-tests.cu
+  #tests/mesher-tests.cu
   tests/math-tests.cu
   tests/matrix-tests.cu
   tests/array-tests.cu
   tests/tetra-tests.cu
   tests/nomination-tests.cu
   tests/fract-location-tests.cu
-  tests/fracture-tests.cu
-  tests/redistribute-pts-tests.cu
+  #tests/fracture-tests.cu
+  #tests/redistribute-pts-tests.cu
   tests/stack-vector-tests.cu
   tests/get-assoc-size-tests.cu
   )

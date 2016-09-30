@@ -9,6 +9,7 @@
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/tuple.h>
 #include <thrust/extrema.h>
+#include <thrust/for_each.h>
 #include <bitset>
 #include <cassert>
 
@@ -36,7 +37,7 @@ using thrust::get;
 using thrust::remove_if;
 using thrust::distance;
 using thrust::fill;
-
+using thrust::for_each;
 
 // Okay, so bugs do exist and maybe asserts do need to be integrated
 // into the project at the moment T_T
@@ -225,6 +226,14 @@ public:
       device_vector<int> num_redistributions{1, 0};
       
       std::cout << "Nominating and repairing points..." << std::endl;
+      
+      set_15_first<<<bpg, tpb>>>(
+        assoc_size,
+        ta.data().get(),
+        pa.data().get(),
+        la.data().get(),
+        nm_ta.data().get(),
+        nm.data().get());
       
       nominate<<<bpg, tpb>>>(
         assoc_size,
