@@ -24,6 +24,14 @@ using thrust::pair;
 using thrust::distance;
 using thrust::transform;
 
+/**
+  * This function is used to determine which points will
+  * be used in this round of insertion.
+  * nm is an array aligned to the number of points that
+  * are available
+  * pa, ta, la are the association tuple
+*/
+
 auto nominate(
   int const assoc_size,
   device_vector<int>& pa,
@@ -31,6 +39,8 @@ auto nominate(
   device_vector<int>& la,
   device_vector<int>& nm) -> void
 {
+  // the first thing we want to do is sort everything
+  // by ta
   auto zip_begin =
     make_zip_iterator(
       make_tuple(
@@ -56,18 +66,27 @@ auto nominate(
           (a_ta_id < b_ta_id));
     });
  
+  
+  // we then want to allocate copies of our
+  // association arrays to write our stream
+  // compaction to
   device_vector<int> pa_cpy{assoc_size, -1};
   device_vector<int> ta_cpy{assoc_size, -1};
   device_vector<int> la_cpy{assoc_size, -1}; 
     
+  // remove tuple elements, using ta as the
+  // unique key
   auto last_pair = unique_by_key_copy(
     ta.begin(), ta.end(),
     make_zip_iterator(make_tuple(pa.begin(), la.begin())),
     ta_cpy.begin(),
     make_zip_iterator(make_tuple(pa_cpy.begin(), la_cpy.begin())));
 
+
+  // unique_by_key_copy returns a pair of iterators (keys_last, values_last)
   int const assoc_cpy_size{static_cast<int>(distance(ta_cpy.begin(), last_pair.first))};
     
+/*
   sort(
     zip_begin, zip_begin + assoc_size,
     [] __device__ (
@@ -98,7 +117,7 @@ auto nominate(
       
       return (a_pa_id < b_pa_id);
     });
-
+*/
   fill(nm.begin(), nm.end(), 0);
   device_vector<int> nm_cpy{nm};
   

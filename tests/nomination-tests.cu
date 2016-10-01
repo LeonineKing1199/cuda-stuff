@@ -55,17 +55,17 @@ auto nomination_tests(void) -> void
     
     cudaDeviceSynchronize();
     
-    for (unsigned i = 0; i < nm.size(); ++i) {
+    /*for (unsigned i = 0; i < nm.size(); ++i) {
       std::cout << nm[i] << " ";
     }
-    std::cout << "\n";
+    std::cout << "\n";//*/
   }
   
   {
-    int assoc_size{500000};
+    int assoc_size{5000};
     
     int const min{0};
-    int const max{25000};
+    int const max{2500};
     
     device_vector<int> pa{rand_int_range(min, max, assoc_size, 0)};
     device_vector<int> ta{rand_int_range(min, max, assoc_size, assoc_size)};
