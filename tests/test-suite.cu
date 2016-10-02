@@ -12,7 +12,7 @@ auto test_suite(void) -> void
   tetra_tests();
   nomination_tests();
   fract_location_tests();
-  //fracture_tests();
+  fracture_tests();
   get_assoc_size_tests();
   //redistribute_pts_tests();
   //mesher_tests();

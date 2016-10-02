@@ -1,21 +1,23 @@
 #ifndef REGULUS_LIB_FRACTURE_HPP_
 #define REGULUS_LIB_FRACTURE_HPP_
 
-#include <thrust/copy.h>
+using tetra = int4;
 
-#include "../globals.hpp"
-#include "../math/tetra.hpp"
-#include "../array.hpp"
+namespace thrust {
+  template <typename T, typename Alloc>
+  class device_vector;
+}
 
-__global__
-void fracture(
+using thrust::device_vector;
+
+auto fracture(
   int const assoc_size,
   int const num_tetra,
-  int const* __restrict__ pa,
-  int const* __restrict__ ta,
-  int const* __restrict__ la,
-  int const* __restrict__ nm,
-  int const* __restrict__ fl,
-  tetra* __restrict__ mesh);
+  device_vector<int> const& pa,
+  device_vector<int> const& ta,
+  device_vector<int> const& la,
+  device_vector<int> const& nm,
+  device_vector<int> const& fl,
+  device_vector<tetra>& mesh) -> void;
 
 #endif // REGULUS_LIB_FRACTURE_HPP_
