@@ -74,7 +74,8 @@ auto nomination_tests(void) -> void
     assert(pa.size() == static_cast<unsigned>(assoc_size));
     assert(ta.size() == static_cast<unsigned>(assoc_size));
     
-    device_vector<int> nm{max, 0};
+    int const num_pts{max};
+    device_vector<int> nm{num_pts, 0};
     
     nominate(assoc_size, pa, ta, la, nm);
     

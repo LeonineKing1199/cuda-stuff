@@ -72,58 +72,30 @@ auto nominate(
   // compaction to
   device_vector<int> pa_cpy{assoc_size, -1};
   device_vector<int> ta_cpy{assoc_size, -1};
-  device_vector<int> la_cpy{assoc_size, -1}; 
     
   // remove tuple elements, using ta as the
   // unique key
   auto last_pair = unique_by_key_copy(
     ta.begin(), ta.end(),
-    make_zip_iterator(make_tuple(pa.begin(), la.begin())),
+    pa.begin(),
     ta_cpy.begin(),
-    make_zip_iterator(make_tuple(pa_cpy.begin(), la_cpy.begin())));
+    pa_cpy.begin());
 
 
   // unique_by_key_copy returns a pair of iterators (keys_last, values_last)
   int const assoc_cpy_size{static_cast<int>(distance(ta_cpy.begin(), last_pair.first))};
     
-/*
-  sort(
-    zip_begin, zip_begin + assoc_size,
-    [] __device__ (
-      tuple<int, int, int> const& a,
-      tuple<int, int, int> const& b) -> bool
-    {
-      int const a_pa_id{get<0>(a)};
-      int const b_pa_id{get<0>(b)};
-      
-      return (a_pa_id < b_pa_id);
-    });
-    
-  auto zip_cpy_begin =
-    make_zip_iterator(
-      make_tuple(
-        pa_cpy.begin(),
-        ta_cpy.begin(),
-        la_cpy.begin()));
-        
-  sort(
-    zip_cpy_begin, zip_cpy_begin + assoc_cpy_size,
-    [] __device__ (
-      tuple<int, int, int> const& a,
-      tuple<int, int, int> const& b) -> bool
-    {
-      int const a_pa_id{get<0>(a)};
-      int const b_pa_id{get<0>(b)};
-      
-      return (a_pa_id < b_pa_id);
-    });
-*/
   fill(nm.begin(), nm.end(), 0);
   device_vector<int> nm_cpy{nm};
   
   int* nm_data = nm.data().get();
   int* nm_cpy_data = nm_cpy.data().get();
   
+  // this is how we count the number of occurrences for a particular
+  // point index
+  // if the copy doesn't match up with the original count array, that
+  // means that the point had some non-unique tetrahedra associated
+  // with it and as such is not up for nomination
   for_each(
     pa.begin(), pa.begin() + assoc_size,
     [=] __device__ (int const pa_id) -> void
@@ -137,7 +109,11 @@ auto nominate(
     {
       atomicAdd(nm_cpy_data + pa_id, 1);
     });
-    
+
+  // we perform a simple transformation over both ranges and
+  // check for equality.
+  // if the point occurred the same amount of times then all
+  // of its  tetrahedra were unique and is able to be nominated
   transform(
     nm.begin(), nm.end(),
     nm_cpy.begin(),

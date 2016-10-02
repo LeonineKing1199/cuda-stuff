@@ -1,18 +1,18 @@
 #ifndef REGULUS_LIB_FRACT_LOCATIONS_HPP_
 #define REGULUS_LIB_FRACT_LOCATIONS_HPP_
 
-#include <thrust/scan.h>
-#include <thrust/iterator/transform_iterator.h>
-#include <thrust/iterator/zip_iterator.h>
-#include <thrust/tuple.h>
-#include <thrust/device_ptr.h>
-#include <thrust/execution_policy.h>
+namespace thrust {
+  template <typename T, typename Alloc>
+  struct device_vector;
+}
+
+using thrust::device_vector;
 
 auto fract_locations(
-  int const* __restrict__ pa,
-  int const* __restrict__ nm,
-  int const* __restrict__ la,
   int const assoc_size,
-  int* __restrict__ fl) -> void;
+  device_vector<int> const& pa,
+  device_vector<int> const& nm,
+  device_vector<int> const& la,
+  device_vector<int>& fl) -> void;
 
 #endif // REGULUS_LIB_FRACT_LOCATIONS_HPP_
