@@ -72,7 +72,7 @@ auto fracture_tests(void) -> void
     nominate(assoc_size, pa, ta, la, nm);
     fract_locations(assoc_size, pa, nm, la, fl);      
     fracture(assoc_size, num_tetra, pa, ta, la, nm, fl, mesh);
-      
+        
     assert((num_tetra + fl[assoc_size - 1] == 4));
     
     assert((mesh[0] == tetra{4, 3, 2, 0}));

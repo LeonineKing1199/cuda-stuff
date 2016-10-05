@@ -86,15 +86,18 @@ auto redistribute_pts_tests(void) -> void
   // set of tetrahedra from a fracture
   {
     using real = float;
+    using thrust::device_vector;
     
     // generate cartesian grid points
-    int const grid_length = 9;
-    int const root_coord_val = 3 * grid_length;
-    thrust::device_vector<point_t<real>> pts;
+    int const grid_length{9};
+    int const root_coord_val{3 * grid_length};
+    
+    device_vector<point_t<real>> pts;
     pts.reserve(grid_length * grid_length * grid_length + 4);
+    
     pts = gen_cartesian_domain<real>(grid_length);
 
-    int const num_pts = pts.size();
+    int const num_pts{static_cast<int>(pts.size())};
     assert(num_pts == (grid_length * grid_length * grid_length));
     
     int const num_est_tetrahedra = 8 * num_pts;
@@ -112,7 +115,7 @@ auto redistribute_pts_tests(void) -> void
     pts.push_back(root_d);
     
     // create root tetrahedron
-    int const pts_size{(int ) pts.size()};
+    int const pts_size{static_cast<int>(pts.size())};
     int const a{pts_size - 4};
     int const b{pts_size - 3};
     int const c{pts_size - 2};
@@ -120,15 +123,15 @@ auto redistribute_pts_tests(void) -> void
     tetra const t{a, b, c, d};
     
     // initialize mesh
-    thrust::device_vector<tetra> mesh;
+    device_vector<tetra> mesh;
     mesh.reserve(num_est_tetrahedra);
     mesh[0] = t;
     
     // initialize the association arrays
-    thrust::device_vector<int> pa{num_est_tetrahedra, -1};
-    thrust::device_vector<int> ta{num_est_tetrahedra, -1};
-    thrust::device_vector<int> la{num_est_tetrahedra, -1};
-    thrust::device_vector<int> fl{num_est_tetrahedra, -1};
+    device_vector<int> pa{num_est_tetrahedra, -1};
+    device_vector<int> ta{num_est_tetrahedra, -1};
+    device_vector<int> la{num_est_tetrahedra, -1};
+    device_vector<int> fl{num_est_tetrahedra, -1};
     
     assert(pa.capacity() == 8 * (grid_length * grid_length * grid_length));
     
@@ -142,7 +145,7 @@ auto redistribute_pts_tests(void) -> void
     
     cudaDeviceSynchronize();
     
-    int assoc_size = num_pts;
+    int assoc_size{num_pts};
 
     for (int i = 0; i < assoc_size; ++i) {
       assert(ta[i] == 0);
@@ -154,97 +157,6 @@ auto redistribute_pts_tests(void) -> void
       ta.data().get(),
       pts.data().get(),
       mesh.data().get());
-    
-    cudaDeviceSynchronize();
-    
-    int const num_tetra{1};
-    
-    thrust::device_vector<int> nm{num_pts, 1};
-    thrust::device_vector<int> nm_ta{num_tetra, -1};
-    
-    nominate<<<bpg, tpb>>>(
-      assoc_size,
-      ta.data().get(),
-      pa.data().get(),
-      nm_ta.data().get(),
-      nm.data().get());
-    
-    repair_nm_ta<<<bpg, tpb>>>(
-      assoc_size,
-      pa.data().get(),
-      ta.data().get(),
-      nm.data().get(),
-      nm_ta.data().get());
-    
-    cudaDeviceSynchronize();
-
-    assert(nm[pa[nm_ta[0]]] == 1);
-
-    thrust::device_vector<int> num_redistributions{1, 0};
-    
-    fract_locations(
-      pa.data().get(),
-      nm.data().get(),
-      la.data().get(),
-      assoc_size,
-      fl.data().get());
-        
-    fracture<<<bpg, tpb>>>(
-      assoc_size,
-      num_tetra,
-      pa.data().get(),
-      ta.data().get(),
-      la.data().get(),
-      nm.data().get(),
-      fl.data().get(),
-      mesh.data().get());
-    
-    redistribute_pts<real><<<bpg, tpb>>>(
-      assoc_size,
-      num_tetra,
-      mesh.data().get(),
-      pts.data().get(),
-      nm.data().get(),
-      nm_ta.data().get(),
-      fl.data().get(),
-      pa.data().get(),
-      ta.data().get(),
-      la.data().get(),
-      num_redistributions.data().get());
-    
-    cudaDeviceSynchronize();
-    
-    assert(num_redistributions[0] > 0);
-    
-    assoc_size = get_assoc_size(
-      pa.data().get(),
-      ta.data().get(),
-      la.data().get(),
-      pa.capacity());
-    
-    auto zip_begin = thrust::make_zip_iterator(
-        thrust::make_tuple(pa.begin(), ta.begin(), la.begin()));
-    
-    auto const* raw_nm = nm.data().get();
-    
-    assoc_size = thrust::distance(zip_begin, thrust::remove_if(
-      thrust::device,
-      zip_begin, zip_begin + assoc_size,
-      [=] __device__ (thrust::tuple<int, int, int> const& t) -> bool
-      {
-        return raw_nm[thrust::get<0>(t)] == 1;
-      }));
-      
-    assert((assoc_size > 0 && assoc_size < (int ) pa.capacity()));
-    
-    assert_redistributed_assocs<real><<<bpg, tpb>>>(
-      pts.data().get(),
-      mesh.data().get(),
-      assoc_size,
-      pa.data().get(),
-      ta.data().get(),
-      la.data().get(),
-      nm.data().get());
     
     cudaDeviceSynchronize();
   }

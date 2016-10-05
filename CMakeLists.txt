@@ -66,7 +66,7 @@ cuda_add_executable(
   tests/nomination-tests.cu
   tests/fract-location-tests.cu
   tests/fracture-tests.cu
-  #tests/redistribute-pts-tests.cu
+  tests/redistribute-pts-tests.cu
   tests/stack-vector-tests.cu
   tests/get-assoc-size-tests.cu
   )

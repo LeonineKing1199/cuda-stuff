@@ -12,6 +12,8 @@
 #include "../array.hpp"
 #include "../stack-vector.hpp"
 
+using thrust::copy;
+
 template <typename T>
 __global__
 void redistribute_pts(
@@ -29,13 +31,12 @@ void redistribute_pts(
 {
   for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
     // store a copy of the current ta value
-    int const ta_id = ta[tid];
-    int const pa_id = pa[tid];
+    int const ta_id{ta[tid]};
+    int const pa_id{pa[tid]};
     
-    // we encode a tid such that nm[pa[tid]] == 1 in nm_ta at ta[tid]
-    // i.e., if (nm[pa[tid]] == 1) then nm_ta[ta[tid]] == tid
-    // and we want to test validity of nm_ta[ta[tid]] because we're going
-    // in reverse
+    // we store a mapping between the index of a
+    // tetrahedron being fractured and the index
+    // of the the association arrays
     int const tuple_id = nm_ta[ta_id];
 
     // this means the tetrahedron was not even written to
@@ -43,13 +44,13 @@ void redistribute_pts(
       return;
     }
 
-    // this point was not ultimately nominated even though it wrote
-    // this check my ultimately be unnecessary but for now I'm going
-    // to be safe (I think it's necessary)
+    // if the point was not nominated, return
     if (nm[pa[tuple_id]] != 1) {
       return;
     }
 
+    // if this thread is the current thread, we should NOT
+    // invalidate the association so we should just bail
     if (tuple_id == tid) {
       return;
     }
@@ -61,7 +62,7 @@ void redistribute_pts(
     la[tid] = -1;
 
     // we know that we wrote to mesh at ta_id and that we then wrote
-    // past the end of the mesh at fl[tid] + { 0[, 1[, 2]] }
+    // past the end of the mesh at fl[tuple_id] + { 0[, 1[, 2]] }
     stack_vector<int, 4> local_pa;
     stack_vector<int, 4> local_ta;
     stack_vector<int, 4> local_la;
@@ -69,14 +70,12 @@ void redistribute_pts(
     stack_vector<tetra, 4> tets;
 
     // load the tetrahedra onto the stack
-    // I really wanna create a stack-based vector
-    // to use for this though
     tets.push_back(mesh[ta_id]);
     local_ta.push_back(ta_id);
     local_pa.push_back(pa_id);
     
-    int const fract_size = __popc(la[tuple_id]);
-    int const mesh_offset = num_tetra + fl[tuple_id];
+    int const fract_size{__popc(la[tuple_id])};
+    int const mesh_offset{num_tetra + fl[tuple_id]};
     
     for (int i = 0; i < (fract_size - 1); ++i) {
       int const tet_idx = mesh_offset + i;
@@ -120,11 +119,11 @@ void redistribute_pts(
       local_la[0], local_la[1], local_la[2], local_la[3]);//*/
 
     // now we have to do a write-back to main memory
-    int const assoc_offset = assoc_size + (4 * atomicAdd(num_redistributions, 1));
+    int const assoc_offset{assoc_size + (4 * atomicAdd(num_redistributions, 1))};
     
-    thrust::copy(thrust::seq, local_pa.begin(), local_pa.end(), pa + assoc_offset);
-    thrust::copy(thrust::seq, local_ta.begin(), local_ta.end(), ta + assoc_offset);
-    thrust::copy(thrust::seq, local_la.begin(), local_la.end(), la + assoc_offset);
+    copy(thrust::seq, local_pa.begin(), local_pa.end(), pa + assoc_offset);
+    copy(thrust::seq, local_ta.begin(), local_ta.end(), ta + assoc_offset);
+    copy(thrust::seq, local_la.begin(), local_la.end(), la + assoc_offset);
   }
 }
 
