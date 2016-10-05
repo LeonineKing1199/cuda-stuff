@@ -75,7 +75,7 @@ void redistribute_pts(
     local_pa.push_back(pa_id);
     
     int const fract_size{__popc(la[tuple_id])};
-    int const mesh_offset{num_tetra + fl[tuple_id]};
+    int const mesh_offset{num_tetra + (tuple_id == 0 ? 0 : fl[tuple_id - 1])};
     
     for (int i = 0; i < (fract_size - 1); ++i) {
       int const tet_idx = mesh_offset + i;
