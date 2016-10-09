@@ -15,7 +15,7 @@ auto test_suite(void) -> void
   fracture_tests();
   get_assoc_size_tests();
   redistribute_pts_tests();
-  //mesher_tests();
+  mesher_tests();
   
   std::cout << "Tests passed!\n" << std::endl;
 }

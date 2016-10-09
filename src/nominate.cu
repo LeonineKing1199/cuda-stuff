@@ -9,6 +9,7 @@
 #include <thrust/distance.h>
 #include <thrust/transform.h>
 
+#include "../include/globals.hpp"
 #include "../include/lib/nominate.hpp"
 
 using thrust::device_vector;

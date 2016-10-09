@@ -12,6 +12,7 @@
 #include "../math/point.hpp"
 #include "../array.hpp"
 #include "../stack-vector.hpp"
+#include "mark-nominated-tetra.hpp"
 
 using thrust::copy;
 using thrust::device_vector;
@@ -23,7 +24,7 @@ void redistribute_pts_kernel(
   int const num_tetra,
   tetra const* __restrict__ mesh,
   point_t<T> const* __restrict__ pts,
-  int const* __restrict__ nm,
+  int const* nm,
   int const* __restrict__ nm_ta,
   int const* __restrict__ fl,
   int* pa,
@@ -129,21 +130,6 @@ void redistribute_pts_kernel(
   }
 }
 
-__global__
-void mark_nominated_tetra(
-  int const assoc_size,
-  int const* __restrict__ pa,
-  int const* __restrict__ ta,
-  int const* __restrict__ nm,
-  int* __restrict__ nm_ta)
-{
-  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
-    if (nm[pa[tid]] == 1) {
-      nm_ta[ta[tid]] = tid;
-    }
-  }
-}
-
 template <typename T>
 auto redistribute_pts(
   int const assoc_size,
@@ -166,6 +152,12 @@ auto redistribute_pts(
     nm.data().get(),
     nm_ta.data().get());
   
+  cudaDeviceSynchronize();
+  std::cout << "assoc size is : " << assoc_size << "\n";
+  std::cout << "Before:\n";
+  for (auto v : nm) std::cout << v << ", ";
+  std::cout << "\n";//*/
+  
   redistribute_pts_kernel<T><<<bpg, tpb>>>(
     assoc_size,
     num_tetra,
@@ -178,6 +170,11 @@ auto redistribute_pts(
     ta.data().get(),
     la.data().get(),
     num_redistributions.data().get());
+  
+  cudaDeviceSynchronize();
+  std::cout << "After:\n";
+  for (auto v : nm) std::cout << v << ", ";
+  std::cout << "\n";//*/
   
   cudaDeviceSynchronize();
 }

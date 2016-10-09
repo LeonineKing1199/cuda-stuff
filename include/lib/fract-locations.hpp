@@ -1,11 +1,7 @@
 #ifndef REGULUS_LIB_FRACT_LOCATIONS_HPP_
 #define REGULUS_LIB_FRACT_LOCATIONS_HPP_
 
-namespace thrust {
-  template <typename T, typename Alloc>
-  struct device_vector;
-}
-
+#include <thrust/device_vector.h>
 using thrust::device_vector;
 
 auto fract_locations(

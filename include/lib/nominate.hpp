@@ -1,21 +1,8 @@
 #ifndef REGULUS_LIB_NOMINATE_HPP_
 #define REGULUS_LIB_NOMINATE_HPP_
 
-#include <thrust/device_malloc_allocator.h>
-
-#include "../globals.hpp"
-#include "../device-vector-forward-declaration.hpp"
-
+#include <thrust/device_vector.h>
 using thrust::device_vector;
-
-__global__
-void repair_nm_ta(
-  int const assoc_size,
-  int const* __restrict__ pa,
-  int const* __restrict__ ta,
-  int const* __restrict__ nm,
-  int* __restrict__ nm_ta);
-
 
 auto nominate(
   int const assoc_size,

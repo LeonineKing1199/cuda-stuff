@@ -27,11 +27,10 @@ cuda_add_executable(
 
   include/domain.hpp
   include/timer.hpp
-  #include/mesher.hpp
+  include/mesher.hpp
   include/array.hpp
   include/globals.hpp
   include/stack-vector.hpp
-  include/device-vector-forward-declaration.hpp
   
   include/math/math.hpp
   include/math/point.hpp
@@ -46,6 +45,7 @@ cuda_add_executable(
   include/lib/fracture.hpp
   include/lib/redistribute-pts.hpp
   include/lib/get-assoc-size.hpp
+  include/lib/mark-nominated-tetra.hpp
   
   tests/test-suite.hpp
   
@@ -56,10 +56,11 @@ cuda_add_executable(
   src/fracture.cu
   src/get-assoc-size.cu
   src/rand-int-range.cu
+  src/mark-nominated-tetra.cu
   
   tests/test-suite.cu
   tests/domain-tests.cu
-  #tests/mesher-tests.cu
+  tests/mesher-tests.cu
   tests/math-tests.cu
   tests/matrix-tests.cu
   tests/array-tests.cu

@@ -142,7 +142,7 @@ private:
   // Each tetra structure contains 4 indices, each one
   // corresponding to a point in the pts_ array
   device_vector<point_t<T>> pts_;
-  tetra* tetra_;
+  device_vector<tetra> tetra_;
   
   int num_pts_;
   int num_tetra_;
@@ -161,9 +161,10 @@ private:
   // assume num_pts_ has been constructed
   auto init_tets(tetra const t) -> void
   {
-    int const est_num_tetra = 8 * num_pts_;
-    cudaMalloc(&tetra_, est_num_tetra * sizeof(*tetra_));
-    *device_ptr<tetra>(tetra_) = t;
+    
+    int const est_num_tetra{8 * num_pts_};
+    tetra_.resize(est_num_tetra);
+    tetra_[0] = t;
     num_tetra_ = 1;
   }
     
@@ -181,23 +182,18 @@ public:
     
     init_tets(root_tet);
   }
-  
-  ~mesher(void)
-  {
-    cudaFree(tetra_);
-  }
     
   auto triangulate(void) -> void
   {
     // allocate storage for the association buffers...
-    int const assoc_capacity = 8 * num_pts_;
+    int const assoc_capacity{num_pts_};
     device_vector<int> pa{assoc_capacity, -1};
     device_vector<int> ta{assoc_capacity, -1};
     device_vector<int> la{assoc_capacity, -1};
     
     // then build the initial associations
     {
-      tetra const t = *device_ptr<tetra>(tetra_);
+      tetra const t = tetra_[0];
     
       calc_initial_assoc<T><<<bpg, tpb>>>(
         pts_.data().get(),
@@ -209,6 +205,8 @@ public:
       cudaDeviceSynchronize();  
     }
         
+    // we assume that all points are inside the fiducial
+    // tetrahedron so there's one association for every point
     int assoc_size{num_pts_};
     
     // need to select points
@@ -220,141 +218,35 @@ public:
     while (assoc_size != 0) {
       std::cout << "Allocating temporary buffers..." << std::endl;
       
-      device_vector<int> nm{num_pts_, 1};
+      device_vector<int> nm{num_pts_, 0};
       device_vector<int> nm_ta{num_tetra_, -1};
-      device_vector<int> fl{assoc_capacity, -1};
-      device_vector<int> num_redistributions{1, 0};
-      
-      std::cout << "Nominating and repairing points..." << std::endl;
-      
-      set_15_first<<<bpg, tpb>>>(
-        assoc_size,
-        ta.data().get(),
-        pa.data().get(),
-        la.data().get(),
-        nm_ta.data().get(),
-        nm.data().get());
-      
-      nominate<<<bpg, tpb>>>(
-        assoc_size,
-        ta.data().get(),
-        pa.data().get(),
-        nm_ta.data().get(),
-        nm.data().get());
-      
-      cudaDeviceSynchronize();
-      
-      fill(nm_ta.begin(), nm_ta.end(), -1);
-      assert_unique_mesher<<<bpg, tpb>>>(
-        assoc_size,
-        pa.data().get(),
-        nm.data().get(),
-        ta.data().get(),
-        nm_ta.data().get());
-      
-      repair_nm_ta<<<bpg, tpb>>>(
-        assoc_size,
-        pa.data().get(),
-        ta.data().get(),
-        nm.data().get(),
-        nm_ta.data().get());
+      device_vector<int> fl{assoc_size, -1};
             
-      assert_valid_nm_ta_mesher<<<bpg, tpb>>>(
-        assoc_size,
-        nm_ta.data().get(),
-        pa.data().get(),
-        ta.data().get(),
-        nm.data().get());
+      nominate(assoc_size, pa, ta, la, nm);
+      fract_locations(assoc_size, pa, nm, la, fl);
       
-      cudaDeviceSynchronize();
+      int const num_new_tetra{fl[assoc_size - 1]};
       
-      std::cout << "Calculating fracture locations" << std::endl;
+      fracture(assoc_size, num_tetra_, pa, ta, la, nm, fl, tetra_);
+      redistribute_pts<T>(assoc_size, num_tetra_, tetra_, pts_, nm, fl, pa, ta, la);    
+      assoc_size = get_assoc_size(assoc_capacity, nm, pa, ta, la);
       
-      fract_locations(
-        pa.data().get(),
-        nm.data().get(),
-        la.data().get(),
-        assoc_size,
-        fl.data().get());
-          
-      int const last_idx = assoc_size - 1;
-      int const num_new_tets =
-        fl[last_idx] +
-        (nm[pa[last_idx]] *
-          (std::bitset<32>{la[last_idx]}.count() - 1));
-          
-      std::cout << "Fracturing and redistributing points" << std::endl;
-          
-      fracture<<<bpg, tpb>>>(
-        assoc_size, num_tetra_,
-        pa.data().get(),
-        ta.data().get(),
-        la.data().get(),
-        nm.data().get(),
-        fl.data().get(),
-        tetra_);
+            
+      num_tetra_ += num_new_tetra;
       
-      redistribute_pts<T><<<bpg, tpb>>>(
-        assoc_size, num_tetra_,
-        tetra_,
-        pts_.data().get(),
-        nm.data().get(),
-        nm_ta.data().get(),
-        fl.data().get(),
-        pa.data().get(),
-        ta.data().get(),
-        la.data().get(),
-        num_redistributions.data().get());
-      
-      cudaDeviceSynchronize();
-
-      std::cout << "Calculating new association sizes" << std::endl;
-
-      std::cout << "Stage 1 filtering..." << std::endl;
-
-      assoc_size = get_assoc_size(
-        pa.data().get(),
-        ta.data().get(),
-        la.data().get(),
-        assoc_capacity);
-      
-      std::cout << "Stage 2 filtering..." << std::endl;
-      
-      auto zip_begin = make_zip_iterator(
-        make_tuple(
-          pa.begin(),
-          ta.begin(),
-          la.begin()));
-      
-      auto const* raw_nm = nm.data().get();
-      
-      assoc_size = distance(zip_begin, remove_if(
-        zip_begin, zip_begin + assoc_size,
-        [=] __device__ (tuple<int, int, int> const& t) -> bool
-        {
-          return raw_nm[get<0>(t)] == 1;
-        }));
-      
-      std::cout << "Filling..." << std::endl;
-      
-      fill(
-        zip_begin + assoc_size, zip_begin + assoc_capacity,
-        make_tuple(-1, -1, -1));
-      
-      num_tetra_ += num_new_tets;
-      
-      std::cout << "number of tetrahedra: " << num_tetra_ << std::endl;
-      std::cout << "size of associations: " << assoc_size << "\n" << std::endl;
+      std::cout << "num new tetra: " << num_new_tetra << "\n";
+      std::cout << "number of tetrahedra: " << num_tetra_ << "\n";
+      std::cout << "size of associations: " << assoc_size << "\n\n";
       
       assert_mesher_associations<T><<<bpg, tpb>>>(
         pa.data().get(),
         ta.data().get(),
         la.data().get(),
-        tetra_,
+        tetra_.data().get(),
         pts_.data().get(),
         assoc_size);
       
-      assert_positivity<T><<<bpg, tpb>>>(tetra_, pts_.data().get(), num_tetra_);
+      assert_positivity<T><<<bpg, tpb>>>(tetra_.data().get(), pts_.data().get(), num_tetra_);
       
       cudaDeviceSynchronize();
     }
