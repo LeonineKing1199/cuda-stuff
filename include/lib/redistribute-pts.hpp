@@ -115,7 +115,7 @@ void redistribute_pts_kernel(
       local_ta.push_back(-1);
     }
 
-    printf("New association tuple:\npa: %d %d %d %d\nta: %d %d %d %d\nla: %d %d %d %d\n\n",
+    /*printf("New association tuple:\npa: %d %d %d %d\nta: %d %d %d %d\nla: %d %d %d %d\n\n",
       local_pa[0], local_pa[1], local_pa[2], local_pa[3],
       local_ta[0], local_ta[1], local_ta[2], local_ta[3],
       local_la[0], local_la[1], local_la[2], local_la[3]);//*/

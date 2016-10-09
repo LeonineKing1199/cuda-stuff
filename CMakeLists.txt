@@ -31,6 +31,7 @@ cuda_add_executable(
   include/array.hpp
   include/globals.hpp
   include/stack-vector.hpp
+  include/device-vector-forward-declaration.hpp
   
   include/math/math.hpp
   include/math/point.hpp

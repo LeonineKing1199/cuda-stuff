@@ -1,3 +1,11 @@
+#include <thrust/device_vector.h>
+#include <thrust/sort.h>
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/tuple.h>
+#include <thrust/distance.h>
+#include <thrust/remove.h>
+#include <thrust/fill.h>
+
 #include "../include/lib/get-assoc-size.hpp"
 
 // We actually want to do quite a bit with this
@@ -9,55 +17,64 @@
 // same value block of pa, ta is sorted least
 // to greatest.
 
+using thrust::tuple;
+using thrust::get;
+using thrust::device_vector;
+using thrust::make_tuple;
+using thrust::make_zip_iterator;
+using thrust::remove_if;
+using thrust::sort;
+
 auto get_assoc_size(
-  int* pa,
-  int* ta,
-  int* la,
-  int const assoc_capacity) -> int
+  int const assoc_capacity,
+  device_vector<int> const& nm,
+  device_vector<int>& pa,
+  device_vector<int>& ta,
+  device_vector<int>& la) -> int
 {
-  using int_tuple = thrust::tuple<int, int, int>;
+  using int_tuple = tuple<int, int, int>;
   
-  int assoc_size = 0;
+  int assoc_size{0};
 
-  auto begin = thrust::make_zip_iterator(thrust::make_tuple(pa, ta, la));
+  auto zip_begin =
+    make_zip_iterator(
+      make_tuple(
+        pa.begin(),   // 0
+        ta.begin(),   // 1
+        la.begin())); // 2
 
-  decltype(begin) new_last = thrust::remove_if(
-    thrust::device,
-    begin, begin + assoc_capacity,
+  decltype(zip_begin) zip_end = remove_if(
+    zip_begin, zip_begin + assoc_capacity,
     [] __device__ (int_tuple const& a) -> bool
     {
-      return thrust::get<0>(a) == -1;
+      return get<0>(a) == -1;
     });
     
-  assoc_size = thrust::distance(begin, new_last);
+  int const* nm_data = nm.data().get();
+    
+  zip_end = remove_if(
+    zip_begin, zip_end,
+    [=] __device__ (int_tuple const& a) -> bool
+    {
+      int const pa_id{get<0>(a)};
+      return nm_data[pa_id] == 1;
+    });
+    
+  assoc_size = distance(zip_begin, zip_end);
   
-  thrust::sort(
-    thrust::device,
-    begin, begin + assoc_size,
+  sort(
+    zip_begin, zip_end,
     [] __device__ (
       int_tuple const& a,
       int_tuple const& b) -> bool
     {
-      int const a_pa = thrust::get<0>(a);
-      int const b_pa = thrust::get<0>(b);
+      int const ta_a{get<1>(a)};
+      int const ta_b{get<1>(b)};
       
-      if (a_pa < b_pa) {
-        return true;
-      }
-      
-      if (a_pa > b_pa) {
-        return false;
-      }
-      
-      if (a_pa == b_pa) {
-        int const a_ta = thrust::get<1>(a);
-        int const b_ta = thrust::get<1>(b);
-        
-        return a_ta < b_ta;
-      }
-      
-      return true;
+      return ta_a == ta_b ? get<0>(a) < get<0>(b) : ta_a < ta_b;
     });
+      
+  fill(zip_end, zip_begin + assoc_capacity, make_tuple(-1, -1, -1));
       
   return assoc_size;
 }

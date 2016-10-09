@@ -165,11 +165,26 @@ auto redistribute_pts_tests(void) -> void
 
     device_vector<int> nm{num_pts, 0};
     
-    //nominate(assoc_size, pa, ta, la, nm);
+    int const assoc_capacity{num_est_tetrahedra};
+    
     nm[num_pts / 2] = 1;
     fract_locations(assoc_size, pa, nm, la, fl);
     fracture(assoc_size, num_tetra, pa, ta, la, nm, fl, mesh);
     redistribute_pts<real>(assoc_size, num_tetra, mesh, pts, nm, fl, pa, ta, la);
+    assoc_size = get_assoc_size(assoc_capacity, nm, pa, ta, la);
+    
+    assert(assoc_size > 0);
+    
+    assert_redistributed_assocs<real><<<bpg, tpb>>>(
+      pts.data().get(),
+      mesh.data().get(),
+      assoc_size,
+      pa.data().get(),
+      ta.data().get(),
+      la.data().get(),
+      nm.data().get());
+    
+    cudaDeviceSynchronize();
   }
   
   std::cout << "All tests passed!\n" << std::endl;

@@ -1,18 +1,15 @@
 #ifndef REGULUS_LIB_GET_ASSOC_SIZE_HPP_
 #define REGULUS_LIB_GET_ASSOC_SIZE_HPP_
 
-#include <thrust/execution_policy.h>
-#include <thrust/sort.h>
-#include <thrust/iterator/zip_iterator.h>
-#include <thrust/tuple.h>
-#include <thrust/distance.h>
-#include <thrust/remove.h>
-#include <thrust/fill.h>
+#include <thrust/device_vector.h>
+
+using thrust::device_vector;
 
 auto get_assoc_size(
-  int* __restrict__ pa,
-  int* __restrict__ ta,
-  int* __restrict__ la,
-  int const assoc_capacity) -> int;
+  int const assoc_capacity,
+  device_vector<int> const& nm,
+  device_vector<int>& pa,
+  device_vector<int>& ta,
+  device_vector<int>& la) -> int;
 
 #endif // REGULUS_LIB_GET_ASSOC_SIZE_HPP_
