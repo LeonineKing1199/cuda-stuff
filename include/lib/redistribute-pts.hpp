@@ -1,10 +1,11 @@
 #ifndef REGULUS_LIB_REDISTRIBUTE_PTS_HPP_
 #define REGULUS_LIB_REDISTRIBUTE_PTS_HPP_
 
-#include <stdio.h>
+#include <cstdio>
+#include <cassert>
 
 #include <thrust/copy.h>
-#include <cassert>
+#include <thrust/device_vector.h>
 
 #include "../globals.hpp"
 #include "../math/tetra.hpp"
@@ -13,10 +14,11 @@
 #include "../stack-vector.hpp"
 
 using thrust::copy;
+using thrust::device_vector;
 
 template <typename T>
 __global__
-void redistribute_pts(
+void redistribute_pts_kernel(
   int const assoc_size,
   int const num_tetra,
   tetra const* __restrict__ mesh,
@@ -126,5 +128,59 @@ void redistribute_pts(
     copy(thrust::seq, local_la.begin(), local_la.end(), la + assoc_offset);
   }
 }
+
+__global__
+void mark_nominated_tetra(
+  int const assoc_size,
+  int const* __restrict__ pa,
+  int const* __restrict__ ta,
+  int const* __restrict__ nm,
+  int* __restrict__ nm_ta)
+{
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
+    if (nm[pa[tid]] == 1) {
+      nm_ta[ta[tid]] = tid;
+    }
+  }
+}
+
+template <typename T>
+auto redistribute_pts(
+  int const assoc_size,
+  int const num_tetra,
+  device_vector<tetra> const& mesh,
+  device_vector<point_t<T>> const& pts,
+  device_vector<int> const& nm,
+  device_vector<int> const& fl,
+  device_vector<int>& pa,
+  device_vector<int>& ta,
+  device_vector<int>& la) -> void
+{
+  device_vector<int> nm_ta{num_tetra, -1};
+  device_vector<int> num_redistributions{1, 0};
+  
+  mark_nominated_tetra<<<bpg, tpb>>>(
+    assoc_size,
+    pa.data().get(),
+    ta.data().get(),
+    nm.data().get(),
+    nm_ta.data().get());
+  
+  redistribute_pts_kernel<T><<<bpg, tpb>>>(
+    assoc_size,
+    num_tetra,
+    mesh.data().get(),
+    pts.data().get(),
+    nm.data().get(),
+    nm_ta.data().get(),
+    fl.data().get(),
+    pa.data().get(),
+    ta.data().get(),
+    la.data().get(),
+    num_redistributions.data().get());
+  
+  cudaDeviceSynchronize();
+}
+
 
 #endif // REGULUS_LIB_REDISTRIBUTE_PTS_HPP_

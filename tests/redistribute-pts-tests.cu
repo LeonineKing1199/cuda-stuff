@@ -124,8 +124,10 @@ auto redistribute_pts_tests(void) -> void
     
     // initialize mesh
     device_vector<tetra> mesh;
-    mesh.reserve(num_est_tetrahedra);
+    mesh.resize(num_est_tetrahedra);
     mesh[0] = t;
+    
+    int const num_tetra{1};
     
     // initialize the association arrays
     device_vector<int> pa{num_est_tetrahedra, -1};
@@ -133,7 +135,7 @@ auto redistribute_pts_tests(void) -> void
     device_vector<int> la{num_est_tetrahedra, -1};
     device_vector<int> fl{num_est_tetrahedra, -1};
     
-    assert(pa.capacity() == 8 * (grid_length * grid_length * grid_length));
+    assert(pa.size() == 8 * (grid_length * grid_length * grid_length));
     
     calc_initial_assoc<real><<<bpg, tpb>>>(
       pts.data().get(),
@@ -149,6 +151,7 @@ auto redistribute_pts_tests(void) -> void
 
     for (int i = 0; i < assoc_size; ++i) {
       assert(ta[i] == 0);
+      assert(pa[i] >= 0 && pa[i] < num_pts);
     }
 
     assert_givens<real><<<bpg, tpb>>>(
@@ -159,6 +162,14 @@ auto redistribute_pts_tests(void) -> void
       mesh.data().get());
     
     cudaDeviceSynchronize();
+
+    device_vector<int> nm{num_pts, 0};
+    
+    //nominate(assoc_size, pa, ta, la, nm);
+    nm[num_pts / 2] = 1;
+    fract_locations(assoc_size, pa, nm, la, fl);
+    fracture(assoc_size, num_tetra, pa, ta, la, nm, fl, mesh);
+    redistribute_pts<real>(assoc_size, num_tetra, mesh, pts, nm, fl, pa, ta, la);
   }
   
   std::cout << "All tests passed!\n" << std::endl;

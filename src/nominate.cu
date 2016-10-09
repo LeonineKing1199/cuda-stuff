@@ -60,10 +60,7 @@ auto nominate(
       int const b_ta_id{get<1>(b)};
       int const b_pa_id{get<0>(b)};
       
-      return (
-        a_ta_id == b_ta_id ?
-          (a_pa_id < b_pa_id) :
-          (a_ta_id < b_ta_id));
+      return a_ta_id == b_ta_id ? a_pa_id < b_pa_id : a_ta_id < b_ta_id;
     });
  
   
@@ -76,15 +73,14 @@ auto nominate(
   // remove tuple elements, using ta as the
   // unique key
   auto last_pair = unique_by_key_copy(
-    ta.begin(), ta.end(),
+    ta.begin(), ta.begin() + assoc_size,
     pa.begin(),
     ta_cpy.begin(),
     pa_cpy.begin());
 
-
   // unique_by_key_copy returns a pair of iterators (keys_last, values_last)
   int const assoc_cpy_size{static_cast<int>(distance(ta_cpy.begin(), last_pair.first))};
-    
+  
   fill(nm.begin(), nm.end(), 0);
   device_vector<int> nm_cpy{nm};
   
@@ -109,7 +105,7 @@ auto nominate(
     {
       atomicAdd(nm_cpy_data + pa_id, 1);
     });
-
+    
   // we perform a simple transformation over both ranges and
   // check for equality.
   // if the point occurred the same amount of times then all
