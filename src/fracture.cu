@@ -44,7 +44,7 @@ void fracture_kernel(
       int const la_id{la[tid]};
       stack_vector<tetra, 4> local_tets;
       
-      printf("pa %d => ta %d => la %d\n", pa_id, ta_id, la_id);
+      /*printf("pa %d => ta %d => la %d\n", pa_id, ta_id, la_id);//*/
       
       // check each bit of loc iteratively
       for (int i = 0; i < 4; ++i) {

@@ -123,7 +123,7 @@ void redistribute_pts_kernel(
 
     // now we have to do a write-back to main memory
     int const assoc_offset{assoc_size + (4 * atomicAdd(num_redistributions, 1))};
-    
+        
     copy(thrust::seq, local_pa.begin(), local_pa.end(), pa + assoc_offset);
     copy(thrust::seq, local_ta.begin(), local_ta.end(), ta + assoc_offset);
     copy(thrust::seq, local_la.begin(), local_la.end(), la + assoc_offset);
@@ -152,12 +152,6 @@ auto redistribute_pts(
     nm.data().get(),
     nm_ta.data().get());
   
-  cudaDeviceSynchronize();
-  std::cout << "assoc size is : " << assoc_size << "\n";
-  std::cout << "Before:\n";
-  for (auto v : nm) std::cout << v << ", ";
-  std::cout << "\n";//*/
-  
   redistribute_pts_kernel<T><<<bpg, tpb>>>(
     assoc_size,
     num_tetra,
@@ -170,12 +164,7 @@ auto redistribute_pts(
     ta.data().get(),
     la.data().get(),
     num_redistributions.data().get());
-  
-  cudaDeviceSynchronize();
-  std::cout << "After:\n";
-  for (auto v : nm) std::cout << v << ", ";
-  std::cout << "\n";//*/
-  
+    
   cudaDeviceSynchronize();
 }
 

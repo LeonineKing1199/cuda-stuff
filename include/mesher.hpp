@@ -186,7 +186,7 @@ public:
   auto triangulate(void) -> void
   {
     // allocate storage for the association buffers...
-    int const assoc_capacity{num_pts_};
+    int const assoc_capacity{8 * num_pts_};
     device_vector<int> pa{assoc_capacity, -1};
     device_vector<int> ta{assoc_capacity, -1};
     device_vector<int> la{assoc_capacity, -1};
