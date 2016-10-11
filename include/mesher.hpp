@@ -109,6 +109,7 @@ void assert_mesher_associations(
     
     assert(pa_id != -1);
     assert(ta_id != -1);
+    assert(la_id != -1);
     
     tetra const t = mesh[ta_id];
     auto const a = pts[t.x];
@@ -120,16 +121,67 @@ void assert_mesher_associations(
     
     auto const p = pts[pa_id];
     
+    if (loc<T>(a, b, c, d, p) != la_id) {
+      printf("tetra: %d %d %d %d\n \
+      point: %f %f %f: %d vs %d\n",
+      t.x, t.y, t.z, t.w,
+      p.x, p.y, p.z, la_id, loc<T>(a, b, c, d, p));
+    }
+    
     assert(loc<T>(a, b, c, d, p) != -1);
     assert(loc<T>(a, b, c, d, p) != 0);
     assert(loc<T>(a, b, c, d, p) == la_id);
   }
 }
 
+template <typename T>
+__global__
+void assert_is_outside(
+  point_t<T> const* __restrict__ pts,
+  tetra const t,
+  int const num_pts)
+{
+  for (auto tid = get_tid(); tid < num_pts; tid += grid_stride()) {
+    int const x{t.x};
+    int const y{t.y};
+    int const z{t.z};
+    int const w{t.w};
+    
+    if (tid == x || tid == y || tid == z || tid == w) {
+      return;
+    }
+    
+    point_t<T> const a = pts[x];
+    point_t<T> const b = pts[y];
+    point_t<T> const c = pts[z];
+    point_t<T> const d = pts[w];
+    
+    point_t<T> const p = pts[tid];
+    
+    int const la_id{loc<T>(a, b, c, d, p)};
+        
+    assert(la_id == -1);
+  }
+}
 
-
-
-
+template <typename T>
+__global__
+void assert_mesh_quality(
+  point_t<T> const* __restrict__ pts,
+  tetra const* __restrict__ mesh,
+  int const num_pts,
+  int const num_tetra)
+{
+  if (get_tid() != 0) {
+    return;
+  }
+  
+  for (int i = 0; i < num_tetra; ++i) {
+    tetra const t = mesh[i];
+    
+    assert_is_outside<T><<<bpg, tpb>>>(pts, t, num_pts);
+  }
+}
 
 
 // Main interface for the entire project
@@ -250,6 +302,16 @@ public:
       
       cudaDeviceSynchronize();
     }
+    
+    /*cudaDeviceSynchronize();
+    
+    assert_mesh_quality<T><<<1, 1>>>(
+      pts_.data().get(),
+      tetra_.data().get(),
+      num_pts_,
+      num_tetra_);
+    
+    cudaDeviceSynchronize();//*/
   }
 };
 

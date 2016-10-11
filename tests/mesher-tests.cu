@@ -21,7 +21,7 @@ auto mesher_tests(void) -> void
     using real = float;
     
     // grid of all points in x,y,z 0 through 9
-    int const grid_length{50};
+    int const grid_length{65};
     host_vector<point_t<real>> pts{gen_cartesian_domain<real>(grid_length)};
     
     pts.push_back(point_t<real>{0, 0, 0});
