@@ -10,6 +10,8 @@
 #include <thrust/tuple.h>
 #include <thrust/extrema.h>
 #include <thrust/for_each.h>
+#include <thrust/find.h>
+
 #include <bitset>
 #include <cassert>
 
@@ -38,6 +40,7 @@ using thrust::remove_if;
 using thrust::distance;
 using thrust::fill;
 using thrust::for_each;
+using thrust::find;
 
 // Okay, so bugs do exist and maybe asserts do need to be integrated
 // into the project at the moment T_T
@@ -122,10 +125,13 @@ void assert_mesher_associations(
     auto const p = pts[pa_id];
     
     if (loc<T>(a, b, c, d, p) != la_id) {
-      printf("tetra: %d %d %d %d\n \
-      point: %f %f %f: %d vs %d\n",
-      t.x, t.y, t.z, t.w,
-      p.x, p.y, p.z, la_id, loc<T>(a, b, c, d, p));
+      printf("\
+pa id: %d \n\
+tetra: %d %d %d %d\n\
+point: %f %f %f: %d vs %d\n",
+        pa_id,
+        t.x, t.y, t.z, t.w,
+        p.x, p.y, p.z, la_id, loc<T>(a, b, c, d, p));
     }
     
     assert(loc<T>(a, b, c, d, p) != -1);
@@ -213,7 +219,6 @@ private:
   // assume num_pts_ has been constructed
   auto init_tets(tetra const t) -> void
   {
-    
     int const est_num_tetra{8 * num_pts_};
     tetra_.resize(est_num_tetra);
     tetra_[0] = t;
@@ -268,7 +273,7 @@ public:
     // need to refine
     // need to redistribute points
     while (assoc_size != 0) {
-      std::cout << "Allocating temporary buffers..." << std::endl;
+      std::cout << "Insertion round!\n";
       
       device_vector<int> nm{num_pts_, 0};
       device_vector<int> nm_ta{num_tetra_, -1};
@@ -279,11 +284,10 @@ public:
       
       int const num_new_tetra{fl[assoc_size - 1]};
       
-      fracture(assoc_size, num_tetra_, pa, ta, la, nm, fl, tetra_);
+      fracture(assoc_size, num_tetra_, pa, ta, la, nm, fl, tetra_);      
       redistribute_pts<T>(assoc_size, num_tetra_, tetra_, pts_, nm, fl, pa, ta, la);    
       assoc_size = get_assoc_size(assoc_capacity, nm, pa, ta, la);
       
-            
       num_tetra_ += num_new_tetra;
       
       std::cout << "num new tetra: " << num_new_tetra << "\n";

@@ -1,14 +1,9 @@
 #ifndef REGULUS_LIB_FRACTURE_HPP_
 #define REGULUS_LIB_FRACTURE_HPP_
 
-using tetra = int4;
-
-namespace thrust {
-  template <typename T, typename Alloc>
-  class device_vector;
-}
-
+#include <thrust/device_vector.h>
 using thrust::device_vector;
+using tetra = int4;
 
 auto fracture(
   int const assoc_size,

@@ -44,18 +44,18 @@ void redistribute_pts_kernel(
 
     // this means the tetrahedron was not even written to
     if (tuple_id == -1) {
-      return;
+      continue;
     }
 
     // if the point was not nominated, return
     if (nm[pa[tuple_id]] != 1) {
-      return;
+      continue;
     }
 
     // if this thread is the current thread, we should NOT
     // invalidate the association so we should just bail
     if (tuple_id == tid) {
-      return;
+      continue;
     }
 
     // we now know that tuple_id is actually a valid tuple id!
@@ -116,6 +116,7 @@ void redistribute_pts_kernel(
       local_ta.push_back(-1);
     }
 
+    
     /*printf("New association tuple:\npa: %d %d %d %d\nta: %d %d %d %d\nla: %d %d %d %d\n\n",
       local_pa[0], local_pa[1], local_pa[2], local_pa[3],
       local_ta[0], local_ta[1], local_ta[2], local_ta[3],
