@@ -10,6 +10,20 @@ using tetra = int4;
 
 enum class orientation { positive = 1, zero = 0, negative = 2 };
 
+template <typename T>
+__host__ __device__
+auto make_matrix(
+  point_t<T> const& a,
+  point_t<T> const& b,
+  point_t<T> const& c,
+  point_t<T> const& d) -> matrix<T, 4, 4>
+{
+  return { 1, a.x, a.y, a.z,
+           1, b.x, b.y, b.z,
+           1, c.x, c.y, c.z,
+           1, d.x, d.y, d.z };
+}
+
 // Routine that calculates whether the point d
 // is above the triangle spanned by abc
 template <typename T>
@@ -21,10 +35,7 @@ auto orient(
   point_t<T> const& d)
 -> orientation
 { 
-  matrix<T, 4, 4> const m{ 1, a.x, a.y, a.z,
-                           1, b.x, b.y, b.z,
-                           1, c.x, c.y, c.z,
-                           1, d.x, d.y, d.z };
+  matrix<T, 4, 4> const m = make_matrix<T>(a, b, c, d);
 
   T const det_value = det<T, 4>(m);
   auto const not_equal_to_zero = !eq<T>(det_value, 0.0);
@@ -132,6 +143,22 @@ auto loc(
   }
   
   return loc;
+}
+
+
+// Determine the volume of the tetrahedron spanned
+// by points a, b, c, d
+template <typename T>
+__host__ __device__
+auto vol(
+  point_t<T> const& a,
+  point_t<T> const& b,
+  point_t<T> const& c,
+  point_t<T> const& d) -> T
+{
+  auto const m = make_matrix<T>(a, b, c, d);
+  
+  return absolute(det<T>(m)) / 6;
 }
 
 #endif // REGULUS_TETRA_HPP_

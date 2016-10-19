@@ -53,7 +53,7 @@ auto get_assoc_size_tests(void) -> void
         }
       });
       
-    auto const f = [] __device__ (int& v) -> void
+    auto const f = [=] __device__ (int& v) -> void
     {
       if (v > max / 2) {
         v = -1;

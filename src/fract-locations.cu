@@ -4,6 +4,7 @@
 #include <thrust/tuple.h>
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>
+#include <thrust/functional.h>
 
 #include "../include/lib/fract-locations.hpp"
 
@@ -39,7 +40,7 @@ auto fract_locations(
   device_vector<int> const& la,
   device_vector<int>& fl) -> void
 {
-  auto const zip_begin = make_zip_iterator(make_tuple(pa.begin(), la.begin()));
+  /*auto const zip_begin = make_zip_iterator(make_tuple(pa.begin(), la.begin()));
   int const* nm_data = nm.data().get();
   
   auto const begin = make_transform_iterator(
@@ -56,5 +57,5 @@ auto fract_locations(
   fill(fl.begin(), fl.begin() + assoc_size, -1);
   inclusive_scan(
     begin, begin + assoc_size,
-    fl.begin());
+    fl.begin());//*/
 }

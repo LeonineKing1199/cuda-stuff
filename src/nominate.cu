@@ -118,5 +118,5 @@ auto nominate(
     [] __device__ (int const a, int const b) -> int
     {
       return (a != 0) && (a - b == 0);
-    });
+    });//*/
 }

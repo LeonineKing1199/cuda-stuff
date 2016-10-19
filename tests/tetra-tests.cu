@@ -128,6 +128,12 @@ auto tetra_tests_impl(void) -> void
       
       assert(loc<real>(a, b, c, d, p) == -1);
     }
+    
+    // We should be able to calculate the volume of a tetrahedron
+    {      
+      assert(orient<real>(a, b, c, d) == orientation::positive);
+      assert(vol<real>(a, b, c, d) == 121.5);
+    }
   }
 }
 
