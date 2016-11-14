@@ -1,5 +1,7 @@
 #include "../include/math/rand-int-range.hpp"
 
+#include <thrust/detail/use_default.h>
+
 struct rand_gen
 {
   int min;
@@ -25,7 +27,7 @@ auto rand_int_range(
   int const seed) -> thrust::device_vector<int>
 {
   thrust::device_vector<int> rand_vals{(long unsigned int ) num_vals};
-  thrust::counting_iterator<int> it{seed};
+  thrust::counting_iterator<int, thrust::use_default, thrust::use_default, int> it{seed};
   
   thrust::transform(
     it, it + num_vals,
