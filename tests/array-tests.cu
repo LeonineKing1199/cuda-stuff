@@ -4,6 +4,8 @@
 #include "test-suite.hpp"
 #include "../include/array.hpp"
 
+using thrust::transform;
+
 __host__ __device__
 auto array_tests_impl(void) -> void
 {
@@ -12,16 +14,16 @@ auto array_tests_impl(void) -> void
     array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
     array<float, 4> b = a;
     
-    assert((a == b));
+    assert((a == b) && "failed `==` test");
     
-    assert(a[0] == 1.0f);
-    assert(a[1] == 2.0f);
-    assert(a[2] == 3.0f);
-    assert(a[3] == 4.0f);
+    assert(a[0] == 1.0f && "failed indexed comparison at 0");
+    assert(a[1] == 2.0f && "failed indexed comparison at 1");
+    assert(a[2] == 3.0f && "failed indexed comparison at 2");
+    assert(a[3] == 4.0f && "failed indexed comparison at 3");
     
     b[3] = 17.0f;
     
-    assert((a != b));
+    assert((a != b) && "failed `!=` test");
   }
   
   // it should be transformable
@@ -29,7 +31,7 @@ auto array_tests_impl(void) -> void
     array<float, 4> a{ 1.0f, 2.0f, 3.0f, 4.0f };
     array<float, 4> b{ 0 };
 
-    thrust::transform(
+    transform(
       thrust::seq,
       a.begin(), a.end(),
       b.begin(),
@@ -38,7 +40,7 @@ auto array_tests_impl(void) -> void
         return f * f;
       });
     
-    assert((b == array<float, 4>{ 1.0f, 4.0f, 9.0f, 16.0f }));
+    assert((b == array<float, 4>{ 1.0f, 4.0f, 9.0f, 16.0f }) && "Failed transformation");
   }
 }
 
@@ -50,15 +52,15 @@ void array_test_kernel(void)
 
 auto array_tests(void) -> void
 {
-  std::cout << "Beginning array tests!" << std::endl;
+  std::cout << "Beginning array tests!\n";
   
   array_tests_impl();
 
-  // we should be able to do everything on the device as well
+  // "we should be able to do everything on the device as well
   {
     array_test_kernel<<<1, 256>>>();
     cudaDeviceSynchronize();
   }
   
-  std::cout << "Array tests passed!\n" << std::endl;
+  std::cout << "Array tests passed!\n\n";
 }

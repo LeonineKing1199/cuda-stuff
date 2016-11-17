@@ -2,11 +2,11 @@
 
 auto test_suite(void) -> void
 {
-  std::cout << "Beginning test suite...\n" << std::endl;
+  std::cout << "Beginning test suite...\n\n";
   
   array_tests();
   stack_vector_tests();
-  domain_tests();
+  /*domain_tests();
   math_tests();
   matrix_tests();
   tetra_tests();
@@ -15,7 +15,7 @@ auto test_suite(void) -> void
   fracture_tests();
   get_assoc_size_tests();
   redistribute_pts_tests();
-  mesher_tests();
+  mesher_tests();*/
   
-  std::cout << "Tests passed!\n" << std::endl;
+  std::cout << "Tests passed!\n\n";
 }

@@ -10,9 +10,9 @@ struct array
   using iterator = value_type*;
   using const_reference = value_type const&;
   using const_iterator = value_type const*;
-  
+ 
   T data[N];
-  
+
   __host__ __device__
   auto operator[](size_type const idx) -> reference
   {
@@ -28,25 +28,31 @@ struct array
   __host__ __device__
   auto operator==(array<T, N> const& other) -> bool
   {
-    bool not_equal = false;
-    
-    for (int i = 0; i < N; ++i) {
-      not_equal = not_equal || (data[i] != other.data[i]);
+    bool v{ true };
+
+    for (size_type i = 0; i < N && v; ++i) {
+      v = (data[i] == other.data[i]);
     }
-    
-    return !not_equal;
+
+    return v;
   }
   
   __host__ __device__
   auto operator!=(array<T, N> const& other) -> bool
   {
-    return !(*this == other);
+    bool v{ true };
+
+    for (size_type i = 0; i < N && v; ++i) {
+      v = (data[i] == other.data[i]);
+    }
+
+    return !v;
   }
   
   __host__ __device__
   auto begin(void) -> iterator
   {
-    return &(data[0]);
+    return data;
   }
   
   __host__ __device__
