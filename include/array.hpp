@@ -26,7 +26,7 @@ struct array
   }
   
   __host__ __device__
-  auto operator==(array<T, N> const& other) -> bool
+  auto operator==(array<T, N> const& other) const -> bool
   {
     bool v{ true };
 
@@ -38,7 +38,7 @@ struct array
   }
   
   __host__ __device__
-  auto operator!=(array<T, N> const& other) -> bool
+  auto operator!=(array<T, N> const& other) const -> bool
   {
     bool v{ true };
 
@@ -50,34 +50,19 @@ struct array
   }
   
   __host__ __device__
-  auto begin(void) -> iterator
-  {
-    return data;
-  }
+  auto begin(void) -> iterator { return data; }
   
   __host__ __device__
-  auto begin(void) const -> const_iterator
-  {
-    return &(data[0]);
-  }
+  auto begin(void) const -> const_iterator { return data; }
   
   __host__ __device__
-  auto end(void) -> iterator
-  {
-    return begin() + N;
-  }
+  auto end(void) -> iterator { return begin() + N; }
   
   __host__ __device__
-  auto end(void) const -> const_iterator
-  {
-    return begin() + N;
-  }
+  auto end(void) const -> const_iterator { return begin() + N; }
   
   __host__ __device__
-  auto size(void) const -> size_type
-  {
-    return N;
-  }
+  auto size(void) const -> size_type { return N; }
 };  
 
 

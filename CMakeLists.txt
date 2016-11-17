@@ -20,7 +20,6 @@ link_directories(
         
 include_directories(
   include
-  src
   tests
   "C:/Users/christian/gtest/googletest/googletest/include"
   )
@@ -29,6 +28,10 @@ cuda_add_executable(
   regulus
   
   main.cu
+  
+  include/array.hpp
+  
+  tests/array-tests.cu
   )
   
 target_link_libraries(
@@ -38,5 +41,4 @@ target_link_libraries(
   "C:/Users/christian/gtest/build/googlemock/gtest/Release/gtest_main.lib"
   "C:/Users/christian/gtest/build/googlemock/gtest/Release/gtest.lib"
   )
-    
-add_test(FactorialTest regulus)  
+   

@@ -1,12 +1,35 @@
+#include "gtest/gtest.h"
+#include "array.hpp"
+#include "globals.hpp"
+
 #include <thrust/transform.h>
 #include <thrust/execution_policy.h>
-
-#include "test-suite.hpp"
-#include "../include/array.hpp"
+#include <thrust/device_vector.h>
+#include <thrust/host_vector.h>
 
 using thrust::transform;
+using thrust::device_vector;
+using thrust::host_vector;
 
-__host__ __device__
+__global__
+void device_tests()
+{
+
+}
+
+TEST(ArrayType, DefaultConstructible) 
+{
+  int const size{16};
+  array<int, size> const x{ { 0 } };
+  
+  EXPECT_EQ(16, x.size());
+  
+  for (auto const& v : x) {
+    EXPECT_EQ(0, v);
+  }
+}
+
+/*__host__ __device__
 auto array_tests_impl(void) -> void
 {
   // we should  be able to construct an array
@@ -63,4 +86,6 @@ auto array_tests(void) -> void
   }
   
   std::cout << "Array tests passed!\n\n";
-}
+}*/
+
+

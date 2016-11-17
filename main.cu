@@ -12,7 +12,7 @@ auto factorial(int const n) -> int
 }
 
 TEST(FactorialTest, HandlesZeroInput) {
-  EXPECT_EQ(-1, factorial(0));
+  EXPECT_EQ(1, factorial(0));
 }
 
 int main(int argc, char **argv)
