@@ -1,15 +1,20 @@
 #ifndef REGULUS_ARRAY_HPP_
 #define REGULUS_ARRAY_HPP_
 
-template <typename T, int N>
+template <typename T, long long N>
 struct array
 {
   using value_type = T;
-  using size_type = int;
+  using size_type = long long;
+  
+  using pointer = value_type*;
+  using const_pointer = value_type const*;
+  
+  using iterator = pointer;
+  using const_iterator = const_pointer;  
+  
   using reference = value_type&;
-  using iterator = value_type*;
   using const_reference = value_type const&;
-  using const_iterator = value_type const*;
  
   T data[N];
 
