@@ -30,8 +30,12 @@ cuda_add_executable(
   main.cu
   
   include/array.hpp
+  include/math/point.hpp
+  include/math/equals.hpp
+  include/math/matrix.hpp
   
   tests/array-tests.cu
+  tests/matrix-tests.cu
   )
   
 target_link_libraries(

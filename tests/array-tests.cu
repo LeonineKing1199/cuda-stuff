@@ -64,5 +64,26 @@ TEST(ArrayType, Equality)
   array<int, size> a{ { 0 } };
   array<int, size> b{ { 0 } };
   
-  EXPECT_EQ()
+  EXPECT_EQ(true, a == b);
+}
+
+TEST(ArrayType, FrontAndBack)
+{
+  array<int, 3> x = { 1, 2, 3 };
+  
+  EXPECT_EQ(x.front(), 1);
+  x.front() = 11;
+  EXPECT_EQ(x.front(), 11);
+  
+  EXPECT_EQ(x.back(), 3);
+  x.back() = 17;
+  EXPECT_EQ(x.back(), 17);
+}
+
+TEST(ArrayType, PointerBasedAccess)
+{
+  array<int, 3> const x = { 1, 2, 3 };
+  
+  typename array<int, 3>::const_pointer begin = x.data();
+  EXPECT_EQ(*begin, 1);
 }

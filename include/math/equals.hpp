@@ -5,7 +5,7 @@
 #include <limits>
 #include <cstdint>
 
-#define absolute(a)  ((a) >= 0.0 ? (a) : -(a))
+#define absolute(a) ((a) >= 0.0 ? (a) : -(a))
 
 template <typename T>
 struct epsilon {};
@@ -13,22 +13,22 @@ struct epsilon {};
 template <>
 struct epsilon<float>
 {
-  constexpr float static const e = FLT_EPSILON * 2;
+  constexpr float static const value = FLT_EPSILON;
 };
 
 template <>
 struct epsilon<double>
 {
-  constexpr double static const e = DBL_EPSILON * 2;
+  constexpr double static const value = DBL_EPSILON;
 };
 
 template <typename T>
 __host__ __device__
 __inline__
-auto eq(T const x, T const y) -> bool
+auto eq(T const& a, T const& b) -> bool
 {
-  T const a = x - y;
-  return (absolute(a) < epsilon<T>::e);
+  return absolute(a - b) <= (
+    (absolute(a) > absolute(b) ? absolute(b) : absolute(a)) * epsilon<T>::value);
 }
 
 template <typename T>

@@ -1,6 +1,10 @@
 #ifndef REGULUS_ARRAY_HPP_
 #define REGULUS_ARRAY_HPP_
 
+// We're trying to mimic the STL container here but it's woefully
+// incomplete when compared to the "real thing". But it does the
+// job most of the time.
+
 template <typename T, long long N>
 struct array
 {
@@ -16,18 +20,18 @@ struct array
   using reference = value_type&;
   using const_reference = value_type const&;
  
-  T data[N];
+  T data_[N];
 
   __host__ __device__
   auto operator[](size_type const idx) -> reference
   {
-    return data[idx];
+    return data_[idx];
   }
   
   __host__ __device__
   auto operator[](size_type const idx) const -> const_reference
   {
-    return data[idx];
+    return data_[idx];
   }
   
   __host__ __device__
@@ -36,7 +40,7 @@ struct array
     bool v{ true };
 
     for (size_type i = 0; i < N && v; ++i) {
-      v = (data[i] == other.data[i]);
+      v = (data_[i] == other.data_[i]);
     }
 
     return v;
@@ -48,17 +52,17 @@ struct array
     bool v{ true };
 
     for (size_type i = 0; i < N && v; ++i) {
-      v = (data[i] == other.data[i]);
+      v = (data_[i] == other.data_[i]);
     }
 
     return !v;
   }
   
   __host__ __device__
-  auto begin(void) -> iterator { return data; }
+  auto begin(void) -> iterator { return data_; }
   
   __host__ __device__
-  auto begin(void) const -> const_iterator { return data; }
+  auto begin(void) const -> const_iterator { return data_; }
   
   __host__ __device__
   auto end(void) -> iterator { return begin() + N; }
@@ -68,6 +72,42 @@ struct array
   
   __host__ __device__
   auto size(void) const -> size_type { return N; }
+  
+  __host__ __device__
+  auto front(void) -> reference
+  {
+    return (*this)[0];
+  }
+  
+  __host__ __device__
+  auto front(void) const -> const_reference
+  {
+    return (*this)[0];
+  }
+  
+  __host__ __device__
+  auto back(void) -> reference
+  {
+    return this->operator[](this->size() - 1);
+  }
+  
+  __host__ __device__
+  auto back(void) const -> const_reference
+  {
+    return this->operator[](this->size() - 1);
+  }
+  
+  __host__ __device__
+  auto data(void) -> pointer
+  {
+    return data_;
+  }
+  
+  __host__ __device__
+  auto data(void) const -> const_pointer
+  {
+    return data_;
+  }
 };  
 
 

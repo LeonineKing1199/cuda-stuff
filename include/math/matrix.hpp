@@ -1,6 +1,10 @@
 #ifndef REGULUS_MATRIX_HPP_
 #define REGULUS_MATRIX_HPP_
 
+#include "point.hpp"
+#include "array.hpp"
+#include "equals.hpp"
+
 #include <type_traits>
 #include <thrust/execution_policy.h>
 #include <thrust/transform.h>
@@ -12,34 +16,35 @@
 #include <limits>
 #include <cstdint>
 
-#include "point.hpp"
-#include "../array.hpp"
-#include "equals.hpp"
-
 // we create a forward declaration so that we may create a
 // specialization that we also wish to use in the
 // implementation
 template <
   typename T,
-  int N,
-  int M,
+  long long N,
+  long long M,
   typename
 >
 class matrix;
 
 // we treat vectors as 1 x L matrices
-template <typename T, int L>
+template <typename T, long long L>
 using vector = matrix<T, 1, L, enable_if_t<std::is_floating_point<T>::value>>;
 
 // our formal matrix definition
 template <
   typename T,
-  int N,
-  int M,
+  long long N,
+  long long M,
   typename = enable_if_t<std::is_floating_point<T>::value>
 >
 struct matrix
 { 
+  __host__ __device__
+  auto operator==(matrix const& other) -> bool
+  {
+    return true;
+  }
   using array_type = array<T, N * M>;
   using value_type = typename array_type::value_type;
   using size_type = typename array_type::size_type;
@@ -48,7 +53,7 @@ struct matrix
 
   array<T, N * M> data;
     
-  __host__ __device__
+  /*__host__ __device__
   auto operator==(matrix<T, N, M> const& other) const -> bool
   {
     auto const& other_data = other.data;
@@ -142,7 +147,7 @@ struct matrix
   }*/
 };
 
-
+/*
 // dot product
 template <typename T, int L>
 __host__ __device__
@@ -374,6 +379,6 @@ auto LU_decompose(
 -> void
 {
   LU_decompose(a, pivot(a), L, U);
-}
+}*/
 
 #endif // REGULUS_MATRIX_HPP_

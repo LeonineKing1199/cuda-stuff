@@ -1,9 +1,13 @@
-#include <stdio.h>
+#include "gtest/gtest.h"
+#include "math/matrix.hpp"
 
-#include "test-suite.hpp"
-#include "../include/math/matrix.hpp"
+TEST(MatrixType, DefaultConstructible)
+{
+  matrix<float, 2, 2> m{ { 0 } };
+  
+}
 
-__host__ __device__
+/*__host__ __device__
 auto matrix_tests_impl(void) -> void
 {
   // we should be able to construct a matrix type
@@ -224,4 +228,4 @@ auto matrix_tests(void) -> void
   }
   
   std::cout << "Passed tests!\n" << std::endl;
-}
+}*/
