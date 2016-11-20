@@ -2,6 +2,7 @@
 #include "array.hpp"
 #include "globals.hpp"
 
+#include <iostream>
 #include <thrust/transform.h>
 #include <thrust/execution_policy.h>
 #include <thrust/device_vector.h>
@@ -46,7 +47,7 @@ TEST(ArrayType, DefaultConstructible)
 }
 
 TEST(ArrayType, DeviceTests)
-{
+{ 
   int const size = 128;
   device_vector<int> vals{ size, -1 };
   device_tests<<<bpg, tpb>>>(vals.data().get(), size);  
@@ -55,7 +56,7 @@ TEST(ArrayType, DeviceTests)
   host_vector<int> h_vals{ vals };
   for (int v : h_vals) {
     EXPECT_EQ(8128, v);
-  }  
+  }     
 }
 
 TEST(ArrayType, Equality)
@@ -86,4 +87,14 @@ TEST(ArrayType, PointerBasedAccess)
   
   typename array<int, 3>::const_pointer begin = x.data();
   EXPECT_EQ(*begin, 1);
+}
+
+TEST(ArrayType, ConstCorrectness)
+{
+  using size_type = typename array<int, 5>::size_type;
+  array<int, 5> const a = { 1, 2, 3, 4, 5 };
+  
+  for (size_type i = 0; i < a.size(); ++i) {
+    EXPECT_EQ(i + 1, a[i]);
+  }
 }

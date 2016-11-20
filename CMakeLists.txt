@@ -30,6 +30,7 @@ cuda_add_executable(
   main.cu
   
   include/array.hpp
+  include/enable_if.hpp
   include/math/point.hpp
   include/math/equals.hpp
   include/math/matrix.hpp

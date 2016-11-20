@@ -4,113 +4,92 @@
 #include "point.hpp"
 #include "array.hpp"
 #include "equals.hpp"
+#include "enable_if.hpp"
 
-#include <type_traits>
-#include <thrust/execution_policy.h>
-#include <thrust/transform.h>
-#include <thrust/functional.h>
-#include <thrust/reduce.h>
-#include <thrust/swap.h>
-
-#include <cmath>
-#include <limits>
-#include <cstdint>
-
-// we create a forward declaration so that we may create a
-// specialization that we also wish to use in the
-// implementation
 template <
-  typename T,
-  long long N,
-  long long M,
-  typename
+  typename T, 
+  long long L,
+  typename = enable_if_t<std::is_floating_point<T>::value>
 >
-class matrix;
-
-// we treat vectors as 1 x L matrices
-template <typename T, long long L>
-using vector = matrix<T, 1, L, enable_if_t<std::is_floating_point<T>::value>>;
+using vector = array<T, L>;
 
 // our formal matrix definition
 template <
   typename T,
-  long long N,
-  long long M,
+  long long N, // rows
+  long long M, // cols
   typename = enable_if_t<std::is_floating_point<T>::value>
 >
 struct matrix
 { 
-  __host__ __device__
-  auto operator==(matrix const& other) -> bool
-  {
-    return true;
-  }
   using array_type = array<T, N * M>;
   using value_type = typename array_type::value_type;
   using size_type = typename array_type::size_type;
-  using reference = value_type&;
-  using const_reference = value_type const&;
+  using reference = typename array_type::reference;
+  using const_reference = typename array_type::const_reference;
+  using pointer = typename array_type::pointer;
+  using const_pointer = typename array_type::const_pointer;
 
-  array<T, N * M> data;
+  array<T, N * M> data_;
     
-  /*__host__ __device__
+  // by using this style of access pattern, we get the 
+  // really nice [i][j] syntax
+  __host__ __device__  
+  auto operator[](size_type const row_idx) -> pointer
+  {
+    return data_.data() + (row_idx * M);
+  }
+  
+  __host__ __device__
+  auto operator[](size_type const row_idx) const -> const_pointer
+  {
+    return data_.data() + (row_idx * M);
+  }
+    
+  __host__ __device__
   auto operator==(matrix<T, N, M> const& other) const -> bool
   {
-    auto const& other_data = other.data;
-    
-    for (size_type i = 0; i < data.size(); ++i) {
-      T const x = data[i];
-      T const y = other_data[i];
-            
-      if (!eq(x, y))
-        return false;
-    }
-      
-    return true; 
+    return data_ == other.data_;
   }
   
   __host__ __device__
   auto operator!=(matrix<T, N, M> const& other) const -> bool
   {
-    return !(*this == other);
+    return data_ != other.data_;
   }
   
   __host__ __device__
-  auto operator[](int const idx) -> T&
+  auto size(void) const -> size_type
   {
-    return data[idx];
+    return data_.size();
   }
   
+  // each row has num_cols elements
   __host__ __device__
-  auto operator[](int const idx) const -> T const&
+  auto row(size_type const idx) const -> vector<T, M>
   {
-    return data[idx];
-  }
-  
-  __host__ __device__
-  auto row(int const idx) const -> vector<T, M>
-  {
-    vector<T, M> r{ T{} };
+    vector<T, M> r;
     
-    for (int i = 0; i < M; ++i) {
-      r[i] = data[idx * M + i];
+    for (size_type i = 0; i < M; ++i) {
+      r[i] = data_[idx * M + i];
     }
     
     return r;
   }
   
+  // each column has num_rows elements
   __host__ __device__
   auto col(int const idx) const -> vector<T, N>
   {
-    vector<T, N> c{ T{} };
+    vector<T, N> c;
     
     for (int i = 0; i < N; ++i) {
-      c[i] = data[i * M + idx];
+      c[i] = data_[i * M + idx];
     }
     
     return c;
   }
-  
+/*  
   __host__ __device__
   auto swap_rows(size_type const a_idx, size_type const b_idx) -> matrix&
   {

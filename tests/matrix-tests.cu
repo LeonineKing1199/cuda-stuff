@@ -3,8 +3,29 @@
 
 TEST(MatrixType, DefaultConstructible)
 {
-  matrix<float, 2, 2> m{ { 0 } };
+  float a = 1.0;
+  float b = 2.0;
+  float c = 3.0;
+  float d = 4.0;
+  float e = 5.0;
+  float f = 6.0;
   
+  matrix<float, 2, 3> m{ a, b, c, d, e, f };
+  
+  EXPECT_EQ(6, m.size());
+      
+  EXPECT_EQ(true, (m == matrix<float, 2, 3>{ a, b, c, d, e, f }));
+      
+  matrix<float, 2, 3> const not_m{ a, b, c, d, e, 7.0 };
+      
+  EXPECT_EQ(true, (m != not_m));
+        
+  EXPECT_EQ(true, (m.row(0) == vector<float, 3>{ a, b, c }));
+  EXPECT_EQ(true, (m.row(1) == vector<float, 3>{ d, e, f }));
+  
+  EXPECT_EQ(true, (m.col(0) == vector<float, 2>{ a, d }));
+  EXPECT_EQ(true, (m.col(1) == vector<float, 2>{ b, e }));
+  EXPECT_EQ(true, (m.col(2) == vector<float, 2>{ c, f }));
 }
 
 /*__host__ __device__

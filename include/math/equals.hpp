@@ -31,6 +31,10 @@ auto eq(T const& a, T const& b) -> bool
     (absolute(a) > absolute(b) ? absolute(b) : absolute(a)) * epsilon<T>::value);
 }
 
+
+
+
+
 template <typename T>
 __host__ __device__
 __inline__

@@ -1,13 +1,11 @@
 #ifndef REGULUS_COMMON_HPP_
 #define REGULUS_COMMON_HPP_
 
+#include "enable_if.hpp"
+
 #include <iostream>
 #include <type_traits>
 #include <cfloat>
-
-// helper template that emulates C++14 functionality
-template <bool B, typename T = void>
-using enable_if_t = typename std::enable_if<B, T>::type;
 
 // our main point class
 // as a sane default the encapsulated typedef is whatever
