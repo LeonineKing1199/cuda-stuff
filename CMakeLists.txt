@@ -12,6 +12,7 @@ set(
   CUDA_NVCC_FLAGS
   
   -gencode arch=compute_61,code=sm_61
+  --expt-extended-lambda
   )
                                  
 link_directories(
@@ -34,9 +35,12 @@ cuda_add_executable(
   include/math/point.hpp
   include/math/equals.hpp
   include/math/matrix.hpp
+  include/math/vector.hpp
   
   tests/array-tests.cu
   tests/matrix-tests.cu
+  tests/equals.cu
+  tests/vector-tests.cu
   )
   
 target_link_libraries(

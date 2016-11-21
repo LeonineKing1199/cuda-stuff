@@ -1,6 +1,8 @@
 #ifndef REGULUS_EQUALS_HPP_
 #define REGULUS_EQUALS_HPP_
 
+#include "enable_if.hpp"
+
 #include <cmath>
 #include <limits>
 #include <cstdint>
@@ -35,12 +37,15 @@ auto eq(T const& a, T const& b) -> bool
 
 
 
-template <typename T>
+template <
+  typename T,
+  typename = enable_if_t<std::is_floating_point<T>::value>
+>
 __host__ __device__
 __inline__
 auto round_to(T const t, int const digits) -> T
 {
-  int const factor = pow(10.0, digits);
+  T const factor = pow(10.0, digits);
   T const val = t * factor;
   
   if (val < 0) {
