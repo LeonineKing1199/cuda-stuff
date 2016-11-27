@@ -1,156 +1,117 @@
-#include "test-suite.hpp"
-#include "../include/math/tetra.hpp"
+#include "gtest/gtest.h"
+#include "math/point.hpp"
+#include "math/tetra.hpp"
 
-__host__ __device__
-auto tetra_tests_impl(void) -> void
+struct tetra_type : public testing::Test
 {
-  using real = float;
-  using point_t = point_t<real>;
+public:
+  using real = double;
+  using point_f = point_t<real>;
   
-  // We should be able to determine the orientation
-  // of a tetrahedron correctly
-  {    
-    point_t const a{ 0.0, 0.0, 0.0 };
-    point_t const b{ 9.0, 0.0, 0.0 };
-    point_t const c{ 0.0, 9.0, 0.0 };
-    point_t const d{ 0.0, 0.0, 9.0 };
-    
-    assert(orient<real>(a, b, c, d) == orientation::positive);
-    
-    point_t const e{ 3.0, 3.0, 0.0 };
-    assert(orient<real>(a, b, c, e) == orientation::zero);
-    
-    point_t const f{ 3.0, 3.0, -3.0 };
-    assert(orient<real>(a, b, c, f) == orientation::negative);
-  }
+  point_f const a;
+  point_f const b;
+  point_f const c;
+  point_f const d;
   
-  // insphere stuff should work as well
-  {
-    point_t const a{ 0.0, 0.0, 0.0 };
-    point_t const b{ 9.0, 0.0, 0.0 };
-    point_t const c{ 0.0, 9.0, 0.0 };
-    point_t const d{ 0.0, 0.0, 9.0 };
-    
-    // asserting logical basis for insphere results
-    assert(orient<real>(a, b, c, d) == orientation::positive);
-    
-    point_t const x{ 3.0, 3.0, 3.0 };
-    assert(insphere<real>(a, b, c, d, x) == orientation::negative);
-    
-    point_t const y{ 1000.0, 1000.0, 1000.0 };
-    assert(insphere<real>(a, b, c, d, y) == orientation::positive);
-    
-    point_t const z = b;
-    assert(insphere<real>(a, b, c, d, z) == orientation::zero);
-  }
+  tetra_type(void) 
+  : a{ 0, 0, 0 },
+    b{ 9, 0, 0 },
+    c{ 0, 9, 0 },
+    d{ 0, 0, 9 }
+  {}
+};
+
+TEST_F(tetra_type, global_initialization)
+{
+  EXPECT_TRUE((a == point_f{ 0, 0, 0 }));
+  EXPECT_TRUE((b == point_f{ 9, 0, 0 }));
+  EXPECT_TRUE((c == point_f{ 0, 9, 0 }));
+  EXPECT_TRUE((d == point_f{ 0, 0, 9 }));
+}
+
+TEST_F(tetra_type, should_yield_orientation)
+{
+  EXPECT_EQ(orientation::positive, orient<real>(a, b, c, d));
+}
+
+TEST_F(tetra_type, should_work_with_insphere_stuff_as_well)
+{
+  point_f const x{ 3, 3, 3 };
+  point_f const y{ 1000, 1000, 1000 };
+  point_f const z = b;
   
-  // Okay, now for location code testing!
-  // For any tetrahedron, we have:
-  // 4 vertices
-  // 4 faces
-  // 6 edges
-  // an internal region
-  // outside the tetrahedron
-  // We must make sure our loc routine can accurately
-  // solve these
-  {
-    point_t const a{ 0.0, 0.0, 0.0 };
-    point_t const b{ 9.0, 0.0, 0.0 };
-    point_t const c{ 0.0, 9.0, 0.0 };
-    point_t const d{ 0.0, 0.0, 9.0 };
-    
-    assert(orient<real>(a, b, c, d) == orientation::positive);
-    
+  EXPECT_TRUE((orientation::negative == insphere<real>(a, b, c, d, x)));
+  EXPECT_TRUE((orientation::positive == insphere<real>(a, b, c, d, y)));
+  EXPECT_TRUE((orientation::zero == insphere<real>(a, b, c, d, z)));
+}
+
+TEST_F(tetra_type, all_the_location_code_testing)
+{
     // We should be able to accurately determine all 6 edge intersections
     {
-      point_t const e10{ 4.5, 0.0, 0.0 };
-      point_t const e20{ 0.0, 4.5, 0.0 };
-      point_t const e30{ 0.0, 0.0, 4.5 };
-      point_t const e21{ 4.5, 4.5, 0.0 };
-      point_t const e31{ 4.5, 0.0, 4.5 };
-      point_t const e23{ 0.0, 4.5, 4.5 };
+      point_f const e10{ 4.5, 0.0, 0.0 };
+      point_f const e20{ 0.0, 4.5, 0.0 };
+      point_f const e30{ 0.0, 0.0, 4.5 };
+      point_f const e21{ 4.5, 4.5, 0.0 };
+      point_f const e31{ 4.5, 0.0, 4.5 };
+      point_f const e23{ 0.0, 4.5, 4.5 };
             
-      assert((
+      EXPECT_TRUE((
         eq<real>(det(matrix<real, 4, 4>{ 1, 0, 0, 0,
                                          1, 0, 9, 0,
                                          1, 0, 0, 9,
                                          1, 4.5, 0, 0 }), 364.5)));
                                          
-      assert(orient<real>(d, c, b, e10) == orientation::positive);
-      assert(orient<real>(a, c, d, e10) == orientation::positive);
-      assert(orient<real>(a, d, b, e10) == orientation::zero);
-      assert(orient<real>(a, b, c, e10) == orientation::zero);
+      EXPECT_TRUE(orient<real>(d, c, b, e10) == orientation::positive);
+      EXPECT_TRUE(orient<real>(a, c, d, e10) == orientation::positive);
+      EXPECT_TRUE(orient<real>(a, d, b, e10) == orientation::zero);
+      EXPECT_TRUE(orient<real>(a, b, c, e10) == orientation::zero);
       
-      assert(loc<real>(a, b, c, d, e10) == 3);
-      assert(loc<real>(a, b, c, d, e20) == 5);
-      assert(loc<real>(a, b, c, d, e30) == 9);
-      assert(loc<real>(a, b, c, d, e21) == 6);
-      assert(loc<real>(a, b, c, d, e31) == 10);
-      assert(loc<real>(a, b, c, d, e23) == 12);
+      EXPECT_TRUE(loc<real>(a, b, c, d, e10) == 3);
+      EXPECT_TRUE(loc<real>(a, b, c, d, e20) == 5);
+      EXPECT_TRUE(loc<real>(a, b, c, d, e30) == 9);
+      EXPECT_TRUE(loc<real>(a, b, c, d, e21) == 6);
+      EXPECT_TRUE(loc<real>(a, b, c, d, e31) == 10);
+      EXPECT_TRUE(loc<real>(a, b, c, d, e23) == 12);
     }
     
     // We should be able to determine all 4 face intersections
     {
-      point_t const f321{ 3, 3, 3 };
-      point_t const f023{ 0, 4.5, 3 };
-      point_t const f031{ 4.5, 0, 3 };
-      point_t const f012{ 3, 3, 0 };
+      point_f const f321{ 3, 3, 3 };
+      point_f const f023{ 0, 4.5, 3 };
+      point_f const f031{ 4.5, 0, 3 };
+      point_f const f012{ 3, 3, 0 };
       
-      assert(loc<real>(a, b, c, d, f321) == 14);
-      assert(loc<real>(a, b, c, d, f023) == 13);
-      assert(loc<real>(a, b, c, d, f031) == 11);
-      assert(loc<real>(a, b, c, d, f012) == 7);
+      EXPECT_TRUE(loc<real>(a, b, c, d, f321) == 14);
+      EXPECT_TRUE(loc<real>(a, b, c, d, f023) == 13);
+      EXPECT_TRUE(loc<real>(a, b, c, d, f031) == 11);
+      EXPECT_TRUE(loc<real>(a, b, c, d, f012) == 7);
     }
     
     // We should be able to determine all 4 vertex intersections
     {
-      point_t const v0 = a;
-      point_t const v1 = b;
-      point_t const v2 = c;
-      point_t const v3 = d;
+      point_f const v0 = a;
+      point_f const v1 = b;
+      point_f const v2 = c;
+      point_f const v3 = d;
       
-      assert(loc<real>(a, b, c, d, v0) == 1);
-      assert(loc<real>(a, b, c, d, v1) == 2);
-      assert(loc<real>(a, b, c, d, v2) == 4);
-      assert(loc<real>(a, b, c, d, v3) == 8);
+      EXPECT_TRUE(loc<real>(a, b, c, d, v0) == 1);
+      EXPECT_TRUE(loc<real>(a, b, c, d, v1) == 2);
+      EXPECT_TRUE(loc<real>(a, b, c, d, v2) == 4);
+      EXPECT_TRUE(loc<real>(a, b, c, d, v3) == 8);
     }
     
     // We should be able to determine if a point is inside a tetrahedron
     {
-      point_t const p{ 1, 1, 1 };
+      point_f const p{ 1, 1, 1 };
       
-      assert(loc<real>(a, b, c, d, p) == 15);
+      EXPECT_TRUE(loc<real>(a, b, c, d, p) == 15);
     }
     
     // We should be able to determine if a point is outside a tetrahedron
     {
-      point_t const p{ 3.01, 3.01, 3.01 };
+      point_f const p{ 3.01, 3.01, 3.01 };
       
-      assert(loc<real>(a, b, c, d, p) == -1);
+      EXPECT_TRUE(loc<real>(a, b, c, d, p) == -1);
     }
-    
-    // We should be able to calculate the volume of a tetrahedron
-    {      
-      assert(orient<real>(a, b, c, d) == orientation::positive);
-      assert(vol<real>(a, b, c, d) == 121.5);
-    }
-  }
-}
-
-__global__
-void tetra_tests_kernel(void)
-{
-  tetra_tests_impl();
-}
-
-auto tetra_tests(void) -> void
-{
-  std::cout << "Beginning tetra tests!" << std::endl;
-  
-  tetra_tests_impl();
-  
-  tetra_tests_kernel<<<1, 256>>>();
-  cudaDeviceSynchronize();
-  
-  std::cout << "All tests passed\n" << std::endl;
 }

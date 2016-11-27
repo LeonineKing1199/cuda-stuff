@@ -36,11 +36,15 @@ cuda_add_executable(
   include/math/equals.hpp
   include/math/matrix.hpp
   include/math/vector.hpp
+  include/math/tetra.hpp
+  
+  src/point.cu
   
   tests/array-tests.cu
   tests/matrix-tests.cu
   tests/equals.cu
   tests/vector-tests.cu
+  tests/tetra-tests.cu
   )
   
 target_link_libraries(

@@ -1,6 +1,5 @@
+#include "math/point.hpp"
 #include <iostream>
-
-#include "../include/math/point.hpp"
 
 __host__ __device__
 auto operator==(point_t<float> const& a, point_t<float> const& b) -> bool
