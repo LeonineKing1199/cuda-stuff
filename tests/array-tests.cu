@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include "catch.hpp"
 #include "array.hpp"
 #include "globals.hpp"
 
@@ -34,67 +34,70 @@ void device_tests(int* vals, int const size)
   }
 }
 
-TEST(ArrayType, DefaultConstructible) 
+TEST_CASE("array<T, N>") 
 {
-  int const size = 16;
-  array<int, size> const x{ { 0 } };
+  SECTION("should be default-constructible")
+  {
+    int const size = 16;
+    array<int, size> const x{ { 0 } };
+    
+    REQUIRE(16 == x.size());
+    
+    for (auto const& v : x) {
+      REQUIRE(0 == v);
+    }
+  }
   
-  EXPECT_EQ(16, x.size());
+  SECTION("should work on the device too")
+  {
+    int const size = 128;
+    device_vector<int> vals{ size, -1 };
+    device_tests<<<bpg, tpb>>>(vals.data().get(), size);  
+    cudaDeviceSynchronize();
+    
+    host_vector<int> h_vals{ vals };
+    for (int v : h_vals) {
+      REQUIRE(8128 == v);
+    }       
+  }
   
-  for (auto const& v : x) {
-    EXPECT_EQ(0, v);
+  SECTION("should be comparable")
+  {
+    int const size = 16;
+    array<int, size> a{ { 0 } };
+    array<int, size> b{ { 0 } };
+    
+    REQUIRE(a == b);
+  }
+  
+  SECTION("should support the front and back methods")
+  {
+    array<int, 3> x = { 1, 2, 3 };
+    
+    REQUIRE(x.front() == 1);
+    x.front() = 11;
+    REQUIRE(x.front() == 11);
+    
+    REQUIRE(x.back() == 3);
+    x.back() = 17;
+    REQUIRE(x.back() == 17);    
+  }
+  
+  SECTION("should support pointer-based access")
+  {
+    array<int, 3> const x = { 1, 2, 3 };
+    typename array<int, 3>::const_pointer begin = x.data();
+    REQUIRE(*begin == 1);
+  }
+  
+  SECTION("should support const-correctness")
+  {
+    using size_type = typename array<int, 5>::size_type;
+    array<int, 5> const a = { 1, 2, 3, 4, 5 };
+    
+    for (size_type i = 0; i < a.size(); ++i) {
+      REQUIRE(i + 1 == a[i]);
+    }  
   }
 }
 
-TEST(ArrayType, DeviceTests)
-{ 
-  int const size = 128;
-  device_vector<int> vals{ size, -1 };
-  device_tests<<<bpg, tpb>>>(vals.data().get(), size);  
-  cudaDeviceSynchronize();
-  
-  host_vector<int> h_vals{ vals };
-  for (int v : h_vals) {
-    EXPECT_EQ(8128, v);
-  }     
-}
-
-TEST(ArrayType, Equality)
-{
-  int const size = 16;
-  array<int, size> a{ { 0 } };
-  array<int, size> b{ { 0 } };
-  
-  EXPECT_EQ(true, a == b);
-}
-
-TEST(ArrayType, FrontAndBack)
-{
-  array<int, 3> x = { 1, 2, 3 };
-  
-  EXPECT_EQ(x.front(), 1);
-  x.front() = 11;
-  EXPECT_EQ(x.front(), 11);
-  
-  EXPECT_EQ(x.back(), 3);
-  x.back() = 17;
-  EXPECT_EQ(x.back(), 17);
-}
-
-TEST(ArrayType, PointerBasedAccess)
-{
-  array<int, 3> const x = { 1, 2, 3 };
-  
-  typename array<int, 3>::const_pointer begin = x.data();
-  EXPECT_EQ(*begin, 1);
-}
-
-TEST(ArrayType, ConstCorrectness)
-{
-  using size_type = typename array<int, 5>::size_type;
-  array<int, 5> const a = { 1, 2, 3, 4, 5 };
-  
-  for (size_type i = 0; i < a.size(); ++i) {
-    EXPECT_EQ(i + 1, a[i]);
-  }
-}

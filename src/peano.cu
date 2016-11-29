@@ -4,7 +4,7 @@
  * and any co-authors/contributors to the project.
  */
 
-#include "../include/domain.hpp"
+#include "domain.hpp"
 
 /*! This function computes a Peano-Hilbert key for an integer triplet (x,y,z),
  *  with x,y,z in the range between 0 and 2^bits-1.

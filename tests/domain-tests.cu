@@ -1,27 +1,9 @@
-#include "test-suite.hpp"
-#include "../include/domain.hpp"
-#include "../include/timer.hpp"
+#include "catch.hpp"
+#include "domain.hpp"
 
-auto domain_tests(void) -> void
+/*auto domain_tests(void) -> void
 {
   std::cout << "Running domain-tests" << std::endl;
-
-  // We should be able to declare a point type
-  {
-    typename point_type<float>::type point{0, 1, 2};
-
-    assert(point.x == 0);
-    assert(point.y == 1);
-    assert(point.z == 2);
-  }
-
-  {
-    typename point_type<double>::type point{0, 1, 2};
-
-    assert(point.x == 0);
-    assert(point.y == 1);
-    assert(point.z == 2);
-  }
 
   // We should be able to allocate a Cartesian distribution
   {
@@ -44,7 +26,7 @@ auto domain_tests(void) -> void
       1 0 1
       1 1 0
       1 1 1
-    */
+   
     
     assert((pts[0] == point{0, 0, 0}));
     assert((pts[1] == point{0, 0, 1}));
@@ -111,4 +93,4 @@ auto domain_tests(void) -> void
   }
   
   std::cout << "Completed domain tests!\n" << std::endl;
-}
+}*/
