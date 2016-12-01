@@ -905,7 +905,7 @@ namespace Matchers {
     {
         typedef ExpressionT ExpressionType;
 
-        virtual ~Matcher() {}
+        virtual ~Matcher() noexcept {}
         virtual Ptr<Matcher> clone() const = 0;
         virtual bool match( ExpressionT const& expr ) const = 0;
         virtual std::string toString() const = 0;

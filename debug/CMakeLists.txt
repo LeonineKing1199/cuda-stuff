@@ -42,10 +42,10 @@ cuda_add_executable(
   ../src/peano.cu
   
   ../tests/array-tests.cu
-  #../tests/matrix-tests.cu
-  #../tests/equals.cu
-  #../tests/vector-tests.cu
-  #../tests/tetra-tests.cu
+  ../tests/matrix-tests.cu
+  ../tests/equals.cu
+  ../tests/vector-tests.cu
+  ../tests/tetra-tests.cu
   #../tests/domain-tests.cu
   )
   
@@ -53,5 +53,6 @@ target_link_libraries(
   regulus
   
   cudadevrt
+  cudart
   )
    
