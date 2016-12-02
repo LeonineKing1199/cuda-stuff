@@ -46,7 +46,7 @@ cuda_add_executable(
   ../tests/equals.cu
   ../tests/vector-tests.cu
   ../tests/tetra-tests.cu
-  #../tests/domain-tests.cu
+  ../tests/domain-tests.cu
   )
   
 target_link_libraries(

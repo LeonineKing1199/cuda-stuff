@@ -50,10 +50,10 @@ struct peanokey_hash : public thrust::unary_function<point_t<T>, peanokey>
   peanokey operator()(point_t<T> p) const
   {
     return peano_hilbert_key(
-		static_cast<float>(p.x), 
-		static_cast<float>(p.y), 
-		static_cast<float>(p.z), 
-		23);
+  		static_cast<int>(p.x), 
+  		static_cast<int>(p.y), 
+  		static_cast<int>(p.z), 
+  		23);
   }
 };
 

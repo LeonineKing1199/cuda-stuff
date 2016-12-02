@@ -1,18 +1,16 @@
 #include "catch.hpp"
 #include "domain.hpp"
 
-/*auto domain_tests(void) -> void
+TEST_CASE("Domain generation routines")
 {
-  std::cout << "Running domain-tests" << std::endl;
-
-  // We should be able to allocate a Cartesian distribution
+  SECTION("we should be able to allocate a Cartesian distribution")
   {
     using real = float;
     int const gl = 2;
 
     thrust::host_vector<point_t<real>> pts = gen_cartesian_domain<real>(gl);
 
-    assert(pts.size() == 8);
+    REQUIRE((pts.size() == 8));
 
     using point = point_t<real>;
 
@@ -26,35 +24,19 @@
       1 0 1
       1 1 0
       1 1 1
-   
+   */
     
-    assert((pts[0] == point{0, 0, 0}));
-    assert((pts[1] == point{0, 0, 1}));
-    assert((pts[2] == point{0, 1, 0}));
-    assert((pts[3] == point{0, 1, 1}));
-    assert((pts[4] == point{1, 0, 0}));
-    assert((pts[5] == point{1, 0, 1}));
-    assert((pts[6] == point{1, 1, 0}));
-    assert((pts[7] == point{1, 1, 1}));
+    REQUIRE((pts[0] == point{0, 0, 0}));
+    REQUIRE((pts[1] == point{0, 0, 1}));
+    REQUIRE((pts[2] == point{0, 1, 0}));
+    REQUIRE((pts[3] == point{0, 1, 1}));
+    REQUIRE((pts[4] == point{1, 0, 0}));
+    REQUIRE((pts[5] == point{1, 0, 1}));
+    REQUIRE((pts[6] == point{1, 1, 0}));
+    REQUIRE((pts[7] == point{1, 1, 1}));
   }
-  
-  // We should be able to sort by the Peanokey of each point (device version)
-  {
-    using real = float;
-    
-    timer t;
-    t.start();
-    
-    int const gl = 12;
-    
-    thrust::host_vector<point_t<real>> pts{gen_cartesian_domain<real>(gl)};
-    sort_by_peanokey<real>(pts);
-    
-    t.end();
-    //std::cout << "Device spatial sorting completed in : " << t.get_duration() << " seconds" << std::endl;
-  }
-  
-  // We should be able to sort by the Peanokey of each point (host version)
+
+  SECTION("we should be able to sort by the Peanokey of each point")
   {
     using real = float;
     using point = point_t<real>;
@@ -64,17 +46,17 @@
     thrust::host_vector<point_t<real>> pts = gen_cartesian_domain<real>(gl);
     sort_by_peanokey<real>(pts);
     
-    assert((pts[0] == point{0, 0, 0}));
-    assert((pts[1] == point{0, 1, 0}));
-    assert((pts[2] == point{1, 1, 0}));
-    assert((pts[3] == point{1, 0, 0}));
-    assert((pts[4] == point{1, 0, 1}));
-    assert((pts[5] == point{1, 1, 1}));
-    assert((pts[6] == point{0, 1, 1}));
-    assert((pts[7] == point{0, 0, 1}));
+    REQUIRE((pts[0] == point{0, 0, 0}));
+    REQUIRE((pts[1] == point{0, 1, 0}));
+    REQUIRE((pts[2] == point{1, 1, 0}));
+    REQUIRE((pts[3] == point{1, 0, 0}));
+    REQUIRE((pts[4] == point{1, 0, 1}));
+    REQUIRE((pts[5] == point{1, 1, 1}));
+    REQUIRE((pts[6] == point{0, 1, 1}));
+    REQUIRE((pts[7] == point{0, 0, 1}));
   }
-  
-  // We should be able to sort by a device-based range
+
+  SECTION("we should be able to sort by a device-based range")
   {
     using point = point_t<float>;
     
@@ -82,15 +64,13 @@
     
     sort_by_peanokey<float>(pts.data(), pts.data() + pts.size());
     
-    assert((pts[0] == point{0, 0, 0}));
-    assert((pts[1] == point{0, 1, 0}));
-    assert((pts[2] == point{1, 1, 0}));
-    assert((pts[3] == point{1, 0, 0}));
-    assert((pts[4] == point{1, 0, 1}));
-    assert((pts[5] == point{1, 1, 1}));
-    assert((pts[6] == point{0, 1, 1}));
-    assert((pts[7] == point{0, 0, 1}));
+    REQUIRE((pts[0] == point{0, 0, 0}));
+    REQUIRE((pts[1] == point{0, 1, 0}));
+    REQUIRE((pts[2] == point{1, 1, 0}));
+    REQUIRE((pts[3] == point{1, 0, 0}));
+    REQUIRE((pts[4] == point{1, 0, 1}));
+    REQUIRE((pts[5] == point{1, 1, 1}));
+    REQUIRE((pts[6] == point{0, 1, 1}));
+    REQUIRE((pts[7] == point{0, 0, 1}));
   }
-  
-  std::cout << "Completed domain tests!\n" << std::endl;
-}*/
+}

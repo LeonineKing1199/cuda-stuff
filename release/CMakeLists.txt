@@ -47,5 +47,6 @@ target_link_libraries(
   regulus
   
   cudadevrt
+  cudart
   )
    
