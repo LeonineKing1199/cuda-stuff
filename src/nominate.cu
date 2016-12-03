@@ -61,7 +61,7 @@ auto nominate(
       long long const b_ta_id{get<1>(b)};
       long long const b_pa_id{get<0>(b)};
       
-      return a_ta_id == b_ta_id ? a_pa_id < b_pa_id : a_ta_id < b_ta_id;
+      return (a_ta_id == b_ta_id) ? (a_pa_id < b_pa_id) : (a_ta_id < b_ta_id);
     });
  
   
