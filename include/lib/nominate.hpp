@@ -2,14 +2,13 @@
 #define REGULUS_LIB_NOMINATE_HPP_
 
 #include <thrust/device_vector.h>
-using thrust::device_vector;
 
 auto nominate(
-  int const assoc_size,
-  device_vector<int>& pa,
-  device_vector<int>& ta,
-  device_vector<int>& la,
-  device_vector<int>& nm) -> void;
+  long long const assoc_size,
+  thrust::device_vector<long long>& pa,
+  thrust::device_vector<long long>& ta,
+  thrust::device_vector<long long>& la,
+  thrust::device_vector<long long>& nm) -> void;
 
 
 #endif // REGULUS_LIB_NOMINATE_HPP_

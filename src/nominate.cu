@@ -1,3 +1,6 @@
+#include "globals.hpp"
+#include "lib/nominate.hpp"
+
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>
 #include <thrust/tuple.h>
@@ -8,9 +11,6 @@
 #include <thrust/pair.h>
 #include <thrust/distance.h>
 #include <thrust/transform.h>
-
-#include "../include/globals.hpp"
-#include "../include/lib/nominate.hpp"
 
 using thrust::device_vector;
 using thrust::fill;
@@ -34,11 +34,11 @@ using thrust::transform;
 */
 
 auto nominate(
-  int const assoc_size,
-  device_vector<int>& pa,
-  device_vector<int>& ta,
-  device_vector<int>& la,
-  device_vector<int>& nm) -> void
+  long long const assoc_size,
+  thrust::device_vector<long long>& pa,
+  thrust::device_vector<long long>& ta,
+  thrust::device_vector<long long>& la,
+  thrust::device_vector<long long>& nm) -> void
 {
   // the first thing we want to do is sort everything
   // by ta
@@ -52,14 +52,14 @@ auto nominate(
   sort(
     zip_begin, zip_begin + assoc_size,
     [] __device__ (
-      tuple<int, int, int> const& a,
-      tuple<int, int, int> const& b) -> bool
+      tuple<long long, long long, long long> const& a,
+      tuple<long long, long long, long long> const& b) -> bool
     {
-      int const a_ta_id{get<1>(a)};
-      int const a_pa_id{get<0>(a)};
+      long long const a_ta_id{get<1>(a)};
+      long long const a_pa_id{get<0>(a)};
       
-      int const b_ta_id{get<1>(b)};
-      int const b_pa_id{get<0>(b)};
+      long long const b_ta_id{get<1>(b)};
+      long long const b_pa_id{get<0>(b)};
       
       return a_ta_id == b_ta_id ? a_pa_id < b_pa_id : a_ta_id < b_ta_id;
     });
@@ -68,8 +68,8 @@ auto nominate(
   // we then want to allocate copies of our
   // association arrays to write our stream
   // compaction to
-  device_vector<int> pa_cpy{assoc_size, -1};
-  device_vector<int> ta_cpy{assoc_size, -1};
+  device_vector<long long> pa_cpy{static_cast<unsigned long long>(assoc_size), -1};
+  device_vector<long long> ta_cpy{static_cast<unsigned long long>(assoc_size), -1};
     
   // remove tuple elements, using ta as the
   // unique key
@@ -80,13 +80,13 @@ auto nominate(
     pa_cpy.begin());
 
   // unique_by_key_copy returns a pair of iterators (keys_last, values_last)
-  int const assoc_cpy_size{static_cast<int>(distance(ta_cpy.begin(), last_pair.first))};
+  long long const assoc_cpy_size{static_cast<long long>(distance(ta_cpy.begin(), last_pair.first))};
   
   fill(nm.begin(), nm.end(), 0);
-  device_vector<int> nm_cpy{nm};
+  device_vector<long long> nm_cpy{nm};
   
-  int* nm_data = nm.data().get();
-  int* nm_cpy_data = nm_cpy.data().get();
+  long long* nm_data = nm.data().get();
+  long long* nm_cpy_data = nm_cpy.data().get();
   
   // this is how we count the number of occurrences for a particular
   // point index
@@ -95,16 +95,16 @@ auto nominate(
   // with it and as such is not up for nomination
   for_each(
     pa.begin(), pa.begin() + assoc_size,
-    [=] __device__ (int const pa_id) -> void
+    [=] __device__ (long long const pa_id) -> void
     {
-      atomicAdd(nm_data + pa_id, 1);
+      atomicAdd(reinterpret_cast<unsigned long long*>(nm_data + pa_id), 1);
     });
     
   for_each(
     pa_cpy.begin(), pa_cpy.begin() + assoc_cpy_size,
-    [=] __device__ (int const pa_id) -> void
+    [=] __device__ (long long const pa_id) -> void
     {
-      atomicAdd(nm_cpy_data + pa_id, 1);
+      atomicAdd(reinterpret_cast<unsigned long long*>(nm_cpy_data + pa_id), 1);
     });
     
   // we perform a simple transformation over both ranges and
@@ -115,7 +115,7 @@ auto nominate(
     nm.begin(), nm.end(),
     nm_cpy.begin(),
     nm.begin(),
-    [] __device__ (int const a, int const b) -> int
+    [] __device__ (long long const a, long long const b) -> long long
     {
       return (a != 0) && (a - b == 0);
     });//*/

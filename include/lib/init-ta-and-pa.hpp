@@ -1,9 +1,9 @@
 #ifndef REGULUS_LIB_CALC_TA_AND_PA_HPP_
 #define REGULUS_LIB_CALC_TA_AND_PA_HPP_
 
-#include "../math/point.hpp"
-#include "../math/tetra.hpp"
-#include "../globals.hpp"
+#include "globals.hpp"
+#include "math/point.hpp"
+#include "math/tetra.hpp"
 
 template <typename T>
 __global__
@@ -11,9 +11,9 @@ void calc_initial_assoc(
   point_t<T> const* __restrict__ pts,
   int const num_pts,
   tetra const t,
-  int* __restrict__ pa,
-  int* __restrict__ ta,
-  int* __restrict__ la)
+  long long* __restrict__ pa,
+  long long* __restrict__ ta,
+  long long* __restrict__ la)
 {
   for (auto tid = get_tid(); tid < num_pts; tid += grid_stride()) {
     auto const a = pts[t.x];

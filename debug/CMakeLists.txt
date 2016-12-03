@@ -37,9 +37,13 @@ cuda_add_executable(
   ../include/math/matrix.hpp
   ../include/math/vector.hpp
   ../include/math/tetra.hpp
+
+  ../include/lib/init-ta-and-pa.hpp
+  ../include/lib/nominate.hpp
   
   ../src/point.cu
   ../src/peano.cu
+  ../src/nominate.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu
@@ -47,6 +51,7 @@ cuda_add_executable(
   ../tests/vector-tests.cu
   ../tests/tetra-tests.cu
   ../tests/domain-tests.cu
+  ../tests/nomination-tests.cu
   )
   
 target_link_libraries(

@@ -1,14 +1,13 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 
-#include "test-suite.hpp"
-#include "../include/globals.hpp"
-#include "../include/lib/nominate.hpp"
-#include "../include/math/rand-int-range.hpp"
+#include "globals.hpp"
+#include "lib/nominate.hpp"
+#include "math/rand-int-range.hpp"
 
 using thrust::device_vector;
 using thrust::host_vector;
-
+/*
 __global__
 void assert_unique(
   int const assoc_size,
@@ -58,7 +57,7 @@ auto nomination_tests(void) -> void
     /*for (unsigned i = 0; i < nm.size(); ++i) {
       std::cout << nm[i] << " ";
     }
-    std::cout << "\n";//*/
+    std::cout << "\n";//
   }
   
   {
@@ -93,8 +92,8 @@ auto nomination_tests(void) -> void
     /*for (unsigned i = 0; i < nm.size(); ++i) {
       std::cout << nm[i];
     }
-    std::cout << "\n";//*/
+    std::cout << "\n";//
   }
   
   std::cout << "Tests Passed!\n" << std::endl;
-}
+}*/
