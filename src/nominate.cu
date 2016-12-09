@@ -1,4 +1,6 @@
 #include "globals.hpp"
+#include "size_type.hpp"
+#include "index_t.hpp"
 #include "lib/nominate.hpp"
 
 #include <thrust/device_vector.h>
@@ -34,11 +36,11 @@ using thrust::transform;
 */
 
 auto nominate(
-  long long const assoc_size,
-  thrust::device_vector<long long>& pa,
-  thrust::device_vector<long long>& ta,
-  thrust::device_vector<long long>& la,
-  thrust::device_vector<long long>& nm) -> void
+  size_t const assoc_size,
+  thrust::device_vector<index_t>& pa,
+  thrust::device_vector<index_t>& ta,
+  thrust::device_vector<index_t>& la,
+  thrust::device_vector<unsigned>& nm) -> void
 {
   // the first thing we want to do is sort everything
   // by ta
@@ -52,14 +54,14 @@ auto nominate(
   sort(
     zip_begin, zip_begin + assoc_size,
     [] __device__ (
-      tuple<long long, long long, long long> const& a,
-      tuple<long long, long long, long long> const& b) -> bool
+      tuple<index_t, index_t, index_t> const& a,
+      tuple<index_t, index_t, index_t> const& b) -> bool
     {
-      long long const a_ta_id{get<1>(a)};
-      long long const a_pa_id{get<0>(a)};
+      index_t const a_ta_id{get<1>(a)};
+      index_t const a_pa_id{get<0>(a)};
       
-      long long const b_ta_id{get<1>(b)};
-      long long const b_pa_id{get<0>(b)};
+      index_t const b_ta_id{get<1>(b)};
+      index_t const b_pa_id{get<0>(b)};
       
       return (a_ta_id == b_ta_id) ? (a_pa_id < b_pa_id) : (a_ta_id < b_ta_id);
     });
@@ -68,8 +70,8 @@ auto nominate(
   // we then want to allocate copies of our
   // association arrays to write our stream
   // compaction to
-  device_vector<long long> pa_cpy{static_cast<unsigned long long>(assoc_size), -1};
-  device_vector<long long> ta_cpy{static_cast<unsigned long long>(assoc_size), -1};
+  device_vector<index_t> pa_cpy{assoc_size};
+  device_vector<index_t> ta_cpy{assoc_size};
     
   // remove tuple elements, using ta as the
   // unique key
@@ -80,13 +82,13 @@ auto nominate(
     pa_cpy.begin());
 
   // unique_by_key_copy returns a pair of iterators (keys_last, values_last)
-  long long const assoc_cpy_size{static_cast<long long>(distance(ta_cpy.begin(), last_pair.first))};
+  size_t const assoc_cpy_size{static_cast<size_t>(distance(ta_cpy.begin(), last_pair.first))};
   
   fill(nm.begin(), nm.end(), 0);
-  device_vector<long long> nm_cpy{nm};
+  device_vector<unsigned> nm_cpy{nm};
   
-  long long* nm_data = nm.data().get();
-  long long* nm_cpy_data = nm_cpy.data().get();
+  unsigned* nm_data = nm.data().get();
+  unsigned* nm_cpy_data = nm_cpy.data().get();
   
   // this is how we count the number of occurrences for a particular
   // point index
@@ -95,16 +97,16 @@ auto nominate(
   // with it and as such is not up for nomination
   for_each(
     pa.begin(), pa.begin() + assoc_size,
-    [=] __device__ (long long const pa_id) -> void
+    [=] __device__ (index_t const pa_id) -> void
     {
-      atomicAdd(reinterpret_cast<unsigned long long*>(nm_data + pa_id), 1);
+      atomicAdd(nm_data + pa_id, 1);
     });
     
   for_each(
     pa_cpy.begin(), pa_cpy.begin() + assoc_cpy_size,
-    [=] __device__ (long long const pa_id) -> void
+    [=] __device__ (index_t const pa_id) -> void
     {
-      atomicAdd(reinterpret_cast<unsigned long long*>(nm_cpy_data + pa_id), 1);
+      atomicAdd(nm_cpy_data + pa_id, 1);
     });
     
   // we perform a simple transformation over both ranges and
@@ -115,7 +117,7 @@ auto nominate(
     nm.begin(), nm.end(),
     nm_cpy.begin(),
     nm.begin(),
-    [] __device__ (long long const a, long long const b) -> long long
+    [] __device__ (unsigned const a, unsigned const b) -> unsigned
     {
       return (a != 0) && (a - b == 0);
     });//*/

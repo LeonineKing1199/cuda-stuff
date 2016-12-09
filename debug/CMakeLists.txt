@@ -31,6 +31,8 @@ cuda_add_executable(
   ../include/array.hpp
   ../include/enable_if.hpp
   ../include/domain.hpp
+  ../include/size_type.hpp
+  ../include/index_t.hpp
   
   ../include/math/point.hpp
   ../include/math/equals.hpp
