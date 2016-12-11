@@ -53,7 +53,7 @@ cuda_add_executable(
   ../tests/matrix-tests.cu
   ../tests/equals.cu
   ../tests/vector-tests.cu
-  ../tests/tetra-tests.cu
+  #../tests/tetra-tests.cu
   ../tests/domain-tests.cu
   ../tests/nomination-tests.cu
   )

@@ -115,13 +115,14 @@ auto loc(
   point_t<T> const& b,
   point_t<T> const& c,
   point_t<T> const& d,
-  point_t<T> const& p)
--> int
+  point_t<T> const& p
+) -> unsigned char
 {
-  int const face_ids[12] = { 3, 2, 1,
-                             0, 2, 3,
-                             0, 3, 1,
-                             0, 1, 2 };
+  return 0;
+  /*matrix<int, 4, 4> const face_ids = { 3, 2, 1,
+                                       0, 2, 3,
+                                       0, 3, 1,
+                                       0, 1, 2 };
   
   int const num_pts{4};
   array<point_t<T>, num_pts> const pts{a, b, c, d};
@@ -129,20 +130,20 @@ auto loc(
   int loc{0};
   
   for (int i = 0; i < num_pts; ++i) {
-    orientation const ort{orient<T>(
-      pts[face_ids[i * 3 + 0]],
-      pts[face_ids[i * 3 + 1]],
-      pts[face_ids[i * 3 + 2]],
-      p)};
+    orientation const ort = orient<T>(
+      pts[face_ids[i][0]],
+      pts[face_ids[i][1]],
+      pts[face_ids[i][2]],
+      p);
     
     if (ort == orientation::negative) {
       return -1;
     }
     
-    loc |= (static_cast<unsigned int>(ort) << i);
+    loc |= (ort << i);
   }
   
-  return loc;
+  return loc;//*/
 }
 
 

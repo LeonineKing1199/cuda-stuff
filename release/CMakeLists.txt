@@ -32,15 +32,23 @@ cuda_add_executable(
   ../include/array.hpp
   ../include/enable_if.hpp
   ../include/domain.hpp
+  ../include/size_type.hpp
+  ../include/index_t.hpp
   
   ../include/math/point.hpp
   ../include/math/equals.hpp
   ../include/math/matrix.hpp
   ../include/math/vector.hpp
   ../include/math/tetra.hpp
+  ../include/math/rand-int-range.hpp
+
+  ../include/lib/init-ta-and-pa.hpp
+  ../include/lib/nominate.hpp
   
   ../src/point.cu
   ../src/peano.cu
+  ../src/nominate.cu
+  ../src/rand-int-range.cu
   )
   
 target_link_libraries(

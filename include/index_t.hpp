@@ -4,58 +4,74 @@
 #include "enable_if.hpp"
 #include <type_traits>
 
-struct index_t
+template <
+  typename T,
+  typename = enable_if_t<!(std::is_same<T, bool>::value)>,
+  typename = enable_if_t<std::is_integral<T>::value>,
+  typename = enable_if_t<std::is_signed<T>::value>>
+struct maybe_int_t
 {
-	long long int v;
+public:
 
-	__host__ __device__ index_t(void) : v{-1} {}
-  __host__ __device__ index_t(long long int u) : v{u} {}
-  __host__ __device__ index_t(index_t const& other) : v{other.v} {}
-  __host__ __device__ index_t(index_t&& other) : v{other.v} {}
+  T v;
 
+  // constructors
+
+  // default = invalid
+  __host__ __device__ 
+  maybe_int_t(void) : v{-1} {}
+
+  // simple copy and move constructors
+  __host__ __device__ 
+  maybe_int_t(T u) : v{u} {}
+
+  __host__ __device__ 
+  maybe_int_t(maybe_int_t const& other) : v{other.v} {}
+
+  __host__ __device__ 
+  maybe_int_t(maybe_int_t&& other) : v{std::move(other.v)} {}
+
+  // implicit conversion operators
   __host__ __device__
-	operator bool(void) const 
+  explicit operator bool(void) const 
   { return v >= 0; }
 
   __host__ __device__
-  operator unsigned long long int(void) const
-  {
-    return static_cast<unsigned long long int>(v);
-  }
+  operator T(void) const
+  { return static_cast<typename std::make_unsigned<T>::type>(v); }
 
+  // copy and move assignment operators
   __host__ __device__
-  auto operator=(index_t const& other) -> index_t&
+  auto operator=(maybe_int_t const& other) -> maybe_int_t&
   { v = other.v; return *this; }
 
   __host__ __device__
-  auto operator=(index_t&& other) -> index_t&
-  { v = other.v; return *this; }
+  auto operator=(maybe_int_t&& other) -> maybe_int_t&
+  { v = std::move(other.v); return *this; }
 
+  // equality-based overloads
   __host__ __device__
-  auto operator==(index_t const& other) const -> bool
+  auto operator==(maybe_int_t const& other) const -> bool
   { return v == other.v; }
 
   __host__ __device__
-  auto operator!=(index_t const& other) const -> bool
+  auto operator!=(maybe_int_t const& other) const -> bool
   { return v != other.v; }
 
   __host__ __device__
-  auto operator<(index_t const& other) const -> bool
+  auto operator<(maybe_int_t const& other) const -> bool
   { return v < other.v; }
 
   __host__ __device__
-  auto operator>(index_t const& other) const -> bool
+  auto operator>(maybe_int_t const& other) const -> bool
   { return v > other.v; }
 
-  template <
-    typename T,
-    typename = enable_if_t<std::is_integral<T>::value>
-  >
   __host__ __device__
-  auto operator+(T const& t) const -> index_t
-  {
-    return {v + t};
-  }
+  auto operator+(T const& t) const -> maybe_int_t
+  { return {v + t}; }
 };
+
+using index_t = maybe_int_t<long long int>;
+using loc_t = maybe_int_t<char>;
 
 #endif // REGULUS_INDEX_T_HPP_

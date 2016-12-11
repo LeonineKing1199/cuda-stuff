@@ -99,14 +99,14 @@ auto nominate(
     pa.begin(), pa.begin() + assoc_size,
     [=] __device__ (index_t const pa_id) -> void
     {
-      atomicAdd(nm_data + static_cast<unsigned long long>(pa_id), 1);
+      atomicAdd(nm_data + pa_id, 1);
     });
     
   for_each(
     pa_cpy.begin(), pa_cpy.begin() + assoc_cpy_size,
     [=] __device__ (index_t const pa_id) -> void
     {
-      atomicAdd(nm_cpy_data + static_cast<unsigned long long>(pa_id), 1);
+      atomicAdd(nm_cpy_data + pa_id, 1);
     });
     
   // we perform a simple transformation over both ranges and
