@@ -1,5 +1,4 @@
-#include "../include/math/rand-int-range.hpp"
-
+#include "math/rand-int-range.hpp"
 #include <thrust/detail/use_default.h>
 
 struct rand_gen

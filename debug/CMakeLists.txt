@@ -39,6 +39,7 @@ cuda_add_executable(
   ../include/math/matrix.hpp
   ../include/math/vector.hpp
   ../include/math/tetra.hpp
+  ../include/math/rand-int-range.hpp
 
   ../include/lib/init-ta-and-pa.hpp
   ../include/lib/nominate.hpp
@@ -46,6 +47,7 @@ cuda_add_executable(
   ../src/point.cu
   ../src/peano.cu
   ../src/nominate.cu
+  ../src/rand-int-range.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu
