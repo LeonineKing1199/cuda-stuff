@@ -6,12 +6,14 @@
 
 template <
   typename T,
-  typename = enable_if_t<!(std::is_same<T, bool>::value)>,
   typename = enable_if_t<std::is_integral<T>::value>,
   typename = enable_if_t<std::is_signed<T>::value>>
 struct maybe_int_t
 {
 public:
+
+  using value_type = T;
+  using unsigned_value_type = typename std::make_unsigned<T>::type;
 
   T v;
 
@@ -37,8 +39,8 @@ public:
   { return v >= 0; }
 
   __host__ __device__
-  operator T(void) const
-  { return static_cast<typename std::make_unsigned<T>::type>(v); }
+  operator unsigned_value_type(void) const
+  { return static_cast<unsigned_value_type>(v); }
 
   // copy and move assignment operators
   __host__ __device__

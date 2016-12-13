@@ -2,9 +2,10 @@
 #define REGULUS_TETRA_HPP_
 
 #include "point.hpp"
-#include "../array.hpp"
+#include "array.hpp"
 #include "matrix.hpp"
 #include "equals.hpp"
+#include "index_t.hpp"
 
 using tetra = int4;
 
@@ -116,9 +117,11 @@ auto loc(
   point_t<T> const& c,
   point_t<T> const& d,
   point_t<T> const& p
-) -> unsigned char
+) -> loc_t
 {
-  return 0;
+  loc_t::unsigned_value_type loc = 0;
+
+  return loc_t{};
   /*matrix<int, 4, 4> const face_ids = { 3, 2, 1,
                                        0, 2, 3,
                                        0, 3, 1,

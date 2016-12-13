@@ -35,7 +35,7 @@ TEST_CASE("The nomination function with a smaller data set")
 
   device_vector<index_t> ta{h_ta};
   device_vector<index_t> pa{h_pa};
-  device_vector<index_t> la{assoc_size};
+  device_vector<loc_t> la{assoc_size};
 
   // create the nomination array
   // the number of the points is simply the largest value in the pa_data
@@ -83,7 +83,7 @@ TEST_CASE("The nomination function with a larger dataset")
 
   device_vector<index_t> pa{assoc_size};
   device_vector<index_t> ta{assoc_size};
-  device_vector<index_t> la{assoc_size};
+  device_vector<loc_t> la{assoc_size};
 
   {
     auto const rand_pa = rand_int_range(min, max, assoc_size, 0);

@@ -55,12 +55,12 @@ TEST_CASE("Our tetrahedral implementation")
       REQUIRE(orient<real>(a, d, b, e10) == orientation::zero);
       REQUIRE(orient<real>(a, b, c, e10) == orientation::zero);
       
-      REQUIRE(loc<real>(a, b, c, d, e10) == 3);
-      REQUIRE(loc<real>(a, b, c, d, e20) == 5);
-      REQUIRE(loc<real>(a, b, c, d, e30) == 9);
-      REQUIRE(loc<real>(a, b, c, d, e21) == 6);
-      REQUIRE(loc<real>(a, b, c, d, e31) == 10);
-      REQUIRE(loc<real>(a, b, c, d, e23) == 12);
+      REQUIRE(loc<real>(a, b, c, d, e10) == loc_t{3});
+      REQUIRE(loc<real>(a, b, c, d, e20) == loc_t{5});
+      REQUIRE(loc<real>(a, b, c, d, e30) == loc_t{9});
+      REQUIRE(loc<real>(a, b, c, d, e21) == loc_t{6});
+      REQUIRE(loc<real>(a, b, c, d, e31) == loc_t{10});
+      REQUIRE(loc<real>(a, b, c, d, e23) == loc_t{12});
     }
     
     // We should be able to determine all 4 face intersections
@@ -70,10 +70,10 @@ TEST_CASE("Our tetrahedral implementation")
       point_f const f031{ 4.5, 0, 3 };
       point_f const f012{ 3, 3, 0 };
       
-      REQUIRE(loc<real>(a, b, c, d, f321) == 14);
-      REQUIRE(loc<real>(a, b, c, d, f023) == 13);
-      REQUIRE(loc<real>(a, b, c, d, f031) == 11);
-      REQUIRE(loc<real>(a, b, c, d, f012) == 7);
+      REQUIRE(loc<real>(a, b, c, d, f321) == loc_t{14});
+      REQUIRE(loc<real>(a, b, c, d, f023) == loc_t{13});
+      REQUIRE(loc<real>(a, b, c, d, f031) == loc_t{11});
+      REQUIRE(loc<real>(a, b, c, d, f012) == loc_t{7});
     }
     
     // We should be able to determine all 4 vertex intersections
@@ -83,24 +83,24 @@ TEST_CASE("Our tetrahedral implementation")
       point_f const v2 = c;
       point_f const v3 = d;
       
-      REQUIRE(loc<real>(a, b, c, d, v0) == 1);
-      REQUIRE(loc<real>(a, b, c, d, v1) == 2);
-      REQUIRE(loc<real>(a, b, c, d, v2) == 4);
-      REQUIRE(loc<real>(a, b, c, d, v3) == 8);
+      REQUIRE(loc<real>(a, b, c, d, v0) == loc_t{1});
+      REQUIRE(loc<real>(a, b, c, d, v1) == loc_t{2});
+      REQUIRE(loc<real>(a, b, c, d, v2) == loc_t{4});
+      REQUIRE(loc<real>(a, b, c, d, v3) == loc_t{8});
     }
     
     // We should be able to determine if a point is inside a tetrahedron
     {
       point_f const p{ 1, 1, 1 };
       
-      REQUIRE(loc<real>(a, b, c, d, p) == 15);
+      REQUIRE(loc<real>(a, b, c, d, p) == loc_t{15});
     }
     
     // We should be able to determine if a point is outside a tetrahedron
     {
       point_f const p{ 3.01, 3.01, 3.01 };
       
-      REQUIRE(loc<real>(a, b, c, d, p) == -1);
+      REQUIRE(loc<real>(a, b, c, d, p) == loc_t{});
     }
   }
 }

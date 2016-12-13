@@ -39,7 +39,7 @@ auto nominate(
   size_t const assoc_size,
   thrust::device_vector<index_t>& pa,
   thrust::device_vector<index_t>& ta,
-  thrust::device_vector<index_t>& la,
+  thrust::device_vector<loc_t>& la,
   thrust::device_vector<unsigned>& nm) -> void
 {
   // the first thing we want to do is sort everything
@@ -54,8 +54,8 @@ auto nominate(
   sort(
     zip_begin, zip_begin + assoc_size,
     [] __device__ (
-      tuple<index_t, index_t, index_t> const& a,
-      tuple<index_t, index_t, index_t> const& b) -> bool
+      tuple<index_t, index_t, loc_t> const& a,
+      tuple<index_t, index_t, loc_t> const& b) -> bool
     {
       index_t const a_ta_id{get<1>(a)};
       index_t const a_pa_id{get<0>(a)};
