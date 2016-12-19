@@ -3,6 +3,7 @@
 
 #include "enable_if.hpp"
 #include <type_traits>
+#include <iostream>
 
 template <
   typename T,
@@ -75,5 +76,12 @@ public:
 
 using index_t = maybe_int_t<long long int>;
 using loc_t = maybe_int_t<char>;
+
+/*(template <typename T>
+auto operator<<(std::ostream& os, maybe_int_t<T> const& m) -> std::ostream&
+{
+  os << m.v;
+  return os;
+}*/
 
 #endif // REGULUS_INDEX_T_HPP_
