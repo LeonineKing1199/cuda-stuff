@@ -1,12 +1,10 @@
+#include "lib/fract-locations.hpp"
 #include <thrust/device_vector.h>
 #include <vector>
 
-#include "test-suite.hpp"
-#include "../include/lib/fract-locations.hpp"
-
 using thrust::device_vector;
 
-auto fract_location_tests(void) -> void
+/*auto fract_location_tests(void) -> void
 {
   std::cout << "Beginning fracture location tests..." << std::endl;
   
@@ -36,3 +34,4 @@ auto fract_location_tests(void) -> void
   
   std::cout << "Tests passed!\n" << std::endl;
 }
+//*/

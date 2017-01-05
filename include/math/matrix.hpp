@@ -6,7 +6,7 @@
 #include "array.hpp"
 #include "equals.hpp"
 #include "enable_if.hpp"
-
+#include <iostream>
 
 // our formal matrix definition
 template <
@@ -169,6 +169,34 @@ auto det(matrix<T, N, N> const& m) -> T
   }
   
   return det_value;
+}
+
+template <typename T, long long N, long long M>
+auto operator<<(std::ostream& os, matrix<T, N, M> const& m) -> std::ostream&
+{
+  for (long long i = 0; i < N; ++i) {
+    if (i == 0) {
+      os << "{ ";
+    } else {
+      os << "  ";
+    }
+
+    for (long long j = 0; j < M; ++j) {
+      if ((i * M) + j == (N * M) - 1) {
+        os << m[i][j];
+      } else {
+        os << m[i][j] << ", ";
+      }
+    }
+
+    if (i != N - 1) {
+      os << "\n";
+    }
+  }
+
+  os << " }";
+
+  return os;
 }
 
 #endif // REGULUS_MATRIX_HPP_

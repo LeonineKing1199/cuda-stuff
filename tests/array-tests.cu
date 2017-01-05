@@ -42,10 +42,7 @@ TEST_CASE("array<T, N>")
     array<int, size> const x{ { 0 } };
     
     REQUIRE(16 == x.size());
-    
-    for (auto const& v : x) {
-      REQUIRE(0 == v);
-    }
+    REQUIRE(0 == reduce(thrust::seq, x.begin(), x.end(), 0, plus<int>{}));
   }
   
   SECTION("should work on the device too")
@@ -56,9 +53,13 @@ TEST_CASE("array<T, N>")
     cudaDeviceSynchronize();
     
     host_vector<int> h_vals{ vals };
+    bool is_valid = true;
+
     for (int v : h_vals) {
-      REQUIRE(8128 == v);
-    }       
+      is_valid =  is_valid && (8128 == v);
+    } 
+
+    REQUIRE(is_valid);      
   }
   
   SECTION("should be comparable")
@@ -95,9 +96,13 @@ TEST_CASE("array<T, N>")
     using size_type = typename array<int, 5>::size_type;
     array<int, 5> const a = { 1, 2, 3, 4, 5 };
     
+    bool is_valid = true;
+
     for (size_type i = 0; i < a.size(); ++i) {
-      REQUIRE(i + 1 == a[i]);
+      is_valid = is_valid && (i + 1 == a[i]);
     }  
+
+    REQUIRE(is_valid);
   }
 }
 

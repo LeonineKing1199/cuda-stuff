@@ -40,7 +40,7 @@ TEST_CASE("The nomination function with a smaller data set")
   // create the nomination array
   // the number of the points is simply the largest value in the pa_data
   // and because it represents an index into another array, we add 1
-  size_t const num_pts = (*max_element(pa_data.begin(), pa_data.end()) + 1ll);
+  size_t const num_pts = (*max_element(pa_data.begin(), pa_data.end()) + index_t{1});
   device_vector<unsigned> nm{num_pts};
 
   // test the main function we're after 

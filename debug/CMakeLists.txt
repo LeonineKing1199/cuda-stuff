@@ -13,12 +13,19 @@ set(
   
   -gencode arch=compute_61,code=sm_61
   --expt-extended-lambda
+  --compiler-options "/FS"
   )
-                                 
+
+
+if (MSVC)
+  set(
+    CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt.lib")
+endif()
+
 link_directories(
   "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/x64"
   )        
-        
+
 include_directories(
   ../include
   )
@@ -46,8 +53,9 @@ cuda_add_executable(
   
   ../src/point.cu
   ../src/peano.cu
-  ../src/nominate.cu
   ../src/rand-int-range.cu
+  ../src/nominate.cu
+  ../src/fract-locations.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu
@@ -56,6 +64,8 @@ cuda_add_executable(
   ../tests/tetra-tests.cu
   ../tests/domain-tests.cu
   ../tests/nomination-tests.cu
+  ../tests/fract-location-tests.cu
+  #../tests/fracture-tests.cu
   )
   
 target_link_libraries(

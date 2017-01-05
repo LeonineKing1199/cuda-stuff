@@ -1,6 +1,8 @@
 #ifndef REGULUS_ARRAY_HPP_
 #define REGULUS_ARRAY_HPP_
 
+#include <iostream>
+
 // We're trying to mimic the STL container here but it's woefully
 // incomplete when compared to the "real thing". But it does the
 // job most of the time.
@@ -110,5 +112,22 @@ struct array
   }
 };  
 
+template <typename T, long long N>
+auto operator<<(std::ostream& os, array<T, N> const& a) -> std::ostream& 
+{
+  os << "{ ";
+
+  for (long long i = 0; i < N; ++i) {
+    if (i == N - 1) {
+      os << a.data_[i];
+    } else {
+      os << a.data_[i] << ", ";
+    }
+  }
+
+  os << " }";
+
+  return os;
+}
 
 #endif // REGULUS_ARRAY_HPP_

@@ -1,12 +1,13 @@
+#include "catch.hpp"
+#include "globals.hpp"
+#include "index_t.hpp"
+#include "math/point.hpp"
+#include "math/tetra.hpp"
+#include "lib/init-ta-and-pa.hpp"
+#include "lib/fracture.hpp"
+#include "lib/fract-locations.hpp"
+#include "lib/nominate.hpp"
 #include <thrust/device_vector.h>
-
-#include "test-suite.hpp"
-#include "../include/lib/fracture.hpp"
-#include "../include/math/tetra.hpp"
-#include "../include/math/point.hpp"
-#include "../include/lib/calc-ta-and-pa.hpp"
-#include "../include/lib/nominate.hpp"
-#include "../include/lib/fract-locations.hpp"
 
 auto operator==(tetra const& t1, tetra const& t2) -> bool
 {
@@ -17,69 +18,62 @@ auto operator==(tetra const& t1, tetra const& t2) -> bool
     t1.w == t2.w);
 }
 
-auto fracture_tests(void) -> void
+TEST_CASE("Fracture Routine")
 {
-  std::cout << "Beginning fracture tests!" << std::endl;
-  
-  // We should be able to fracture a tetrahedron
-  {
-    using real = float;
-    using thrust::device_vector;
+  using real = float;
+  using thrust::device_vector;
         
-    device_vector<point_t<real>> pts;
-    pts.reserve(5);
+  device_vector<point_t<real>> pts;
+  pts.reserve(5);
     
-    int const num_pts{1};
+  int const num_pts{1};
     
-    pts[0] = point_t<real>{2, 2, 2};
+  pts[0] = point_t<real>{2, 2, 2};
+  
+  pts[1] = point_t<real>{0, 0, 0};
+  pts[2] = point_t<real>{9, 0, 0};
+  pts[3] = point_t<real>{0, 9, 0};
+  pts[4] = point_t<real>{0, 0, 9};
     
-    pts[1] = point_t<real>{0, 0, 0};
-    pts[2] = point_t<real>{9, 0, 0};
-    pts[3] = point_t<real>{0, 9, 0};
-    pts[4] = point_t<real>{0, 0, 9};
+  tetra const t{1, 2, 3, 4};
     
-    tetra const t{1, 2, 3, 4};
+  device_vector<index_t> pa{num_pts * 8, -1};
+  device_vector<index_t> ta{num_pts * 8, -1};
+  device_vector<loc_t>   la{num_pts * 8, -1};
     
-    device_vector<int> pa{num_pts * 8, -1};
-    device_vector<int> ta{num_pts * 8, -1};
-    device_vector<int> la{num_pts * 8, -1};
+  calc_initial_assoc<real><<<bpg, tpb>>>(
+    pts.data().get(),
+    num_pts,
+    t,
+    pa.data().get(),
+    ta.data().get(),
+    la.data().get());
+  cudaDeviceSynchronize();
     
-    calc_initial_assoc<real><<<bpg, tpb>>>(
-      pts.data().get(),
-      num_pts,
-      t,
-      pa.data().get(),
-      ta.data().get(),
-      la.data().get());
-    cudaDeviceSynchronize();
+  REQUIRE(static_cast<index_t>(pa[0]) == index_t{0});
+  REQUIRE(static_cast<index_t>(ta[0]) == index_t{0});
+  REQUIRE(static_cast<loc_t>(la[0])   == loc_t{15});
     
-    assert(pa[0] == 0);
-    assert(ta[0] == 0);
-    assert(la[0] == 15);
-    
-    int const assoc_size{1};
-    int const num_tetra{1};
+  int const assoc_size{1};
+  int const num_tetra{1};
        
-    device_vector<int> fl{assoc_size, -1};
-    device_vector<int> nm{num_pts, 0};
-    device_vector<tetra> mesh{8 * num_pts};
-    mesh[0] = t;
+  device_vector<index_t> fl{assoc_size, -1};
+  device_vector<unsigned> nm{num_pts, 0};
+  device_vector<tetra> mesh{8 * num_pts};
+  mesh[0] = t;
         
-    assert((mesh[0] == tetra{1, 2, 3, 4}));
+  REQUIRE((mesh[0] == tetra{1, 2, 3, 4}));
     
-    // nominate the points, calculate the fracture locations
-    // and then finally fracture the tetrahedron!
-    nominate(assoc_size, pa, ta, la, nm);
-    fract_locations(assoc_size, pa, nm, la, fl);      
-    fracture(assoc_size, num_tetra, pa, ta, la, nm, fl, mesh);
-        
-    assert((num_tetra + fl[assoc_size - 1] == 4));
-    
-    assert((mesh[0] == tetra{4, 3, 2, 0}));
-    assert((mesh[1] == tetra{1, 3, 4, 0}));
-    assert((mesh[2] == tetra{1, 4, 2, 0}));
-    assert((mesh[3] == tetra{1, 2, 3, 0}));
-  }
+  // nominate the points, calculate the fracture locations
+  // and then finally fracture the tetrahedron!
+  nominate(assoc_size, pa, ta, la, nm);
+  fract_locations(assoc_size, pa, nm, la, fl);      
+  fracture(assoc_size, num_tetra, pa, ta, la, nm, fl, mesh);
+      
+  REQUIRE((num_tetra + static_cast<index_t>(fl[assoc_size - 1]) == 4));
   
-  std::cout << "Tests Passed!\n" << std::endl;
+  REQUIRE((mesh[0] == tetra{4, 3, 2, 0}));
+  REQUIRE((mesh[1] == tetra{1, 3, 4, 0}));
+  REQUIRE((mesh[2] == tetra{1, 4, 2, 0}));
+  REQUIRE((mesh[3] == tetra{1, 2, 3, 0}));
 }

@@ -34,38 +34,39 @@ using thrust::inclusive_scan;
 using thrust::fill;
 using thrust::unary_function;
 
-struct fract_size_functor : public unary_function<tuple<int, int> const&, int>
-{
-  int const *nm;
+struct fract_size_functor : public unary_function<tuple<index_t, loc_t> const&, index_t>
+{ 
+  unsigned const *nm;
   
-  fract_size_functor(int const *nm_) : nm{nm_}
+  fract_size_functor(void) = delete;
+  fract_size_functor(unsigned const *nm_) : nm{nm_}
   {}
   
   __device__
-  auto operator()(tuple<int, int> const &t) -> int
+  auto operator()(tuple<index_t, loc_t> const &t) -> index_t
   {
-    int const pa_id{get<0>(t)};
-    int const la_id{get<1>(t)};
+    index_t const pa_id = get<0>(t);
+    loc_t const la_id = get<1>(t);
     
-    int const fract_size{__popc(static_cast<unsigned>(la_id)) - 1};
-    return nm[pa_id] * fract_size;
+    index_t const fract_size{__popc(la_id) - 1};
+    return {nm[pa_id] * fract_size};
   }
 };
 
 auto fract_locations(
   int const assoc_size,
-  device_vector<int> const& pa,
-  device_vector<int> const& nm,
-  device_vector<int> const& la,
-  device_vector<int>& fl) -> void
+  device_vector<index_t> const& pa,
+  device_vector<unsigned> const& nm,
+  device_vector<loc_t> const& la,
+  device_vector<index_t>& fl) -> void
 {
   auto const zip_begin = make_zip_iterator(make_tuple(pa.begin(), la.begin()));
-  int const* nm_data = nm.data().get();
+  unsigned const* nm_data = nm.data().get();
   
   auto const begin = make_transform_iterator(
     zip_begin, fract_size_functor{nm_data});
  
-  fill(fl.begin(), fl.begin() + assoc_size, -1);
+  fill(fl.begin(), fl.begin() + assoc_size, index_t{-1});
   inclusive_scan(
     begin, begin + assoc_size,
     fl.begin());
