@@ -20,10 +20,15 @@ struct maybe_int
 
   value_type t;
 
+  __host__ __device__
   maybe_int(value_type const t_) : t{t_} {}
+
+  __host__ __device__
   maybe_int(void) = default;
+
+  __host__ __device__
   maybe_int(maybe_int const& t_) : t{t_.t} {}
-  maybe_int(maybe_int&& t_) : t{std::move(t_.t)} {}
+  //maybe_int(maybe_int&& t_) : t{static_cast<value_type&&>(t_.t)} {}
 
   __host__ __device__
   auto operator=(maybe_int const& rhs) -> maybe_int&

@@ -51,7 +51,7 @@ TEST_CASE("The nomination function with a smaller data set")
   // we ensure that if a point _is_ nominated that its corresponding
   // tetrahedron is unique
   // we enforce this using a dumb counter
-  size_t const num_tetra = (*max_element(ta_data.begin(), ta_data.end())).v + 1;
+  size_t const num_tetra = (*max_element(ta_data.begin(), ta_data.end())).t + 1;
 
   host_vector<unsigned> nominated_tetra{num_tetra, 0};
   host_vector<unsigned> h_nm{nm};

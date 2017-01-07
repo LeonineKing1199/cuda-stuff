@@ -66,8 +66,8 @@ TEST_CASE("The maybe_int type")
 
   SECTION("should be convertible to a boolean")
   {
-    maybe_int<ptrdiff_t> m = ptrdiff_t{-1};
-    maybe_int<ptrdiff_t> n = ptrdiff_t{1337};
+    maybe_int<ptrdiff_t> const m = ptrdiff_t{-1};
+    maybe_int<ptrdiff_t> const n = ptrdiff_t{1337};
 
     REQUIRE(static_cast<bool>(m) == false);
     REQUIRE(static_cast<bool>(n) == true);

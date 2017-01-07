@@ -100,7 +100,7 @@ TEST_CASE("Our tetrahedral implementation")
     {
       point_f const p{ 3.01, 3.01, 3.01 };
       
-      REQUIRE(loc<real>(a, b, c, d, p) == loc_t{});
+      REQUIRE(loc<real>(a, b, c, d, p) == loc_t{-1});
     }
   }
 }
