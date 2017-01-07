@@ -7,6 +7,10 @@
 
 // This struct pattern is shamelessly ripped from Boost's
 // strong typedef implementation
+// However, we do not copy over their use of macros for generating
+// structure definitions
+// Currently, the project has no need of such a mechanism but I did
+// think their inheritance approach was interesting
 
 template <typename T, typename U>
 struct less_than_comparable_base

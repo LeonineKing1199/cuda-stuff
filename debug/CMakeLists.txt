@@ -14,6 +14,7 @@ set(
   -gencode arch=compute_61,code=sm_61
   --expt-extended-lambda
   --compiler-options "/FS"
+  --compiler-options "/W3"
   )
 
 
@@ -40,6 +41,7 @@ cuda_add_executable(
   ../include/domain.hpp
   ../include/size_type.hpp
   ../include/index_t.hpp
+  ../include/maybe-int.hpp
   
   ../include/math/point.hpp
   ../include/math/equals.hpp
@@ -66,6 +68,7 @@ cuda_add_executable(
   ../tests/nomination-tests.cu
   ../tests/fract-location-tests.cu
   #../tests/fracture-tests.cu
+  ../tests/index_t-tests.cu
   )
   
 target_link_libraries(
