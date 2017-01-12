@@ -5,7 +5,7 @@
 #include <thrust/device_vector.h>
 
 auto fract_locations(
-  int const assoc_size,
+  size_t const assoc_size,
   thrust::device_vector<index_t> const& pa,
   thrust::device_vector<unsigned> const& nm,
   thrust::device_vector<loc_t> const& la,

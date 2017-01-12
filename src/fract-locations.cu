@@ -1,3 +1,4 @@
+#include "../include/lib/fract-locations.hpp"
 #include <thrust/scan.h>
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/iterator/zip_iterator.h>
@@ -5,8 +6,6 @@
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>
 #include <thrust/functional.h>
-
-#include "../include/lib/fract-locations.hpp"
 
 /*
   Now it's time that we figure out _how_ we're going to wind up
@@ -49,12 +48,12 @@ struct fract_size_functor : public unary_function<tuple<index_t, loc_t> const&, 
     loc_t const la_id = get<1>(t);
     
     index_t const fract_size{__popc(la_id) - 1};
-    return {nm[pa_id] * fract_size};
+    return {static_cast<typename index_t::value_type>(nm[pa_id] * fract_size)};
   }
 };
 
 auto fract_locations(
-  int const assoc_size,
+  size_t const assoc_size,
   device_vector<index_t> const& pa,
   device_vector<unsigned> const& nm,
   device_vector<loc_t> const& la,
@@ -66,7 +65,7 @@ auto fract_locations(
   auto const begin = make_transform_iterator(
     zip_begin, fract_size_functor{nm_data});
  
-  fill(fl.begin(), fl.begin() + assoc_size, index_t{-1});
+  fill(fl.begin(), fl.end(), index_t{-1});
   inclusive_scan(
     begin, begin + assoc_size,
     fl.begin());

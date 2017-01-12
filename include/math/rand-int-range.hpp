@@ -1,8 +1,6 @@
 #ifndef REGULUS_LIB_RAND_INT_RANGE_HPP_
 #define REGULUS_LIB_RAND_INT_RANGE_HPP_
 
-#include <thrust/random.h>
-#include <thrust/iterator/counting_iterator.h>
 #include <thrust/device_vector.h>
 
 struct rand_gen;
