@@ -15,12 +15,12 @@ auto operator==(point_t<double> const& a, point_t<double> const& b) -> bool
 
 auto operator<<(std::ostream& os, point_t<float> const& p) -> std::ostream&
 {
-  os << p.x << " " << p.y << " " << p.z;
+  os << "{ " << p.x << " " << p.y << " " << p.z << " }";
   return os;
 }
 
 auto operator<<(std::ostream& os, point_t<double> const& p) -> std::ostream&
 {
-  os << p.x << " " << p.y << " " << p.z;
+  os << "{ " << p.x << " " << p.y << " " << p.z << " }";
   return os;
 }

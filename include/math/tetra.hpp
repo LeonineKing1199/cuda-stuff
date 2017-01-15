@@ -7,9 +7,15 @@
 #include "equals.hpp"
 #include "index_t.hpp"
 
-using tetra = int4;
+// maybe it's a bad choice to use ints for storing
+// locations in the pointer buffer?
+// we might hit hard memory limits before we overflow
+// array indices
+using tetra     = int4;
+using adjacency = int4;
 
 enum class orientation { positive = 1, zero = 0, negative = 2 };
+
 // we use this so Catch can accurately print our enumerated type
 auto operator<<(std::ostream& os, orientation o) -> std::ostream&;
 
@@ -35,8 +41,7 @@ auto orient(
   point_t<T> const& a,
   point_t<T> const& b,
   point_t<T> const& c,
-  point_t<T> const& d)
--> orientation
+  point_t<T> const& d) -> orientation
 { 
   matrix<T, 4, 4> const m = make_matrix<T>(a, b, c, d);
 
@@ -74,8 +79,7 @@ auto insphere(
   point_t<T> const& b,
   point_t<T> const& c,
   point_t<T> const& d,
-  point_t<T> const& p)
--> orientation
+  point_t<T> const& p) -> orientation
 {
   matrix<T, 5, 5> const m{
     1.0, a.x, a.y, a.z, mag<T>(a),
@@ -118,8 +122,7 @@ auto loc(
   point_t<T> const& b,
   point_t<T> const& c,
   point_t<T> const& d,
-  point_t<T> const& p
-) -> loc_t
+  point_t<T> const& p) -> loc_t
 {
   array<orientation, 4> ort;
 
@@ -135,14 +138,14 @@ auto loc(
   // face 3 - 012
   ort[3] = orient<T>(a, b, c, p);
 
-  unsigned char l = 0;
+  typename loc_t::uvalue_type l = 0;
   for (typename array<orientation, 4>::size_type i = 0; i < ort.size(); ++i) {
     if (ort[i] == orientation::negative) { 
       return loc_t{-1}; 
     }
     l |= (ort[i] == orientation::positive ? 1 : 0) << i;
   }
-  return loc_t{static_cast<char>(l)};
+  return loc_t{static_cast<typename loc_t::value_type>(l)};
 }
 
 

@@ -23,7 +23,7 @@ auto peano_hilbert_key(int x, int y, int z, int bits) -> peanokey;
 template <typename T>
 auto gen_cartesian_domain(int const grid_length) -> thrust::host_vector<point_t<T>>
 {
-  long long const num_points = grid_length * grid_length * grid_length;
+  unsigned const num_points = grid_length * grid_length * grid_length;
   thrust::host_vector<point_t<T>> domain;
   domain.reserve(num_points);
 

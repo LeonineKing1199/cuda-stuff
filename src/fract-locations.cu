@@ -38,14 +38,13 @@ struct fract_size_functor : public unary_function<tuple<index_t, loc_t> const&, 
   unsigned const *nm;
   
   fract_size_functor(void) = delete;
-  fract_size_functor(unsigned const *nm_) : nm{nm_}
-  {}
+  fract_size_functor(unsigned const *nm_) : nm{nm_} {}
   
   __device__
   auto operator()(tuple<index_t, loc_t> const &t) -> index_t
   {
     index_t const pa_id = get<0>(t);
-    loc_t const la_id = get<1>(t);
+    loc_t   const la_id = get<1>(t);
     
     index_t const fract_size{__popc(la_id) - 1};
     return {static_cast<typename index_t::value_type>(nm[pa_id] * fract_size)};
@@ -54,9 +53,9 @@ struct fract_size_functor : public unary_function<tuple<index_t, loc_t> const&, 
 
 auto fract_locations(
   size_t const assoc_size,
-  device_vector<index_t> const& pa,
+  device_vector<index_t>  const& pa,
   device_vector<unsigned> const& nm,
-  device_vector<loc_t> const& la,
+  device_vector<loc_t>    const& la,
   device_vector<index_t>& fl) -> void
 {
   auto const zip_begin = make_zip_iterator(make_tuple(pa.begin(), la.begin()));

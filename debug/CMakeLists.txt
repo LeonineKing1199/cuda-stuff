@@ -6,7 +6,7 @@ find_package(CUDA REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 set(CUDA_HOST_COMPILATION_CPP ON)
 set(CUDA_SEPARABLE_COMPILATION ON)
-set(CUDA_64_BIT_DEVICE_CODE ON)
+#set(CUDA_64_BIT_DEVICE_CODE ON)
 
 set(
   CUDA_NVCC_FLAGS
@@ -25,7 +25,8 @@ if (MSVC)
 endif()
 
 link_directories(
-  "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/x64"
+  #"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/x64"
+  "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/Win32"
   )        
 
 include_directories(
@@ -53,6 +54,7 @@ cuda_add_executable(
 
   ../include/lib/init-ta-and-pa.hpp
   ../include/lib/nominate.hpp
+  ../include/lib/set-internal-fract-adjacencies.hpp
   
   ../src/point.cu
   ../src/peano.cu
@@ -60,6 +62,7 @@ cuda_add_executable(
   ../src/nominate.cu
   ../src/fract-locations.cu
   ../src/tetra.cu
+  ../src/set-internal-fract-adjacencies.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu

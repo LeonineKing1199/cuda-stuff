@@ -165,7 +165,17 @@ struct maybe_int
 template <typename T>
 auto operator<<(std::ostream& os, maybe_int<T> const& mi) -> std::ostream&
 {
-  os << static_cast<unsigned long long>(static_cast<typename maybe_int<T>::uvalue_type>(mi));
+  if (static_cast<bool>(mi)) {
+    // it seems weird to chain casts like this...
+    // we know if our boolean check passes, it's okay
+    // to promote the encapsulated type to unsigned
+    // because unsigned chars (common alias for uint8_t),
+    // we promote to the largest possible integral type
+    // so the value is guaranteed to be contained
+    os << static_cast<unsigned long long>(static_cast<typename maybe_int<T>::uvalue_type>(mi));
+  } else {
+    os << "invalid value";
+  }
   return os;
 }
 
