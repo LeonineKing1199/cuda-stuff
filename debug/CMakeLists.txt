@@ -15,9 +15,10 @@ set(
   --expt-extended-lambda
   --compiler-options "/FS"
   --compiler-options "/W3"
+  -D_SCL_SECURE_NO_WARNINGS
   )
 
-
+# this is specific to the Ninja build tool
 if (MSVC)
   set(
     CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt.lib")
@@ -58,6 +59,7 @@ cuda_add_executable(
   ../src/rand-int-range.cu
   ../src/nominate.cu
   ../src/fract-locations.cu
+  ../src/tetra.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu

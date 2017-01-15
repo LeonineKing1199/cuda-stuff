@@ -162,4 +162,11 @@ struct maybe_int
   }
 };
 
+template <typename T>
+auto operator<<(std::ostream& os, maybe_int<T> const& mi) -> std::ostream&
+{
+  os << static_cast<unsigned long long>(static_cast<typename maybe_int<T>::uvalue_type>(mi));
+  return os;
+}
+
 #endif // REGULUS_MAYBE_INT_HPP_

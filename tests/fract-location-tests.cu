@@ -3,26 +3,12 @@
 #include "lib/fract-locations.hpp"
 
 #include <array>
+#include <algorithm>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 
 using thrust::host_vector;
 using thrust::device_vector;
-
-template <
-  typename Container1,
-  typename Container2
->
-auto compare_ranges(Container1 const& c1, Container2 const& c2) -> bool
-{
-  bool equal = true;
-
-  auto it2 = c2.begin();
-  for (auto it1 = c1.begin(); it1 != c1.end() && equal; ++it1, ++it2) {
-    equal = equal && (*it1 == *it2);
-  }
-  return equal;
-}
 
 TEST_CASE("The fract locations routine")
 {
@@ -41,5 +27,7 @@ TEST_CASE("The fract locations routine")
   std::array<index_t, 9> const expected_vals = {1, 2, 3, 6, 6, 6, 7, 8, 9};
   host_vector<index_t> fl_copy = fl;
 
-  REQUIRE(compare_ranges(expected_vals, fl_copy));
+  REQUIRE(
+    std::equal(expected_vals.begin(), expected_vals.end(), fl_copy.begin())
+  );
 }
