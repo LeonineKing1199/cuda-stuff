@@ -2,8 +2,8 @@
 
 __host__ __device__
 auto set_interal_fract_adjacencies(
-  array<index_t, 4> const& locations,
-  loc_t const loc_code) -> array<adjacency, 4>
+  array<index_t, 4> const& fract_locs,
+  loc_t             const  loc_code) -> array<adjacency, 4>
 {
   ptrdiff_t const adjacency_map[4][3] = {
     { 3, 2, 1 },
@@ -13,16 +13,14 @@ auto set_interal_fract_adjacencies(
   };
 
   array<adjacency, 4> adj_relations;
-  for (auto i = 0; i < locations.size(); ++i) {
+  for (
+    typename array<index_t, 4>::size_type i{}; i < fract_locs.size(); ++i)
+  {
     if (loc_code & (1 << i)) {
-      ptrdiff_t const* loc_idx = adjacency_map[i];
-
-      adj_relations[i] = {
-        locations[loc_idx[0]], 
-        locations[loc_idx[1]], 
-        locations[loc_idx[2]], 
-        -1
-      };
+      adj_relations[i] = { fract_locs[adjacency_map[i][0]],
+                           fract_locs[adjacency_map[i][1]],
+                           fract_locs[adjacency_map[i][2]],
+                           -1 };
     }
   }
 

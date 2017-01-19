@@ -74,6 +74,7 @@ cuda_add_executable(
   ../tests/fract-location-tests.cu
   #../tests/fracture-tests.cu
   ../tests/index_t-tests.cu
+  ../tests/set-internal-fract-adjacencies.cu
   )
   
 target_link_libraries(

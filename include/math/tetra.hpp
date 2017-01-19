@@ -16,8 +16,11 @@ using adjacency = int4;
 
 enum class orientation { positive = 1, zero = 0, negative = 2 };
 
-// we use this so Catch can accurately print our enumerated type
 auto operator<<(std::ostream& os, orientation o) -> std::ostream&;
+
+auto operator==(int4 const& a, int4 const& b) -> bool;
+auto operator!=(int4 const& a, int4 const& b) -> bool;
+auto operator<<(std::ostream& os, int4 const& t) -> std::ostream&;
 
 template <typename T>
 __host__ __device__
