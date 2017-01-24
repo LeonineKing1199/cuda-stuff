@@ -72,9 +72,9 @@ cuda_add_executable(
   ../tests/domain-tests.cu
   ../tests/nomination-tests.cu
   ../tests/fract-location-tests.cu
-  #../tests/fracture-tests.cu
   ../tests/index_t-tests.cu
   ../tests/set-internal-fract-adjacencies.cu
+  ../tests/fracture-tests.cu
   )
   
 target_link_libraries(

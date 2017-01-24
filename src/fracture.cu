@@ -1,12 +1,11 @@
-#include <stdio.h>
+#include "globals.hpp"
+#include "lib/fracture.hpp"
+#include "math/tetra.hpp"
+#include "stack-vector.hpp"
 
+#include <stdio.h>
 #include <thrust/device_vector.h>
 #include <thrust/copy.h>
-
-#include "../include/lib/fracture.hpp"
-#include "../include/globals.hpp"
-#include "../include/math/tetra.hpp"
-#include "../include/stack-vector.hpp"
 
 __device__
 int const static face_idx[4][3] = {

@@ -21,7 +21,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -42,7 +42,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -61,7 +61,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -80,7 +80,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -99,7 +99,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -120,7 +120,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -139,7 +139,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -158,7 +158,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -177,7 +177,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -196,7 +196,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -215,7 +215,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -236,7 +236,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -255,7 +255,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -274,7 +274,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
@@ -293,7 +293,7 @@ TEST_CASE("The internal adjacency setting")
     };
 
     for (
-      typename array<adjacency, 4>::size_type i{}; i < expected_adj_relations.size(); ++i)
+      decltype(expected_adj_relations.size()) i{}; i < expected_adj_relations.size(); ++i)
     {
       REQUIRE(adj_relations[i] == expected_adj_relations[i]);
     }
