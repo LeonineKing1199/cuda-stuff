@@ -3,6 +3,7 @@
 
 #include "index_t.hpp"
 #include "math/tetra.hpp"
+#include <thrust/device_vector.h>
 
 auto fracture(
   size_t const assoc_size,

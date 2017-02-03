@@ -14,7 +14,6 @@ set(
   -gencode arch=compute_61,code=sm_61
   --expt-extended-lambda
   --compiler-options "/FS"
-  --compiler-options "/W3"
   -D_SCL_SECURE_NO_WARNINGS
   )
 
@@ -63,6 +62,7 @@ cuda_add_executable(
   ../src/fract-locations.cu
   ../src/tetra.cu
   ../src/set-internal-fract-adjacencies.cu
+  ../src/fracture.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu

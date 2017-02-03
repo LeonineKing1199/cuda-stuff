@@ -1,87 +1,100 @@
 #include "globals.hpp"
 #include "lib/fracture.hpp"
-#include "math/tetra.hpp"
-#include "stack-vector.hpp"
 
 #include <stdio.h>
-#include <thrust/device_vector.h>
-#include <thrust/copy.h>
+#include <thrust/remove.h>
+#include <thrust/execution_policy.h>
+#include <thrust/distance.h>
+
+namespace T = thrust;
 
 __device__
-int const static face_idx[4][3] = {
+size_t const static face_idx[4][3] = {
   { 3, 2, 1 },   // face 0
   { 0, 2, 3 },   // face 1
   { 0, 3, 1 },   // face 2
-  { 0, 1, 2 } }; // face 3
+  { 0, 1, 2 }    // face 3
+};
 
 __global__
 void fracture_kernel(
-  int const assoc_size,
-  int const num_tetra,
-  int const* __restrict__ pa,
-  int const* __restrict__ ta,
-  int const* __restrict__ la,
-  int const* __restrict__ nm,
-  int const* __restrict__ fl,
-  tetra* __restrict__ mesh)
+  size_t const assoc_size,
+  size_t const num_tetra,
+  index_t  const* __restrict__ pa,
+  index_t  const* __restrict__ ta,
+  loc_t    const* __restrict__ la,
+  unsigned const* __restrict__ nm,
+  index_t  const* __restrict__ fl,
+  tetra         * __restrict__ mesh)
 {
   for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
     // if this point was nominated...
-    int const pa_id{pa[tid]};
+    index_t const pa_id = pa[tid];
     if (nm[pa_id] == 1) {
+
       // want to then load in the tetrahedron
-      int const ta_id{ta[tid]};
-      tetra const t = mesh[ta_id];
+      index_t const ta_id = ta[tid];
+      tetra   const t     = mesh[ta_id];
       
       // want to create something randomly accessible
-      array<int, 4> t_ids;
-      t_ids[0] = t.x;
-      t_ids[1] = t.y;
-      t_ids[2] = t.z;
-      t_ids[3] = t.w;
+      array<int, 4> vertex_idx = { t.x, t.y, t.z, t.w };
 
-      int const la_id{la[tid]};
-      stack_vector<tetra, 4> local_tets;
+      loc_t const loc = la[tid];
+    
+      //printf("pa %d => ta %d => la %d\n", pa_id, ta_id, loc);
       
-      //printf("pa %d => ta %d => la %d\n", pa_id, ta_id, la_id);
-      
+      array<tetra, 4>   fract_set; 
+      array<index_t, 4> fract_locs;
+
       // check each bit of loc iteratively
-      for (int i = 0; i < 4; ++i) {
-        if (la_id & (1 << i)) {
-          tetra const tmp{
-            t_ids[face_idx[i][0]],
-            t_ids[face_idx[i][1]],
-            t_ids[face_idx[i][2]],
-            pa_id};
-            
-          local_tets.push_back(tmp);
+      for (decltype(fract_set.size()) i = 0; i < fract_set.size(); ++i) {
+        if (loc & (1 << i)) {
+          fract_set[i] = { 
+            vertex_idx[face_idx[i][0]],
+            vertex_idx[face_idx[i][1]],
+            vertex_idx[face_idx[i][2]],
+            pa_id
+          };
+
+          fract_locs[i] = 
+
+        } else {
+          fract_set[i]  = {-1, -1, -1, -1};
+          fract_locs[i] = -1;
         }
       }
-            
-      // now we need to perform a write-back procedure to the main mesh
-      // write back in-place
-      mesh[ta_id] = local_tets[0];
-      
-      // now append to buffer
-      int const mesh_offset{num_tetra + (tid == 0 ? 0 : fl[tid - 1])};
-      for (int i = 0; i < local_tets.size() - 1; ++i) {
-        mesh[mesh_offset + i] = local_tets[i + 1];
-      }
+
+      // auto const end = T::remove_copy_if(
+      //   T::seq, 
+      //   fract_set.begin(), fract_set.end(),
+      //   filtered_fract_set.begin(),
+      //   [](tetra const& t) -> bool { return t.x == -1; });
+
+      // // perform the first write-back to the location where the
+      // // fractured tetrahedron was stored
+      // auto begin = filtered_fract_set.begin();
+
+      // mesh[ta_id] = *begin;
+      // ++begin;
+
+      // size_t mesh_offset = num_tetra + (tid == 0 ? 0 : fl[tid - 1]);
+
+      // for (auto it = begin; it < end; ++it) {
+      //   mesh[mesh_offset++] = *it;
+      // }
     }
   }
 }
 
-using thrust::device_vector;
-
 auto fracture(
-  int const assoc_size,
-  int const num_tetra,
-  device_vector<int> const& pa,
-  device_vector<int> const& ta,
-  device_vector<int> const& la,
-  device_vector<int> const& nm,
-  device_vector<int> const& fl,
-  device_vector<tetra>& mesh) -> void
+  size_t const assoc_size,
+  size_t const num_tetra,
+  T::device_vector<index_t>  const& pa,
+  T::device_vector<index_t>  const& ta,
+  T::device_vector<loc_t>    const& la,
+  T::device_vector<unsigned> const& nm,
+  T::device_vector<index_t>  const& fl,
+  T::device_vector<tetra>         & mesh) -> void
 {
   fracture_kernel<<<bpg, tpb>>>(
     assoc_size,
@@ -92,6 +105,4 @@ auto fracture(
     nm.data().get(),
     fl.data().get(),
     mesh.data().get());
-    
-  cudaDeviceSynchronize();
 }  

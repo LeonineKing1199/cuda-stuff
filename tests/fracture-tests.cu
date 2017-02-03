@@ -1,6 +1,7 @@
 #include "catch.hpp"
 #include "globals.hpp"
 #include "index_t.hpp"
+#include "array.hpp"
 #include "math/point.hpp"
 #include "math/tetra.hpp"
 #include "lib/init-ta-and-pa.hpp"
@@ -64,11 +65,20 @@ TEST_CASE("Fracture Routine")
   nominate(assoc_size, pa, ta, la, nm);
   fract_locations(assoc_size, pa, nm, la, fl);      
   fracture(assoc_size, num_tetra, pa, ta, la, nm, fl, mesh);
-      /*
-  REQUIRE(num_tetra + static_cast<index_t>(fl[assoc_size - 1]) == 4);
+  cudaDeviceSynchronize();
+
+  REQUIRE((num_tetra + static_cast<index_t>(fl[assoc_size - 1]) == 4));
   
-  REQUIRE((mesh[0] == tetra{4, 3, 2, 0}));
-  REQUIRE((mesh[1] == tetra{1, 3, 4, 0}));
-  REQUIRE((mesh[2] == tetra{1, 4, 2, 0}));
-  REQUIRE((mesh[3] == tetra{1, 2, 3, 0}));//*/
+  array<tetra, 4> expected_tets = {
+    tetra{4, 3, 2, 0},
+    tetra{1, 3, 4, 0},
+    tetra{1, 4, 2, 0},
+    tetra{1, 2, 3, 0}
+  };
+
+  for (decltype(expected_tets.size()) i = 0; i < expected_tets.size(); ++i) {
+    REQUIRE(mesh[i] == expected_tets[i]);
+  }
+
+  //*/
 }
