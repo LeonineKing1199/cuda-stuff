@@ -13,6 +13,7 @@ auto fracture(
   thrust::device_vector<loc_t>    const& la,
   thrust::device_vector<unsigned> const& nm,
   thrust::device_vector<index_t>  const& fl,
-  thrust::device_vector<tetra>         & mesh) -> void;
+  thrust::device_vector<tetra>         & mesh,
+  thrust::device_vector<adjacency>     & adjacency_relations) -> void;
 
 #endif // REGULUS_LIB_FRACTURE_HPP_

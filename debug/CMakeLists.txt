@@ -23,6 +23,7 @@ if (MSVC)
     CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt.lib")
 endif()
 
+# TODO: Fix this horrible absolute path inclusion
 link_directories(
   #"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/x64"
   "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/Win32"

@@ -50,10 +50,10 @@ struct maybe_int
     return static_cast<uvalue_type>(t);
   }
 
-  __host__ __host__
+  __host__ __device__
   explicit operator bool(void) const
   {
-    return t > 0;
+    return t >= 0;
   }
 
   friend
