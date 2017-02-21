@@ -10,11 +10,11 @@ template <typename T>
 __global__
 void calc_initial_assoc(
   point_t<T> const* __restrict__ pts,
-  int const num_pts,
+  int   const num_pts,
   tetra const t,
   index_t* __restrict__ pa,
   index_t* __restrict__ ta,
-  loc_t* __restrict__ la)
+  loc_t*   __restrict__ la)
 {
   for (auto tid = get_tid(); tid < num_pts; tid += grid_stride()) {
     auto const a = pts[t.x];
@@ -22,8 +22,8 @@ void calc_initial_assoc(
     auto const c = pts[t.z];
     auto const d = pts[t.w];
     
-    pa[tid] = index_t{static_cast<long long>(tid)};
-    ta[tid] = index_t{0ll};
+    pa[tid] = index_t{static_cast<typename index_t::value_type>(tid)};
+    ta[tid] = index_t{typename index_t::value_type{0}};
     la[tid] = loc<T>(a, b, c, d, pts[tid]);
   }
 }

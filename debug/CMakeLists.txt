@@ -6,28 +6,30 @@ find_package(CUDA REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 set(CUDA_HOST_COMPILATION_CPP ON)
 set(CUDA_SEPARABLE_COMPILATION ON)
-#set(CUDA_64_BIT_DEVICE_CODE ON)
 
-set(
+list(
+  APPEND
   CUDA_NVCC_FLAGS
   
   -gencode arch=compute_61,code=sm_61
   --expt-extended-lambda
-  --compiler-options "/FS"
-  -D_SCL_SECURE_NO_WARNINGS
   )
 
-# this is specific to the Ninja build tool
 if (MSVC)
+  list(
+    APPEND
+    CUDA_NVCC_FLAGS
+    
+      # this is specific to the Ninja build tool
+      --compiler-options "/FS"
+      -D_SCL_SECURE_NO_WARNINGS
+    )
+
+  # this is specific to the Ninja build tool
   set(
     CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt.lib")
-endif()
 
-# TODO: Fix this horrible absolute path inclusion
-link_directories(
-  #"C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/x64"
-  "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/lib/Win32"
-  )        
+endif()
 
 include_directories(
   ../include
@@ -55,6 +57,7 @@ cuda_add_executable(
   ../include/lib/init-ta-and-pa.hpp
   ../include/lib/nominate.hpp
   ../include/lib/set-internal-fract-adjacencies.hpp
+  ../include/lib/mark-nominated-tetra.hpp
   
   ../src/point.cu
   ../src/peano.cu
@@ -64,6 +67,7 @@ cuda_add_executable(
   ../src/tetra.cu
   ../src/set-internal-fract-adjacencies.cu
   ../src/fracture.cu
+  ../src/mark-nominated-tetra.cu
   
   ../tests/array-tests.cu
   ../tests/matrix-tests.cu
@@ -81,7 +85,6 @@ cuda_add_executable(
 target_link_libraries(
   regulus
   
-  cudadevrt
-  cudart
+  ${CUDA_cudadevrt_LIBRARY}
   )
    

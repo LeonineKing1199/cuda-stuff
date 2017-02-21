@@ -7,40 +7,38 @@
 #include <thrust/copy.h>
 #include <thrust/device_vector.h>
 
-#include "../globals.hpp"
-#include "../math/tetra.hpp"
-#include "../math/point.hpp"
-#include "../array.hpp"
-#include "../stack-vector.hpp"
-#include "mark-nominated-tetra.hpp"
+#include "globals.hpp"
+#include "array.hpp"
+#include "index_t.hpp"
 
-using thrust::copy;
-using thrust::device_vector;
+#include "math/tetra.hpp"
+#include "math/point.hpp"
+
+#include "lib/mark-nominated-tetra.hpp"
 
 template <typename T>
 __global__
 void redistribute_pts_kernel(
-  int const assoc_size,
-  int const num_tetra,
-  tetra const* __restrict__ mesh,
+  size_t const assoc_size,
+  size_t const num_tetra,
+  tetra      const* __restrict__ mesh,
   point_t<T> const* __restrict__ pts,
-  int const* nm,
-  int const* __restrict__ nm_ta,
-  int const* __restrict__ fl,
-  int* pa,
-  int* ta,
-  int* la,
+  unsigned   const*              nm,
+  index_t    const* __restrict__ nm_ta,
+  index_t    const* __restrict__ fl,
+  index_t* pa,
+  index_t* ta,
+  index_t* la,
   int* num_redistributions)
 {
-  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
-    // store a copy of the current ta value
-    int const ta_id{ta[tid]};
-    int const pa_id{pa[tid]};
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {=
+    index_t const ta_id = ta[tid];
+    index_t const pa_id = pa[tid];
     
     // we store a mapping between the index of a
     // tetrahedron being fractured and the index
     // of the the association arrays
-    int const tuple_id = nm_ta[ta_id];
+    index_t const tuple_id = nm_ta[ta_id];
 
     // this means the tetrahedron was not even written to
     if (tuple_id == -1) {

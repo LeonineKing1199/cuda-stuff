@@ -14,18 +14,7 @@
 #include <thrust/distance.h>
 #include <thrust/transform.h>
 
-using thrust::device_vector;
-using thrust::fill;
-using thrust::tuple;
-using thrust::get;
-using thrust::make_zip_iterator;
-using thrust::make_tuple;
-using thrust::sort;
-using thrust::unique_by_key_copy;
-using thrust::for_each;
-using thrust::pair;
-using thrust::distance;
-using thrust::transform;
+namespace T = thrust;
 
 /**
   * This function is used to determine which points will
@@ -37,57 +26,60 @@ using thrust::transform;
 
 auto nominate(
   size_t const assoc_size,
-  thrust::device_vector<index_t>& pa,
-  thrust::device_vector<index_t>& ta,
-  thrust::device_vector<loc_t>& la,
-  thrust::device_vector<unsigned>& nm) -> void
+  T::device_vector<index_t>& pa,
+  T::device_vector<index_t>& ta,
+  T::device_vector<loc_t>& la,
+  T::device_vector<unsigned>& nm) -> void
 {
   // the first thing we want to do is sort everything
   // by ta
   auto zip_begin =
-    make_zip_iterator(
-      make_tuple(
+    T::make_zip_iterator(
+      T::make_tuple(
         pa.begin(),
         ta.begin(),
         la.begin()));
         
-  sort(
+  T::sort(
     zip_begin, zip_begin + assoc_size,
     [] __device__ (
-      tuple<index_t, index_t, loc_t> const& a,
-      tuple<index_t, index_t, loc_t> const& b) -> bool
+      T::tuple<index_t, index_t, loc_t> const& a,
+      T::tuple<index_t, index_t, loc_t> const& b) -> bool
     {
-      index_t const a_ta_id{get<1>(a)};
-      index_t const a_pa_id{get<0>(a)};
+      index_t const a_ta_id = T::get<1>(a);
+      index_t const a_pa_id = T::get<0>(a);
       
-      index_t const b_ta_id{get<1>(b)};
-      index_t const b_pa_id{get<0>(b)};
+      index_t const b_ta_id = T::get<1>(b);
+      index_t const b_pa_id = T::get<0>(b);
       
-      return (a_ta_id == b_ta_id) ? (a_pa_id < b_pa_id) : (a_ta_id < b_ta_id);
+      return (a_ta_id == b_ta_id) 
+        ? (a_pa_id < b_pa_id) 
+        : (a_ta_id < b_ta_id);
     });
  
   
   // we then want to allocate copies of our
   // association arrays to write our stream
   // compaction to
-  device_vector<index_t> pa_cpy{assoc_size};
-  device_vector<index_t> ta_cpy{assoc_size};
+  T::device_vector<index_t> pa_cpy{assoc_size};
+  T::device_vector<index_t> ta_cpy{assoc_size};
     
   // remove tuple elements, using ta as the
   // unique key
-  auto last_pair = unique_by_key_copy(
+  auto last_pair = T::unique_by_key_copy(
     ta.begin(), ta.begin() + assoc_size,
     pa.begin(),
     ta_cpy.begin(),
     pa_cpy.begin());
 
   // unique_by_key_copy returns a pair of iterators (keys_last, values_last)
-  size_t const assoc_cpy_size{static_cast<size_t>(distance(ta_cpy.begin(), last_pair.first))};
+  size_t const assoc_cpy_size = 
+    static_cast<size_t>(T::distance(ta_cpy.begin(), last_pair.first));
   
-  fill(nm.begin(), nm.end(), 0);
-  device_vector<unsigned> nm_cpy{nm};
+  T::fill(nm.begin(), nm.end(), 0);
+  T::device_vector<unsigned> nm_cpy{nm};
   
-  unsigned* nm_data = nm.data().get();
+  unsigned* nm_data     = nm.data().get();
   unsigned* nm_cpy_data = nm_cpy.data().get();
   
   // this is how we count the number of occurrences for a particular
@@ -95,14 +87,14 @@ auto nominate(
   // if the copy doesn't match up with the original count array, that
   // means that the point had some non-unique tetrahedra associated
   // with it and as such is not up for nomination
-  for_each(
+  T::for_each(
     pa.begin(), pa.begin() + assoc_size,
     [=] __device__ (index_t const pa_id) -> void
     {
       atomicAdd(nm_data + pa_id, 1);
     });
     
-  for_each(
+  T::for_each(
     pa_cpy.begin(), pa_cpy.begin() + assoc_cpy_size,
     [=] __device__ (index_t const pa_id) -> void
     {
@@ -113,12 +105,12 @@ auto nominate(
   // check for equality.
   // if the point occurred the same amount of times then all
   // of its  tetrahedra were unique and is able to be nominated
-  transform(
+  T::transform(
     nm.begin(), nm.end(),
     nm_cpy.begin(),
     nm.begin(),
     [] __device__ (unsigned const a, unsigned const b) -> unsigned
     {
-      return (a != 0) && (a - b == 0);
-    });//*/
+      return static_cast<unsigned>((a != 0) && (a - b == 0));
+    });
 }
