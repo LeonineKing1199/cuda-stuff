@@ -6,6 +6,8 @@
 
 #include <thrust/copy.h>
 #include <thrust/device_vector.h>
+#include <thrust/iterator/zip_iterator.h>
+#include <thrust/tuple.h>
 
 #include "globals.hpp"
 #include "array.hpp"
@@ -15,6 +17,8 @@
 #include "math/point.hpp"
 
 #include "lib/mark-nominated-tetra.hpp"
+
+namespace thr = thrust;
 
 template <typename T>
 __global__
@@ -28,46 +32,70 @@ void redistribute_pts_kernel(
   index_t    const* __restrict__ fl,
   index_t* pa,
   index_t* ta,
-  index_t* la,
+  loc_t*   la,
   int* num_redistributions)
 {
-  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {=
+  for (auto tid = get_tid(); tid < assoc_size; tid += grid_stride()) {
     index_t const ta_id = ta[tid];
     index_t const pa_id = pa[tid];
-    
+    loc_t   const la_id = la[tid];
+
     // we store a mapping between the index of a
     // tetrahedron being fractured and the index
     // of the the association arrays
     index_t const tuple_id = nm_ta[ta_id];
 
     // this means the tetrahedron was not even written to
-    if (tuple_id == -1) {
+    if (!static_cast<bool>(tuple_id)) {
+      // btw, `continue` is very necessary when using a 
+      // grid-stride loop, instead of using `return`
       continue;
     }
 
-    // if the point was not nominated, return
+    // if the point was not nominated, return aka continue
     if (nm[pa[tuple_id]] != 1) {
       continue;
     }
 
     // if this thread is the current thread, we should NOT
     // invalidate the association so we should just bail
-    if (tuple_id == tid) {
+    // I don't remember why now...
+    if (static_cast<size_t>(tuple_id) == tid) {
       continue;
     }
 
     // we now know that tuple_id is actually a valid tuple id!
     // invalidate this association
-    ta[tid] = -1;
-    pa[tid] = -1;
-    la[tid] = -1;
+    ta[tid] = index_t{-1};
+    pa[tid] = index_t{-1};
+    la[tid] = loc_t{-1};
 
     // we know that we wrote to mesh at ta_id and that we then wrote
     // past the end of the mesh at fl[tuple_id] + { 0[, 1[, 2]] }
-    stack_vector<int, 4> local_pa;
-    stack_vector<int, 4> local_ta;
-    stack_vector<int, 4> local_la;
+
+    // stack_vector<int, 4> local_pa;
+    // stack_vector<int, 4> local_ta;
+    // stack_vector<int, 4> local_la;
     
+    array<index_t, 4> pa_ids;
+    array<index_t, 4> ta_ids;
+    array<loc_t,   4> la_ids;
+
+    array<tetra, 4> tets;
+
+    auto ids_iterator = 
+      thr::make_zip_iterator(
+        thr::make_tuple(
+          pa_ids.begin(),
+          ta_ids.begin(),
+          la_ids.begin()));
+
+    auto tets_iterator = tets.begin();
+
+    *ids_iterator  = thr::make_tuple(pa_id, ta_id, la_id);
+    *tets_iterator = mesh[ta_id];
+
+/*
     stack_vector<tetra, 4> tets;
 
     // load the tetrahedra onto the stack
@@ -121,28 +149,30 @@ void redistribute_pts_kernel(
       local_la[0], local_la[1], local_la[2], local_la[3]);//*/
 
     // now we have to do a write-back to main memory
+    /*
     int const assoc_offset{assoc_size + (4 * atomicAdd(num_redistributions, 1))};
         
     copy(thrust::seq, local_pa.begin(), local_pa.end(), pa + assoc_offset);
     copy(thrust::seq, local_ta.begin(), local_ta.end(), ta + assoc_offset);
     copy(thrust::seq, local_la.begin(), local_la.end(), la + assoc_offset);
+    //*/
   }
 }
 
 template <typename T>
 auto redistribute_pts(
-  int const assoc_size,
-  int const num_tetra,
-  device_vector<tetra> const& mesh,
-  device_vector<point_t<T>> const& pts,
-  device_vector<int> const& nm,
-  device_vector<int> const& fl,
-  device_vector<int>& pa,
-  device_vector<int>& ta,
-  device_vector<int>& la) -> void
+  size_t const assoc_size,
+  size_t const num_tetra,
+  thr::device_vector<tetra>      const& mesh,
+  thr::device_vector<point_t<T>> const& pts,
+  thr::device_vector<unsigned>   const& nm,
+  thr::device_vector<index_t>    const& fl,
+  thr::device_vector<index_t>&          pa,
+  thr::device_vector<index_t>&          ta,
+  thr::device_vector<loc_t>&            la) -> void
 {
-  device_vector<int> nm_ta{num_tetra, -1};
-  device_vector<int> num_redistributions{1, 0};
+  thr::device_vector<index_t> nm_ta{num_tetra, index_t{-1}};
+  thr::device_vector<int>     num_redistributions{1, 0};
   
   mark_nominated_tetra<<<bpg, tpb>>>(
     assoc_size,
@@ -163,8 +193,6 @@ auto redistribute_pts(
     ta.data().get(),
     la.data().get(),
     num_redistributions.data().get());
-    
-  cudaDeviceSynchronize();
 }
 
 

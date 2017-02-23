@@ -1,24 +1,26 @@
-#include <thrust/device_vector.h>
+#include "catch.hpp"
+#include "globals.hpp"
+#include "domain.hpp"
 
-#include "test-suite.hpp"
+#include "lib/init-ta-and-pa.hpp"
+#include "lib/nominate.hpp"
+#include "lib/fract-locations.hpp"
+#include "lib/fracture.hpp"
+#include "lib/redistribute-pts.hpp"
+#include "lib/get-assoc-size.hpp"
 
-#include "../include/globals.hpp"
-#include "../include/domain.hpp"
 
-#include "../include/lib/calc-ta-and-pa.hpp"
-#include "../include/lib/nominate.hpp"
-#include "../include/lib/fract-locations.hpp"
-#include "../include/lib/fracture.hpp"
-#include "../include/lib/redistribute-pts.hpp"
-#include "../include/lib/get-assoc-size.hpp"
+TEST_CASE("The point redistribution function")
+{
 
+}
 /*
   Kinda funny but these tests are basically an entire runthrough
   of the triangulation pipeline so this file makes a good reference
   for a rough approximation of how the triangulation routine really
   will work
 */
-
+/*
 template <typename T>
 __global__
 void assert_givens(
@@ -188,4 +190,4 @@ auto redistribute_pts_tests(void) -> void
   }
   
   std::cout << "All tests passed!\n" << std::endl;
-}
+}*/

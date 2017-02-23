@@ -6,6 +6,6 @@ cmake ^
     -DCMAKE_BUILD_TYPE=Debug ^
     ..\debug\ 
 
-ninja -j 4
+cmake --build .
 
 cd ..\debug

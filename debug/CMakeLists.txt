@@ -57,7 +57,9 @@ cuda_add_executable(
   ../include/lib/init-ta-and-pa.hpp
   ../include/lib/nominate.hpp
   ../include/lib/set-internal-fract-adjacencies.hpp
+  ../include/lib/fracture.hpp
   ../include/lib/mark-nominated-tetra.hpp
+  ../include/lib/redistribute-pts.hpp
   
   ../src/point.cu
   ../src/peano.cu
@@ -80,6 +82,7 @@ cuda_add_executable(
   ../tests/index_t-tests.cu
   ../tests/set-internal-fract-adjacencies.cu
   ../tests/fracture-tests.cu
+  ../tests/redistribute-pts-tests.cu
   )
   
 target_link_libraries(
