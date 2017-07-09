@@ -1,6 +1,8 @@
 #ifndef REGULUS_GLOBALS_HPP_
 #define REGULUS_GLOBALS_HPP_
 
+namespace regulus
+{
 size_t const static tpb = 256; // threads per block
 size_t const static bpg = 512; // blocks per grid
 
@@ -14,6 +16,7 @@ constexpr __device__
 auto grid_stride(void) -> size_t
 {
   return tpb * bpg;
+}
 }
 
 #endif // REGULUS_GLOBALS_HPP_

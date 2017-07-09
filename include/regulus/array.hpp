@@ -6,6 +6,7 @@
 // We're trying to mimic the STL container here but it's woefully
 // incomplete when compared to the "real thing". But it does the
 // job most of the time.
+namespace regulus {
 
 template <typename T, ptrdiff_t N>
 struct array
@@ -16,10 +17,10 @@ struct array
   using pointer       = value_type*;
   using const_pointer = value_type const*;
   
-  using iterator = pointer;
+  using iterator       = pointer;
   using const_iterator = const_pointer;  
   
-  using reference = value_type&;
+  using reference       = value_type&;
   using const_reference = value_type const&;
  
   T data_[N];
@@ -39,7 +40,7 @@ struct array
   __host__ __device__
   auto operator==(array<T, N> const& other) const -> bool
   {
-    bool v{ true };
+    bool v{true};
 
     for (size_type i = 0; i < N && v; ++i) {
       v = (data_[i] == other.data_[i]);
@@ -51,7 +52,7 @@ struct array
   __host__ __device__
   auto operator!=(array<T, N> const& other) const -> bool
   {
-    bool v{ true };
+    bool v{true};
 
     for (size_type i = 0; i < N && v; ++i) {
       v = (data_[i] == other.data_[i]);
@@ -110,14 +111,16 @@ struct array
   {
     return data_;
   }
-};  
+}; 
+}
 
-template <typename T, long long N>
-auto operator<<(std::ostream& os, array<T, N> const& a) -> std::ostream& 
+
+template <typename T, ptrdiff_t N>
+auto operator<<(std::ostream& os, regulus::array<T, N> const& a) -> std::ostream& 
 {
   os << "{ ";
 
-  for (long long i = 0; i < N; ++i) {
+  for (decltype(N) i = 0; i < N; ++i) {
     if (i == N - 1) {
       os << a.data_[i];
     } else {

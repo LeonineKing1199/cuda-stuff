@@ -3,3 +3,5 @@ build-debug/
 build-release/
 ninja-build/
 .git
+CMakeSettings.json
+CMakeFiles

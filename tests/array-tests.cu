@@ -1,6 +1,6 @@
-#include "catch.hpp"
-#include "array.hpp"
-#include "globals.hpp"
+#include <catch.hpp>
+#include "regulus/array.hpp"
+#include "regulus/globals.hpp"
 
 #include <iostream>
 #include <thrust/transform.h>
@@ -11,26 +11,23 @@
 #include <thrust/reduce.h>
 #include <thrust/functional.h>
 
-using thrust::transform;
-using thrust::device_vector;
-using thrust::host_vector;
-using thrust::sequence;
-using thrust::reduce;
-using thrust::plus;
+
+namespace T = thrust;
+namespace R = regulus;
 
 __global__
-void device_tests(int* vals, int const size)
+void device_tests(int* vals, size_t const size)
 {
-  for (auto tid = get_tid(); tid < size; tid += grid_stride()) {
-    array<int, 128> tmp_vals;
+  for (auto tid = R::get_tid(); tid < size; tid += R::grid_stride()) {
+    R::array<int, 128> tmp_vals;
     
-    sequence(thrust::seq, tmp_vals.begin(), tmp_vals.end());
+    T::sequence(T::seq, tmp_vals.begin(), tmp_vals.end());
     
-    vals[tid] = reduce(
-      thrust::seq, 
-      tmp_vals.begin(), tmp_vals.end(), 
+    vals[tid] = T::reduce(
+      T::seq,
+      tmp_vals.begin(), tmp_vals.end(),
       0, 
-      plus<int>{});
+      T::plus<int>{});
   }
 }
 
@@ -38,24 +35,30 @@ TEST_CASE("array<T, N>")
 {
   SECTION("should be default-constructible")
   {
-    int const size = 16;
-    array<int, size> const x{ { 0 } };
+    auto const size = ptrdiff_t{16};
+    R::array<int, size> const x{ { 0 } };
     
-    REQUIRE(16 == x.size());
-    REQUIRE(0 == reduce(thrust::seq, x.begin(), x.end(), 0, plus<int>{}));
+    REQUIRE(size == x.size());
+    REQUIRE(
+      0 == T::reduce(
+        T::seq, 
+        x.begin(), x.end(), 
+        0, 
+        T::plus<int>{}));
   }
   
   SECTION("should work on the device too")
   {
-    int const size = 128;
-    device_vector<int> vals{ size, -1 };
-    device_tests<<<bpg, tpb>>>(vals.data().get(), size);  
+    auto const size = size_t{128};
+    auto vals       = T::device_vector<int>{size, -1};
+  
+    device_tests<<<R::bpg, R::tpb>>>(vals.data().get(), size);  
     cudaDeviceSynchronize();
     
-    host_vector<int> h_vals{ vals };
-    bool is_valid = true;
+    auto const h_vals = T::host_vector<int>{vals};
+    bool is_valid     = true;
 
-    for (int v : h_vals) {
+    for (int const v : h_vals) {
       is_valid =  is_valid && (8128 == v);
     } 
 
@@ -64,16 +67,17 @@ TEST_CASE("array<T, N>")
   
   SECTION("should be comparable")
   {
-    int const size = 16;
-    array<int, size> a{ { 0 } };
-    array<int, size> b{ { 0 } };
+    auto const size = ptrdiff_t{16};
+
+    R::array<int, size> a{ { 0 } };
+    R::array<int, size> b{ { 0 } };
     
     REQUIRE(a == b);
   }
   
   SECTION("should support the front and back methods")
   {
-    array<int, 3> x = { 1, 2, 3 };
+    R::array<int, 3> x = { 1, 2, 3 };
     
     REQUIRE(x.front() == 1);
     x.front() = 11;
@@ -86,15 +90,15 @@ TEST_CASE("array<T, N>")
   
   SECTION("should support pointer-based access")
   {
-    array<int, 3> const x = { 1, 2, 3 };
-    typename array<int, 3>::const_pointer begin = x.data();
+    auto const x     = R::array<int, 3>{1, 2, 3};
+    auto const begin = x.data();
     REQUIRE(*begin == 1);
   }
   
   SECTION("should support const-correctness")
   {
-    using size_type = typename array<int, 5>::size_type;
-    array<int, 5> const a = { 1, 2, 3, 4, 5 };
+    using size_type = typename R::array<int, 5>::size_type;
+    auto const a    = R::array<int, 5>{1, 2, 3, 4, 5};
     
     bool is_valid = true;
 
