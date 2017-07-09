@@ -30,12 +30,21 @@ set(
   HEADERS
 
   ./include/regulus/array.hpp
+  ./include/regulus/globals.hpp
+  ./include/regulus/mesh.hpp
+  ./include/regulus/point_t.hpp
+  ./include/regulus/is_point.hpp
+
+  ./include/regulus/algorithm/build_root_tetrahedron.hpp
+
+  ./include/regulus/utils/gen_cartesian_domain.hpp
 )
 
 set(
   TESTS
 
   ./tests/array-tests.cu
+  ./tests/build_root_tetrahedron_tests.cu
 )
 
 # Generate the demo/release binary
