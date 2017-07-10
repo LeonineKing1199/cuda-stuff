@@ -34,10 +34,13 @@ set(
   ./include/regulus/mesh.hpp
   ./include/regulus/point_t.hpp
   ./include/regulus/is_point.hpp
+  ./include/regulus/point_traits.hpp
 
   ./include/regulus/algorithm/build_root_tetrahedron.hpp
+  ./include/regulus/algorithm/orientation.hpp
 
   ./include/regulus/utils/gen_cartesian_domain.hpp
+  ./include/regulus/utils/make_point.hpp
 )
 
 set(
