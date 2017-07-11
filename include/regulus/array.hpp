@@ -8,18 +8,15 @@
 // job most of the time.
 namespace regulus {
 
-template <typename T, ptrdiff_t N>
+template <typename T, size_t N>
 struct array
 {
-  using value_type = T;
-  using size_type  = decltype(N);
-  
-  using pointer       = value_type*;
-  using const_pointer = value_type const*;
-  
-  using iterator       = pointer;
-  using const_iterator = const_pointer;  
-  
+  using value_type      = T;
+  using size_type       = size_t;
+  using pointer         = value_type*;
+  using const_pointer   = value_type const*;
+  using iterator        = pointer;
+  using const_iterator  = const_pointer;  
   using reference       = value_type&;
   using const_reference = value_type const&;
  
@@ -115,7 +112,7 @@ struct array
 }
 
 
-template <typename T, ptrdiff_t N>
+template <typename T, size_t N>
 auto operator<<(std::ostream& os, regulus::array<T, N> const& a) -> std::ostream& 
 {
   os << "{ ";

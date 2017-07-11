@@ -28,7 +28,7 @@ auto make_matrix(
   point_t<T> const& a,
   point_t<T> const& b,
   point_t<T> const& c,
-  point_t<T> const& d) -> matrix<T, 4, 4>
+  point_t<T> const&
 {
   return { 1, a.x, a.y, a.z,
            1, b.x, b.y, b.z,

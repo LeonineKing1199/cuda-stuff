@@ -35,6 +35,8 @@ set(
   ./include/regulus/point_t.hpp
   ./include/regulus/is_point.hpp
   ./include/regulus/point_traits.hpp
+  ./include/regulus/matrix.hpp
+  ./include/regulus/vector.hpp
 
   ./include/regulus/algorithm/build_root_tetrahedron.hpp
   ./include/regulus/algorithm/orientation.hpp
@@ -46,8 +48,10 @@ set(
 set(
   TESTS
 
-  ./tests/array-tests.cu
+  ./tests/array_tests.cu
   ./tests/build_root_tetrahedron_tests.cu
+  ./tests/vector_tests.cu
+  ./tests/matrix_tests.cu
 )
 
 # Generate the demo/release binary

@@ -21,6 +21,7 @@ namespace detail
 
 template <typename Point>
 struct add_points
+  : public thrust::binary_function<Point const, Point const, Point>
 {
   __host__ __device__
   auto operator()(Point const a, Point const b) -> Point
@@ -29,9 +30,7 @@ struct add_points
 
 template <typename Point>
 struct calc_radius_from 
-: public thrust::unary_function<
-  Point const, 
-  typename point_traits<Point>::value_type
+: public thrust::unary_function<Point const, typename point_traits<Point>::value_type
 >
 {
   Point const p;
@@ -67,7 +66,7 @@ template <
 >
 auto build_root_tetrahedron(
   InputIterator begin, InputIterator end)
--> typename array<Point, 4>
+-> array<Point, 4>
 {
   using coord_value_type = typename point_traits<Point>::value_type;
 

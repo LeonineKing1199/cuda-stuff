@@ -16,12 +16,6 @@ namespace R = regulus;
 
 using point_t = R::point_t<double>;
 
-auto operator<<(std::ostream& os, point_t const p) -> std::ostream&
-{
-  os << "{ " << p.x << ", " << p.y << ", " << p.z << " }";
-  return os;
-}
-
 } // anonymous namespace
 
 TEST_CASE("Building the all-encompassing global tetrahedron... ")

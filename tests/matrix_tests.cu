@@ -1,5 +1,6 @@
-#include "catch.hpp"
-#include "math/matrix.hpp"
+#include <catch.hpp>
+
+#include "regulus/matrix.hpp"
 
 TEST_CASE("Our matrix implementation")
 {
