@@ -16,6 +16,9 @@ and [CMake](https://cmake.org/) 3.7 or higher.
 
 ## Building and Testing on Windows
 
+For Windows, the only sane way of dealing with building CUDA is the [Ninja](https://ninja-build.org/) build tool
+so you will need to download and install that as well. The reasons for this are, MSBuild doesn't extend well to the CUDA ecosystem (no parallel building, interface libs in CMake break header dependencies).
+
 You can customize some of the top level parameters in the `vars.bat` file to control 
 the CMake build process (configuration type, build directory, toolchain file location).
 We recommend that you use [vcpkg](https://github.com/Microsoft/vcpkg) for your Windows 

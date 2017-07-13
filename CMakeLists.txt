@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.7)
 
 project(regulus)
 
-set(CMAKE_CXX_STANDARD 11)
-
 find_package(CUDA 8.0 REQUIRED)
-set(CUDA_SEPARABLE_COMPILATION ON)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CUDA_SEPARABLE_COMPILATION ON)
 set(COMPUTE_CAPABILITY 61)
 
 list(
@@ -17,33 +16,22 @@ list(
   --expt-extended-lambda
 )
 
-add_library(regulus_core INTERFACE)
-target_include_directories(
-  regulus_core
+# MSVC + Ninja-specific build details
+if (MSVC)
+  list(
+    APPEND
+    CUDA_NVCC_FLAGS
+    
+      # this is specific to the Ninja build tool
+      --compiler-options "/FS"
+      -D_SCL_SECURE_NO_WARNINGS
+    )
 
-  INTERFACE
-  ${CUDA_INCLUDE_DIR}
-  ./include
-)
+  # this is specific to the Ninja build tool
+  set(
+    CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:libcmt.lib")
 
-set(
-  HEADERS
-
-  ./include/regulus/array.hpp
-  ./include/regulus/globals.hpp
-  ./include/regulus/mesh.hpp
-  ./include/regulus/point_t.hpp
-  ./include/regulus/is_point.hpp
-  ./include/regulus/point_traits.hpp
-  ./include/regulus/matrix.hpp
-  ./include/regulus/vector.hpp
-
-  ./include/regulus/algorithm/build_root_tetrahedron.hpp
-  ./include/regulus/algorithm/orientation.hpp
-
-  ./include/regulus/utils/gen_cartesian_domain.hpp
-  ./include/regulus/utils/make_point.hpp
-)
+endif()
 
 set(
   TESTS
@@ -54,13 +42,21 @@ set(
   ./tests/matrix_tests.cu
 )
 
+add_library(regulus_core INTERFACE)
+target_include_directories(
+  regulus_core
+
+  INTERFACE
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+
 # Generate the demo/release binary
 
 cuda_add_executable(
   regulus
 
   ./release/main.cu
-  ${HEADERS}
 )
 
 target_link_libraries(
@@ -80,20 +76,12 @@ cuda_add_executable(
   regulus_tests
 
   ./debug/main.cu
-  ${HEADERS}
   ${TESTS}
 )
 
 target_link_libraries(
   regulus_tests
 
-  regulus_core
   Catch
+  regulus_core
 )
-
-# see: https://github.com/philsquared/Catch/blob/master/contrib/ParseAndAddCatchTests.cmake
-#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
-#enable_testing()
-
-#include(ParseAndAddCatchTests)
-#ParseAndAddCatchTests(regulus_tests)

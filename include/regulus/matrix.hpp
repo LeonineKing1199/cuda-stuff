@@ -3,8 +3,12 @@
 
 #include <type_traits>
 
+#include <thrust/equal.h>
+#include <thrust/execution_policy.h>
+
 #include "regulus/array.hpp"
 #include "regulus/vector.hpp"
+#include "regulus/utils/equals.hpp"
 
 namespace regulus
 {
@@ -31,21 +35,28 @@ struct matrix
   }
 
   __host__ __device__
-  auto operator[](size_type const row_idx) -> const_iterator
+  auto operator[](size_type const row_idx) const -> const_iterator
   {
     return data_.begin() + (row_idx * C);
   }
 
   __host__ __device__
-  auto operator==(matrixT<T, R, C> const& other) const -> bool
+  auto operator==(matrix<T, R, C> const& other) const -> bool
   {
-    return data_ == other.data_;
+    return thrust::equal(
+      thrust::seq,
+      data_.begin(), data_.end(),
+      other.data_.begin(),
+      [](T const x, T const y) -> bool
+      {
+        return eq(x, y);
+      });
   }
 
   __host__ __device__
   auto operator!=(matrix<T, R, C> const& other) const -> bool
   {
-    return data_ != other.data_;
+    return !(*this == other);
   }
 
   __host__ __device__
@@ -59,13 +70,25 @@ struct matrix
   {
     vector<T, C> row;
 
-    auto const array_offset = row_idx * M;
+    auto const array_offset = row_idx * C;
 
     for (size_type i = 0; i < C; ++i) {
       row[i] = data_[array_offset + i];
     }
 
     return row;
+  }
+
+  __host__ __device__
+  auto col(size_type const col_idx) const -> vector<T, R>
+  {
+    vector<T, R> col;
+
+    for (size_type i = 0; i < R; ++i) {
+      col[i] = data_[i * C + col_idx];
+    }
+
+    return col;
   }
 };
 
