@@ -1,2 +1,2 @@
 @echo off
-cuda-memcheck .\build\regulus_tests.exe
+cuda-memcheck .\build\regulus_tests.exe %1

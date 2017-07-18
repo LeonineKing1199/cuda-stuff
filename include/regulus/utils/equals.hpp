@@ -1,7 +1,7 @@
 #ifndef REGULUS_UTILS_EQUALS_HPP_
 #define REGULUS_UTILS_EQUALS_HPP_
 
-#include <limits>
+#include "regulus/utils/numeric_limits.hpp"
 
 namespace regulus
 {
@@ -9,9 +9,9 @@ namespace regulus
   __host__ __device__
   auto eq(T const x, T const y) -> bool
   {
-    auto const eps = std::numeric_limits<T>::epsilon();
-    auto const tmp = abs(x) > abs(y) ? abs(y) : abs(x);
-    return abs(x - y) <= tmp * eps;
+    auto const eps = numeric_limits<T>::epsilon();
+    auto const tmp = fmin(x, y);
+    return abs(x - y) <= (tmp * eps);
   }
 } // regulus
 

@@ -1,6 +1,7 @@
-#include <catch.hpp>
 #include "regulus/array.hpp"
 #include "regulus/globals.hpp"
+
+#include <catch.hpp>
 
 #include <iostream>
 #include <thrust/transform.h>
@@ -69,8 +70,8 @@ TEST_CASE("array<T, N>")
   {
     auto const size = ptrdiff_t{16};
 
-    R::array<int, size> a{ { 0 } };
-    R::array<int, size> b{ { 0 } };
+    R::array<int, size> a{0};
+    R::array<int, size> b{0};
     
     REQUIRE(a == b);
   }

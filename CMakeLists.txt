@@ -4,6 +4,11 @@ project(regulus)
 
 find_package(CUDA 8.0 REQUIRED)
 
+# Find the Catch header and create an interface lib from it
+find_path(CATCH_INCLUDE_DIR catch.hpp)
+add_library(Catch INTERFACE)
+target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+
 set(CMAKE_CXX_STANDARD 11)
 set(CUDA_SEPARABLE_COMPILATION ON)
 set(COMPUTE_CAPABILITY 61)
@@ -33,26 +38,12 @@ if (MSVC)
 
 endif()
 
-set(
-  TESTS
-
-  ./tests/array_tests.cu
-  ./tests/build_root_tetrahedron_tests.cu
-  ./tests/vector_tests.cu
-  ./tests/matrix_tests.cu
-)
 
 add_library(regulus_core INTERFACE)
-target_include_directories(
-  regulus_core
-
-  INTERFACE
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+target_include_directories(regulus_core INTERFACE ./include)
 
 
 # Generate the demo/release binary
-
 cuda_add_executable(
   regulus
 
@@ -66,11 +57,14 @@ target_link_libraries(
 )
 
 # Assemble the testing binary
+set(
+  TESTS
 
-# Find the Catch header and create an interface lib from it
-find_path(CATCH_INCLUDE_DIR catch.hpp)
-add_library(Catch INTERFACE)
-target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
+  ./tests/array_tests.cu
+  ./tests/build_root_tetrahedron_tests.cu
+  ./tests/vector_tests.cu
+  ./tests/matrix_tests.cu
+)
 
 cuda_add_executable(
   regulus_tests
