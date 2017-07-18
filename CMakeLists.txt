@@ -64,6 +64,7 @@ set(
   ./tests/build_root_tetrahedron_tests.cu
   ./tests/vector_tests.cu
   ./tests/matrix_tests.cu
+  ./tests/tetra_tests.cu
 )
 
 cuda_add_executable(

@@ -1,2 +1,3 @@
 @echo off
-cuda-memcheck .\build\regulus_tests.exe %1
+call vars.bat
+cuda-memcheck .\%build_directory%\regulus_tests.exe %1

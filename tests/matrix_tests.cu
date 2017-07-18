@@ -63,7 +63,7 @@ TEST_CASE("Our matrix implementation")
     using regulus::eq;
     using regulus::round_to;
 
-    regulus::matrix<float, 4, 4> t{
+    auto const t = regulus::matrix<float, 4, 4>{
       1.0f, 0.0f, 0.0f, 0.0f,
       1.0f, 9.0f, 0.0f, 0.0f,
       1.0f, 0.0f, 9.0f, 0.0f,
@@ -71,19 +71,19 @@ TEST_CASE("Our matrix implementation")
                            
     REQUIRE(eq(det(t), 729.0f));
     
-    regulus::matrix<double, 4, 4> r{
+    auto const r = regulus::matrix<double, 4, 4>{
        0.0, 1.85, 0.63, 2.65,
       1.92, 1.57, 1.15, 2.94,
        2.7, 2.45, 0.57, 2.81,
       2.33, 1.68,  1.0, 0.05};
-           
+
     REQUIRE(eq(round_to(det(r), 3), -10.928));
     
-    regulus::matrix<float, 4, 4> u{ 
+    auto const u = regulus::matrix<float, 4, 4>{ 
       1.0, 0.0, 0.0, 0.0,
       1.0, 9.0, 0.0, 0.0,
       1.0, 0.0, 9.0, 0.0,
-      1.0, 3.0, 3.0, 0.0 };
+      1.0, 3.0, 3.0, 0.0};
                            
     REQUIRE(eq(det(u), 0.0f));
   }

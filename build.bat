@@ -1,6 +1,5 @@
 @echo off
 
-
 call vars.bat
 
 mkdir %build_directory% 2> NUL

@@ -6,3 +6,5 @@ ninja-build/
 CMakeSettings.json
 CMakeFiles
 .vscode
+build_Debug/
+build_Release/
