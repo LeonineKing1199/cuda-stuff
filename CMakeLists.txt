@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.9)
 
 project(regulus)
 
@@ -40,8 +40,7 @@ endif()
 
 
 add_library(regulus_core INTERFACE)
-target_include_directories(regulus_core INTERFACE ./include)
-
+target_include_directories(regulus_core INTERFACE ./include ${CUDA_INCLUDE_DIR})
 
 # Generate the demo/release binary
 cuda_add_executable(
@@ -54,6 +53,7 @@ target_link_libraries(
   regulus
 
   regulus_core
+  ${CUDA_cudadevrt_LIBRARY}
 )
 
 # Assemble the testing binary
@@ -79,4 +79,5 @@ target_link_libraries(
 
   Catch
   regulus_core
+  ${CUDA_cudadevrt_LIBRARY}
 )

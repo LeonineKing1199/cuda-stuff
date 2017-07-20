@@ -6,11 +6,10 @@
 #include "regulus/matrix.hpp"
 #include "regulus/utils/equals.hpp"
 #include "regulus/point_traits.hpp"
+#include "regulus/orientation.hpp"
 
 namespace regulus
 {
-  enum class orientation { positive, zero, negative };
-  
   template <
     typename Point,
     typename = typename enable_if_t<is_point<Point>::value>>
@@ -22,15 +21,17 @@ namespace regulus
     Point const d) 
   -> orientation
   {
+    using coord_type = typename point_traits<Point>::value_type;
+
     auto const det_v = det(
-      matrix<typename point_traits<Point>::value_type, 4, 4>{
+      matrix<coord_type, 4, 4>{
         1, a.x, a.y, a.z,
         1, b.x, b.y, b.z,
         1, c.x, c.y, c.z,
         1, d.x, d.y, d.z});
 
     return (
-      eq(det_v, 0)
+      eq(det_v, coord_type{0})
       ? orientation::zero
       : (
         det_v < 0

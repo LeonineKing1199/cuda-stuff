@@ -12,7 +12,7 @@ namespace regulus
   {
     template <>
     struct coord_type<tetra_t>
-    { using type = int; };
+    { using type = ptrdiff_t; };
 
     template <>
     struct access<0, tetra_t>
