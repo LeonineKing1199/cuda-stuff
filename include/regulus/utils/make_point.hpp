@@ -3,7 +3,8 @@
 
 #include "regulus/point_traits.hpp"
 
-namespace regulus {
+namespace regulus 
+{
   template <typename Point>
   __host__ __device__
   auto make_point(

@@ -1,6 +1,7 @@
 #ifndef REGULUS_ALGORITHM_BUILD_ROOT_TETRAHEDRON_HPP_
 #define REGULUS_ALGORITHM_BUILD_ROOT_TETRAHEDRON_HPP_
 
+#include <iostream>
 #include <type_traits>
 
 #include <thrust/reduce.h>
@@ -106,13 +107,13 @@ namespace regulus
       thrust::maximum<coord_value_type>{});
 
     // and now we're ready to build our 4 vertices!
-    auto const x = sqrt(3) * radius;
+    auto const x = sqrtf(3) * radius;
 
     return {
-      make_point<Point>(-x,  x, -x),
-      make_point<Point>(-x, -x,  x),
-      make_point<Point>( x, -x, -x),
-      make_point<Point>( x,  x,  x)
+      make_point<Point>(-x + centroid.x,  x + centroid.y, -x + centroid.z),
+      make_point<Point>(-x + centroid.x, -x + centroid.y,  x + centroid.z),
+      make_point<Point>( x + centroid.x, -x + centroid.y, -x + centroid.z),
+      make_point<Point>( x + centroid.x,  x + centroid.y,  x + centroid.z)
     };
   }
 

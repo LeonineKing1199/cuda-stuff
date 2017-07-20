@@ -3,11 +3,8 @@
 
 #include <climits>
 
-#include "regulus/array.hpp"
 #include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
-#include "regulus/matrix.hpp"
-#include "regulus/utils/equals.hpp"
 #include "regulus/point_traits.hpp"
 #include "regulus/algorithm/orient.hpp"
 

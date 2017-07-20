@@ -19,7 +19,7 @@ namespace regulus
 
   template <
     typename Point,
-    typename = typename enable_if_t<is_point<Point>::value>
+    typename = enable_if_t<is_point<Point>::value>
   >
   __host__ __device__
   auto insphere(
