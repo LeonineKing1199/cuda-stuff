@@ -32,7 +32,7 @@ void device_tests(int* vals, size_t const size)
   }
 }
 
-TEST_CASE("array<T, N>") 
+TEST_CASE("Our array type") 
 {
   SECTION("should be default-constructible")
   {

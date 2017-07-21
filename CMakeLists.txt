@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.7)
 
 project(regulus)
 
@@ -81,3 +81,13 @@ target_link_libraries(
   regulus_core
   ${CUDA_cudadevrt_LIBRARY}
 )
+
+# add some CTest functionality as well
+# unfortunately, only the Catch binary is run so as far as
+# CTest knows, only one test is actually run
+# see: https://github.com/philsquared/Catch/blob/master/contrib/ParseAndAddCatchTests.cmake
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
+
+enable_testing()
+include(ParseAndAddCatchTests)
+ParseAndAddCatchTests(regulus_tests)

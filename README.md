@@ -28,3 +28,22 @@ Working with the code should be fairly simple. Open up an instance of the Develo
 Prompt for VS2015 and you can use `...\cuda-stuff>clean && build && test` to either purge
 the currently built instance of the project, build the project or run the generated test binary
 through `cuda-memcheck`.
+
+### VSCode and CMake Tools Support
+
+I couldn't get Visual Studio 2017 to manage CUDA and CMake all at the same time so
+I fell back to VSCode and installed the CMake Tools extension by vector-of-bool.
+
+We can have the IDE mirror our normal CLI build process by updating our `./.vscode/settings.json`
+with:
+```
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    },
+    "cmake.buildDirectory": "${workspaceRoot}/build_${buildType}",
+    "cmake.generator": "Ninja",
+    "cmake.environment": {
+        "CC": "cl",
+        "CXX": "cl"
+    }
+```

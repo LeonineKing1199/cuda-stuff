@@ -5,6 +5,8 @@ ninja-build/
 .git
 CMakeSettings.json
 CMakeFiles
-.vscode
+.vs/
+.vscode/
 build_Debug/
 build_Release/
+cmake.modules/
