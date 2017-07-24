@@ -6,16 +6,16 @@
 #include "regulus/is_point.hpp"
 #include "regulus/utils/make_point.hpp"
 
-namespace regulus 
+namespace regulus
 {
   template <
-    typename Point, 
+    typename Point,
     typename OutputIterator,
     typename = enable_if_t<is_point<Point>::value>
   >
   auto gen_cartesian_domain(
-    size_t const grid_length, 
-    OutputIterator output) 
+    size_t const grid_length,
+    OutputIterator output)
   -> void
   {
     using coord_type = typename point_traits<Point>::value_type;

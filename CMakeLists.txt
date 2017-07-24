@@ -16,7 +16,7 @@ set(COMPUTE_CAPABILITY 61)
 list(
   APPEND
   CUDA_NVCC_FLAGS
-  
+
   -gencode arch=compute_${COMPUTE_CAPABILITY},code=sm_${COMPUTE_CAPABILITY}
   --expt-extended-lambda
 )
@@ -26,7 +26,7 @@ if (MSVC)
   list(
     APPEND
     CUDA_NVCC_FLAGS
-    
+
       # this is specific to the Ninja build tool
       --compiler-options "/FS"
       -D_SCL_SECURE_NO_WARNINGS
@@ -65,6 +65,8 @@ set(
   ./tests/vector_tests.cu
   ./tests/matrix_tests.cu
   ./tests/tetra_tests.cu
+  ./tests/equals.cu
+  ./tests/make_assoc_relations_tests.cu
 )
 
 cuda_add_executable(

@@ -1,15 +1,17 @@
-#include "catch.hpp"
-#include "math/equals.hpp"
+#include "regulus/utils/equals.hpp"
+#include "regulus/utils/round_to.hpp"
 
-TEST_CASE("The equals function")
+#include <catch.hpp>
+
+TEST_CASE("The eq function")
 {
-  REQUIRE(eq(0.6f, 3.0f / 5));
-  REQUIRE(eq(0.1, 1.0 / 10));
-  REQUIRE(!eq(0.1, 1.1 / 10));
+  REQUIRE(regulus::eq(0.6f, 3.0f / 5));
+  REQUIRE(regulus::eq(0.1, 1.0 / 10));
+  REQUIRE(!regulus::eq(0.1, 1.1 / 10));
 }
 
 TEST_CASE("The round_to function")
 {
-  REQUIRE(eq(0.333, round_to(1.0 / 3, 3)));
-  REQUIRE(eq(3.14285714, round_to(22.0 / 7, 8)));
+  REQUIRE(regulus::eq(0.333, regulus::round_to(1.0 / 3, 3)));
+  REQUIRE(regulus::eq(3.14285714, regulus::round_to(22.0 / 7, 8)));
 }
