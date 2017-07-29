@@ -85,27 +85,27 @@ TEST_CASE("Building the all-encompassing global tetrahedron... ")
     auto output_begin = std::back_inserter(h_pts);
     regulus::gen_cartesian_domain<point_t>(grid_length, output_begin);
   }
-  
+
   // copy to device and call relevant function for testing
   auto          d_pts = thrust::device_vector<point_t>{h_pts};
   auto const vertices =
     regulus::build_root_tetrahedron<point_t>(
-      d_pts.begin(), 
+      d_pts.begin(),
       d_pts.end());
 
   // as a precaution, make sure the root tetrahedron we're proposing
   // is positively oriented
   REQUIRE(
     (orient(
-      vertices[0], 
-      vertices[1], 
-      vertices[2], 
+      vertices[0],
+      vertices[1],
+      vertices[2],
       vertices[3]) == regulus::orientation::positive));
 
   // and now finally ensure that each point of cartesian grid
   // is contained by the proposed all-encompassing tetrahedron
   auto const all_are_contained = thrust::all_of(
-    d_pts.begin(), d_pts.end(), 
+    d_pts.begin(), d_pts.end(),
     relative_loc<point_t>{vertices});
 
   REQUIRE(all_are_contained);

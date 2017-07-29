@@ -9,9 +9,14 @@ namespace regulus
   struct numeric_limits
   {
     static
-    constexpr 
+    constexpr
     __host__ __device__
     auto epsilon(void) -> T;
+
+    static
+    constexpr
+    __host__ __device__
+    auto max(void) -> T;
   };
 
   template <>
@@ -59,6 +64,14 @@ namespace regulus
     auto epsilon(void) -> unsigned char
     {
       return 0;
+    }
+
+    static
+    constexpr
+    __host__ __device__
+    auto max(void) -> unsigned char
+    {
+      return UCHAR_MAX;
     }
   };
 
@@ -228,7 +241,7 @@ namespace regulus
     {
       return LDBL_EPSILON;
     }
-  };  
+  };
 }
 
 #endif // REGULUS_UTILS_NUMERIC_LIMITS_HPP_

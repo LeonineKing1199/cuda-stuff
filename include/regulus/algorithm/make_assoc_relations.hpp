@@ -1,6 +1,7 @@
 #ifndef REGULUS_ALGORITHM_MAKE_ASSOC_RELATIONS_HPP_
 #define REGULUS_ALGORITHM_MAKE_ASSOC_RELATIONS_HPP_
 
+#include <cstdio>
 #include <thrust/tuple.h>
 #include <thrust/transform.h>
 #include <thrust/device_vector.h>
@@ -19,8 +20,8 @@ namespace regulus
     template <typename Point>
     struct get_loc_code
       : public thrust::unary_function<
-          thrust::tuple<Point, size_t> const&,
-          thrust::tuple<ptrdiff_t, ptrdiff_t, uint8_t>
+          thrust::tuple<Point, size_t> const,
+          thrust::tuple<ptrdiff_t, ptrdiff_t, loc_t>
     >
     {
       Point const a;
@@ -38,17 +39,32 @@ namespace regulus
       {}
 
       __host__ __device__
-      auto operator()(thrust::tuple<Point, size_t> const& pt_and_index)
-      -> thrust::tuple<ptrdiff_t, ptrdiff_t, uint8_t>
+      auto operator()(thrust::tuple<Point, size_t> const pt_and_index)
+      -> thrust::tuple<ptrdiff_t, ptrdiff_t, loc_t>
       {
         using thrust::get;
 
+        auto const p = get<0>(pt_and_index);
+
+        if (loc(a, b, c, d, p) == outside_v)
+          printf(
+            "Tetrahedron:\n"
+            "%f %f %f\n"
+            "%f %f %f\n"
+            "%f %f %f\n"
+            "%f %f %f\n"
+            "Point:\n"
+            "%f %f %f\n\n",
+            a.x, a.y, a.z,
+            b.x, b.y, b.z,
+            c.x, c.y, c.z,
+            d.x, d.y, d.z,
+            p.x, p.y, p.z);
+
         return thrust::make_tuple(
           get<1>(pt_and_index),
-          0,
-          loc(
-            a, b, c, d,
-            get<0>(pt_and_index)));
+          ptrdiff_t{0},
+          loc(a, b, c, d, p));
       }
     };
   }
@@ -58,11 +74,11 @@ namespace regulus
     typename = enable_if_t<is_point<Point>::value>
   >
   auto make_assoc_relations(
-    regulus::array<Point, 4>         const& vtx,
-    thrust::device_vector<Point>     const& pts,
-    thrust::device_vector<ptrdiff_t>      & pa,
-    thrust::device_vector<ptrdiff_t>      & ta,
-    thrust::device_vector<uint8_t>        & la)
+    array<Point, 4>              const  vtx,
+    thrust::device_vector<Point> const& pts,
+    thrust::device_vector<ptrdiff_t>  & pa,
+    thrust::device_vector<ptrdiff_t>  & ta,
+    thrust::device_vector<loc_t>      & la)
   -> void
   {
     auto const begin = thrust::make_zip_iterator(

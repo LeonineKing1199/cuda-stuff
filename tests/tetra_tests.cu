@@ -31,7 +31,7 @@ TEST_CASE("Our tetrahedral implementation")
 
   using real    = double;
   using point_t = regulus::point_t<real>;
-  
+
   auto const a = point_t{0, 0, 0};
   auto const b = point_t{9, 0, 0};
   auto const c = point_t{0, 9, 0};
@@ -47,24 +47,24 @@ TEST_CASE("Our tetrahedral implementation")
     auto const x = point_t{3, 3, 3};
     auto const y = point_t{1000, 1000, 1000};
     auto const z = b;
-    
+
     REQUIRE(orientation::negative == insphere(a, b, c, d, x));
     REQUIRE(orientation::positive == insphere(a, b, c, d, y));
-    REQUIRE(orientation::zero     == insphere(a, b, c, d, z));    
+    REQUIRE(orientation::zero     == insphere(a, b, c, d, z));
   }
 
   SECTION("should support location code testing")
   {
-    
+
     // We should be able to accurately determine all 6 edge intersections
-    {      
+    {
       auto const e10 = point_t{4.5, 0.0, 0.0};
       auto const e20 = point_t{0.0, 4.5, 0.0};
       auto const e30 = point_t{0.0, 0.0, 4.5};
       auto const e21 = point_t{4.5, 4.5, 0.0};
       auto const e31 = point_t{4.5, 0.0, 4.5};
       auto const e23 = point_t{0.0, 4.5, 4.5};
-                                               
+
       REQUIRE(loc(a, b, c, d, e10) == 3);
       REQUIRE(loc(a, b, c, d, e20) == 5);
       REQUIRE(loc(a, b, c, d, e30) == 9);
@@ -72,44 +72,44 @@ TEST_CASE("Our tetrahedral implementation")
       REQUIRE(loc(a, b, c, d, e31) == 10);
       REQUIRE(loc(a, b, c, d, e23) == 12);
     }
-    
+
     // We should be able to determine all 4 face intersections
     {
       auto const f321 = point_t{3, 3, 3};
       auto const f023 = point_t{0, 4.5, 3};
       auto const f031 = point_t{4.5, 0, 3};
       auto const f012 = point_t{3, 3, 0};
-      
+
       REQUIRE(loc(a, b, c, d, f321) == 14);
       REQUIRE(loc(a, b, c, d, f023) == 13);
       REQUIRE(loc(a, b, c, d, f031) == 11);
       REQUIRE(loc(a, b, c, d, f012) == 7);
     }
-    
+
     // We should be able to determine all 4 vertex intersections
     {
       auto const v0 = a;
       auto const v1 = b;
       auto const v2 = c;
       auto const v3 = d;
-      
+
       REQUIRE(loc(a, b, c, d, v0) == 1);
       REQUIRE(loc(a, b, c, d, v1) == 2);
       REQUIRE(loc(a, b, c, d, v2) == 4);
       REQUIRE(loc(a, b, c, d, v3) == 8);
     }
-    
+
     // We should be able to determine if a point is inside a tetrahedron
     {
       auto const p = point_t{1, 1, 1};
-      
+
       REQUIRE(loc(a, b, c, d, p) == 15);
     }
-    
+
     // We should be able to determine if a point is outside a tetrahedron
     {
       auto const p = point_t{3.01, 3.01, 3.01};
-      REQUIRE(loc(a, b, c, d, p) == UINT8_MAX);
+      REQUIRE(loc(a, b, c, d, p) == regulus::numeric_limits<regulus::loc_t>::max());
     }
   }
 }

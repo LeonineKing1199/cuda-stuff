@@ -42,20 +42,6 @@ endif()
 add_library(regulus_core INTERFACE)
 target_include_directories(regulus_core INTERFACE ./include ${CUDA_INCLUDE_DIR})
 
-# Generate the demo/release binary
-cuda_add_executable(
-  regulus
-
-  ./release/main.cu
-)
-
-target_link_libraries(
-  regulus
-
-  regulus_core
-  ${CUDA_cudadevrt_LIBRARY}
-)
-
 # Assemble the testing binary
 set(
   TESTS
@@ -93,3 +79,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
 enable_testing()
 include(ParseAndAddCatchTests)
 ParseAndAddCatchTests(regulus_tests)
+
+
+# Generate the demo/release binary
+cuda_add_executable(
+  regulus
+
+  ./release/main.cu
+)
+
+target_link_libraries(
+  regulus
+
+  regulus_core
+  ${CUDA_cudadevrt_LIBRARY}
+)

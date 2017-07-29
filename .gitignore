@@ -7,5 +7,4 @@ CMakeSettings.json
 CMakeFiles
 .vs/
 .vscode/
-build_Debug/
-build_Release/
+build_*

@@ -1,6 +1,8 @@
 #ifndef REGULUS_ALGORITHM_ORIENTATION_HPP_
 #define REGULUS_ALGORITHM_ORIENTATION_HPP_
 
+#include <cstdio>
+
 #include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/matrix.hpp"
@@ -18,7 +20,7 @@ namespace regulus
     Point const a,
     Point const b,
     Point const c,
-    Point const d) 
+    Point const d)
   -> orientation
   {
     using coord_type = typename point_traits<Point>::value_type;
@@ -29,6 +31,10 @@ namespace regulus
         1, b.x, b.y, b.z,
         1, c.x, c.y, c.z,
         1, d.x, d.y, d.z});
+
+    if (det_v < 0) {
+      printf("det_v: %f\n", det_v);
+    }
 
     return (
       eq(det_v, coord_type{0})

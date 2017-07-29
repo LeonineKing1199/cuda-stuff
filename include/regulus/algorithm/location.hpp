@@ -7,9 +7,15 @@
 #include "regulus/type_traits.hpp"
 #include "regulus/point_traits.hpp"
 #include "regulus/algorithm/orient.hpp"
+#include "regulus/utils/numeric_limits.hpp"
 
 namespace regulus
 {
+  using loc_t = uint8_t;
+
+  constexpr
+  loc_t outside_v = numeric_limits<loc_t>::max();
+
   template <
     typename Point,
     typename = enable_if_t<is_point<Point>::value>
@@ -21,41 +27,41 @@ namespace regulus
     Point const c,
     Point const d,
     Point const p)
-  -> uint8_t
+  -> loc_t
   {
     using coord_type = typename point_traits<Point>::value_type;
 
-    auto loc_code         = uint8_t{0};
-    auto curr_orientation = uint8_t{0};
+    auto loc_code         = loc_t{0};
+    auto curr_orientation = loc_t{0};
 
     // 321
-    curr_orientation = static_cast<uint8_t>(orient(d, c, b, p));
+    curr_orientation = static_cast<loc_t>(orient(d, c, b, p));
     if (curr_orientation > 1) {
-      return UINT8_MAX;
+      return outside_v;
     }
 
     loc_code |= (curr_orientation << 0);
 
     // 023
-    curr_orientation = static_cast<uint8_t>(orient(a, c, d, p));
+    curr_orientation = static_cast<loc_t>(orient(a, c, d, p));
     if (curr_orientation > 1) {
-      return UINT8_MAX;
+      return outside_v;
     }
 
     loc_code |= (curr_orientation << 1);
 
     // 031
-    curr_orientation = static_cast<uint8_t>(orient(a, d, b, p));
+    curr_orientation = static_cast<loc_t>(orient(a, d, b, p));
     if (curr_orientation > 1) {
-      return UINT8_MAX;
+      return outside_v;
     }
 
     loc_code |= (curr_orientation << 2);
 
     // 012
-    curr_orientation = static_cast<uint8_t>(orient(a, b, c, p));
+    curr_orientation = static_cast<loc_t>(orient(a, b, c, p));
     if (curr_orientation > 1) {
-      return UINT8_MAX;
+      return outside_v;
     }
 
     loc_code |= (curr_orientation << 3);
