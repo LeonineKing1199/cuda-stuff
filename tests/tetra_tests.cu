@@ -1,6 +1,6 @@
-#include "regulus/tetra_t.hpp"
+#include "regulus/tetra.hpp"
 #include "regulus/access.hpp"
-#include "regulus/point_t.hpp"
+#include "regulus/point.hpp"
 #include "regulus/algorithm/orient.hpp"
 #include "regulus/algorithm/location.hpp"
 #include "regulus/algorithm/insphere.hpp"
@@ -109,7 +109,7 @@ TEST_CASE("Our tetrahedral implementation")
     // We should be able to determine if a point is outside a tetrahedron
     {
       auto const p = point_t{3.01, 3.01, 3.01};
-      REQUIRE(loc(a, b, c, d, p) == regulus::numeric_limits<regulus::loc_t>::max());
+      REQUIRE(loc(a, b, c, d, p) == regulus::outside_v);
     }
   }
 }

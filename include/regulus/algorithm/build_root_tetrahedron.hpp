@@ -15,31 +15,31 @@
 #include "regulus/is_point.hpp"
 #include "regulus/utils/make_point.hpp"
 
-namespace regulus 
+namespace regulus
 {
-  namespace detail 
+  namespace detail
   {
     template <typename Point>
     struct add_points
       : public thrust::binary_function<
-          Point const, Point const, 
+          Point const, Point const,
           Point
         >
     {
       __host__ __device__
       auto operator()(Point const a, Point const b) -> Point
-      { 
+      {
         return make_point<Point>(
-          a.x + b.x, 
-          a.y + b.y, 
-          a.z + b.z); 
+          a.x + b.x,
+          a.y + b.y,
+          a.z + b.z);
       }
     };
 
     template <typename Point>
-    struct calc_radius_from 
+    struct calc_radius_from
       : public thrust::unary_function<
-          Point const, 
+          Point const,
           typename point_traits<Point>::value_type
         >
     {
@@ -51,33 +51,34 @@ namespace regulus
       {}
 
       __host__ __device__
-      auto operator()(Point const q)     
+      auto operator()(Point const q)
       -> typename point_traits<Point>::value_type
       {
         return sqrt(
-          pow(q.x - p.x, 2) + 
-          pow(q.y - p.y, 2) + 
+          pow(q.x - p.x, 2) +
+          pow(q.y - p.y, 2) +
           pow(q.z - p.z, 2));
       }
     };
   } // detail
 
   template <
-    typename Point, 
+    typename Point,
     typename InputIterator,
     typename = typename std::enable_if<
       is_point<Point>::value &&
       std::is_same<
-        Point, 
+        Point,
         thrust::iterator_traits<InputIterator>::value_type
       >::value
     >::type
   >
   auto build_root_tetrahedron(
-    InputIterator begin, InputIterator end)
+    InputIterator begin,
+    InputIterator end)
   -> array<Point, 4>
   {
-    using coord_value_type = typename point_traits<Point>::value_type;
+    using coord_type = typename point_traits<Point>::value_type;
 
     // first thing we do is calculate the centroid of the point set
     // sum all points first
@@ -103,11 +104,11 @@ namespace regulus
 
     auto const radius = thrust::reduce(
       calc_radius_begin, calc_radius_end,
-      coord_value_type{0},
-      thrust::maximum<coord_value_type>{});
+      coord_type{0},
+      thrust::maximum<coord_type>{});
 
     // and now we're ready to build our 4 vertices!
-    auto const x = sqrtf(3) * radius;
+    auto const x = sqrt(3.0) * radius;
 
     return {
       make_point<Point>(-x + centroid.x,  x + centroid.y, -x + centroid.z),
@@ -116,7 +117,6 @@ namespace regulus
       make_point<Point>( x + centroid.x,  x + centroid.y,  x + centroid.z)
     };
   }
-
 } // regulus
 
 #endif // REGULUS_ALGORITHM_BUILD_ROOT_TETRAHEDRON_HPP_

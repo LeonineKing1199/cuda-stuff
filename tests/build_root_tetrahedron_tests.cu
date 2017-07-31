@@ -33,7 +33,7 @@
 
 #endif
 
-#include "regulus/point_t.hpp"
+#include "regulus/point.hpp"
 #include "regulus/algorithm/build_root_tetrahedron.hpp"
 #include "regulus/utils/gen_cartesian_domain.hpp"
 #include "regulus/algorithm/location.hpp"

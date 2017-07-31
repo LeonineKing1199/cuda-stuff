@@ -25,7 +25,7 @@
 #endif
 
 
-#include "regulus/point_t.hpp"
+#include "regulus/point.hpp"
 #include "regulus/algorithm/location.hpp"
 #include "regulus/algorithm/build_root_tetrahedron.hpp"
 #include "regulus/algorithm/make_assoc_relations.hpp"

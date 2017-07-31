@@ -53,6 +53,7 @@ set(
   ./tests/tetra_tests.cu
   ./tests/equals.cu
   ./tests/make_assoc_relations_tests.cu
+  ./tests/numeric_stability_tests.cu
 )
 
 cuda_add_executable(
@@ -70,17 +71,6 @@ target_link_libraries(
   ${CUDA_cudadevrt_LIBRARY}
 )
 
-# add some CTest functionality as well
-# unfortunately, only the Catch binary is run so as far as
-# CTest knows, only one test is actually run
-# see: https://github.com/philsquared/Catch/blob/master/contrib/ParseAndAddCatchTests.cmake
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
-
-enable_testing()
-include(ParseAndAddCatchTests)
-ParseAndAddCatchTests(regulus_tests)
-
-
 # Generate the demo/release binary
 cuda_add_executable(
   regulus
@@ -94,3 +84,13 @@ target_link_libraries(
   regulus_core
   ${CUDA_cudadevrt_LIBRARY}
 )
+
+# add some CTest functionality as well
+# unfortunately, only the Catch binary is run so as far as
+# CTest knows, only one test is actually run
+# see: https://github.com/philsquared/Catch/blob/master/contrib/ParseAndAddCatchTests.cmake
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
+
+enable_testing()
+include(ParseAndAddCatchTests)
+ParseAndAddCatchTests(regulus_tests)
