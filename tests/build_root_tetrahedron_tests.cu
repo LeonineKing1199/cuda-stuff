@@ -42,7 +42,7 @@
 
 namespace
 {
-  using point_t = regulus::point_t<float>;
+  using point_t = regulus::point_t<double>;
 
   template <typename Point>
   struct relative_loc : public thrust::unary_function<Point const, bool>

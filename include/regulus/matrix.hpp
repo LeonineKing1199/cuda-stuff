@@ -145,7 +145,7 @@ namespace regulus
   __host__ __device__
   auto det(regulus::matrix<T, 2, 2> const& m) -> T
   {
-    auto const& x = m.data_;
+    auto const x = m.data_;
     return (x[0] * x[3]) - (x[1] * x[2]);
   }
 
@@ -166,35 +166,35 @@ namespace regulus
   template <typename T, size_t N>
   __host__ __device__
   auto det(regulus::matrix<T, N, N> const& m) -> T
-  {  
+  {
     using size_type = typename matrix<T, 1,  1>::size_type;
 
     auto const& x = m.data_;
     auto det_v    = T{0};
-    
+
     auto sub_matrix = regulus::matrix<T, (N - 1), (N- 1)>{0};
 
     // for each column...
     for (size_type col = 0; col < N; ++col) {
-      
+
       // we copy sub-matrices into our recycled buffer
       auto buff_size = size_type{0};
       for (size_type row_idx = 1; row_idx < N; ++row_idx) {
         for (size_type col_idx = 0; col_idx < N; ++col_idx) {
 
           if (col_idx == col) { continue; }
-          
-          
+
+
           sub_matrix.data_[buff_size] = x[row_idx * N + col_idx];
           ++buff_size;
         }
       }
-      
+
       auto const det_term = x[col] * det(sub_matrix);
 
       det_v += (col % 2 == 0 ? det_term : -det_term);
     }
-    
+
     return det_v;
   }
 

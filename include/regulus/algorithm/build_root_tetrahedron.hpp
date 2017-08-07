@@ -108,7 +108,7 @@ namespace regulus
       thrust::maximum<coord_type>{});
 
     // and now we're ready to build our 4 vertices!
-    auto const x = sqrt(3.0) * radius;
+    auto const x = static_cast<coord_type>(sqrt(3.0)) * radius * 2;
 
     return {
       make_point<Point>(-x + centroid.x,  x + centroid.y, -x + centroid.z),

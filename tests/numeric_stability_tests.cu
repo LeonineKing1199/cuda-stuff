@@ -31,7 +31,7 @@ TEST_CASE("Our location routine should be numerically stable")
 
     REQUIRE((regulus::eq(det_v0, 0.0) || det_v0 > 0));
     REQUIRE((regulus::eq(det_v1, 0.0) || det_v1 > 0));
-    REQUIRE((regulus::eq(det_v2, 0.0) || det_v2 > 0));
+    REQUIRE(!(regulus::eq(det_v2, 0.0) || det_v2 > 0));
     REQUIRE((regulus::eq(det_v3, 0.0) || det_v3 > 0));
   }
 
@@ -57,18 +57,12 @@ TEST_CASE("Our location routine should be numerically stable")
         d_pts.begin(),
         d_pts.end());
 
-    for (auto const v : rv) {
-      printf("%.17f %.17f %.17f\n", v.x, v.y, v.z);
-    }
-
     auto const p = point_t{0,  8,  8};
 
     auto const dist0 = regulus::planar_dist(rv[3], rv[2], rv[1], p);
     auto const dist1 = regulus::planar_dist(rv[0], rv[2], rv[3], p);
     auto const dist2 = regulus::planar_dist(rv[0], rv[3], rv[1], p);
     auto const dist3 = regulus::planar_dist(rv[0], rv[1], rv[2], p);
-
-    printf("%.15f\n", dist2);
 
     REQUIRE((regulus::eq(dist0, 0.0) || dist0 > 0));
     REQUIRE((regulus::eq(dist1, 0.0) || dist1 > 0));

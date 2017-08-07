@@ -18,7 +18,6 @@ template <
   typename = typename std::enable_if<std::is_arithmetic<T>::value>::type>
 struct vector : public array<T, L>
 {
-  __host__ __device__
   vector(void) = default;
 
   __host__ __device__
@@ -33,7 +32,7 @@ struct vector : public array<T, L>
 
 template <typename T, size_t L>
 __host__ __device__
-auto operator*(vector<T, L> const x, vector<T, L> const y) 
+auto operator*(vector<T, L> const x, vector<T, L> const y)
 -> typename vector<T, L>::value_type
 {
   return thrust::inner_product(

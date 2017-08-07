@@ -12,6 +12,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/logical.h>
 #include <thrust/functional.h>
+#include <thrust/iterator/counting_iterator.h>
 
 #pragma warning(pop)
 
@@ -21,6 +22,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/logical.h>
 #include <thrust/functional.h>
+#include <thrust/iterator/counting_iterator.h>
 
 #endif
 
@@ -45,7 +47,17 @@ namespace
   {
     __host__ __device__
     auto operator()(loc_t const loc) -> bool
-    { return loc < 16; }
+    { return loc > 0 && loc != regulus::outside_v; }
+  };
+
+  struct is_zero
+    : public thrust::unary_function<ptrdiff_t const , bool>
+  {
+    __host__ __device__
+    auto operator()(ptrdiff_t const x) -> bool
+    {
+      return x == 0;
+    }
   };
 }
 
@@ -70,9 +82,8 @@ TEST_CASE("Making the initial set of association relations should work")
 
     auto d_pts = thrust::device_vector<point_t>{h_pts};
 
-    auto const root_vertices = regulus::build_root_tetrahedron<point_t>(
-        d_pts.begin(),
-        d_pts.end());
+    auto const root_vertices =
+      regulus::build_root_tetrahedron<point_t>(d_pts.begin(), d_pts.end());
 
     auto const num_assocs = 4 * num_pts;
 
@@ -88,11 +99,11 @@ TEST_CASE("Making the initial set of association relations should work")
     cudaDeviceSynchronize();
 
     REQUIRE((thrust::all_of(la.begin(), la.begin() + num_pts, contained{})));
-
-    auto h_pa = thrust::host_vector<ptrdiff_t>{pa};
-    auto h_ta = thrust::host_vector<ptrdiff_t>{ta};
-    auto h_la = thrust::host_vector<loc_t>{la};
-
-
+    REQUIRE((thrust::all_of(ta.begin(), ta.begin() + num_pts, is_zero{})));
+    REQUIRE((
+      thrust::equal(
+        pa.begin(), pa.begin() + num_pts,
+        thrust::make_counting_iterator(ptrdiff_t{0}),
+        thrust::equal_to<ptrdiff_t>{})));
   }
 }

@@ -46,20 +46,20 @@ namespace regulus
 
         auto const p = get<0>(pt_and_index);
 
-        if (loc(a, b, c, d, p) == outside_v)
-          printf(
-            "Tetrahedron:\n"
-            "%f %f %f\n"
-            "%f %f %f\n"
-            "%f %f %f\n"
-            "%f %f %f\n"
-            "Point:\n"
-            "%f %f %f\n\n",
-            a.x, a.y, a.z,
-            b.x, b.y, b.z,
-            c.x, c.y, c.z,
-            d.x, d.y, d.z,
-            p.x, p.y, p.z);
+        // if (loc(a, b, c, d, p) == outside_v)
+        //   printf(
+        //     "Tetrahedron:\n"
+        //     "%f %f %f\n"
+        //     "%f %f %f\n"
+        //     "%f %f %f\n"
+        //     "%f %f %f\n"
+        //     "Point:\n"
+        //     "%f %f %f\n\n",
+        //     a.x, a.y, a.z,
+        //     b.x, b.y, b.z,
+        //     c.x, c.y, c.z,
+        //     d.x, d.y, d.z,
+        //     p.x, p.y, p.z);
 
         return thrust::make_tuple(
           get<1>(pt_and_index),
