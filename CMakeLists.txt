@@ -38,13 +38,61 @@ if (MSVC)
 
 endif()
 
+cuda_add_library(
+  regulus_core
+  STATIC
+  ./src/nominate.cu
 
-add_library(regulus_core INTERFACE)
-target_include_directories(regulus_core INTERFACE ./include ${CUDA_INCLUDE_DIR})
+  ./include/regulus/access.hpp
+  ./include/regulus/algorithm
+  ./include/regulus/array.hpp
+  ./include/regulus/globals.hpp
+  ./include/regulus/is_point.hpp
+  ./include/regulus/matrix.hpp
+  ./include/regulus/mesh.hpp
+  ./include/regulus/orientation.hpp
+  ./include/regulus/point.hpp
+  ./include/regulus/point_traits.hpp
+  ./include/regulus/tetra.hpp
+  ./include/regulus/tetra_traits.hpp
+  ./include/regulus/type_traits.hpp
+  ./include/regulus/utils
+  ./include/regulus/vector.hpp
+
+  ./include/regulus/algorithm/build_root_tetrahedron.hpp
+  ./include/regulus/algorithm/insphere.hpp
+  ./include/regulus/algorithm/location.hpp
+  ./include/regulus/algorithm/make_assoc_relations.hpp
+  ./include/regulus/algorithm/nominate.hpp
+  ./include/regulus/algorithm/orient.hpp
+
+  ./include/regulus/utils/dist_from_plane.hpp
+  ./include/regulus/utils/equals.hpp
+  ./include/regulus/utils/gen_cartesian_domain.hpp
+  ./include/regulus/utils/make_point.hpp
+  ./include/regulus/utils/numeric_limits.hpp
+  ./include/regulus/utils/round_to.hpp
+)
+
+target_include_directories(
+  regulus_core
+
+  PUBLIC
+  ./include
+  ${CUDA_INCLUDE_DIR}
+)
+
+target_link_libraries(
+  regulus_core
+
+  ${CUDA_cudadevrt_LIBRARY}
+)
 
 # Assemble the testing binary
-set(
-  TESTS
+cuda_add_executable(
+  regulus_tests
+
+  ./debug/main.cu
 
   ./tests/array_tests.cu
   ./tests/build_root_tetrahedron_tests.cu
@@ -56,19 +104,11 @@ set(
   ./tests/numeric_stability_tests.cu
 )
 
-cuda_add_executable(
-  regulus_tests
-
-  ./debug/main.cu
-  ${TESTS}
-)
-
 target_link_libraries(
   regulus_tests
 
   Catch
   regulus_core
-  ${CUDA_cudadevrt_LIBRARY}
 )
 
 # Generate the demo/release binary
@@ -82,7 +122,6 @@ target_link_libraries(
   regulus
 
   regulus_core
-  ${CUDA_cudadevrt_LIBRARY}
 )
 
 # add some CTest functionality as well
