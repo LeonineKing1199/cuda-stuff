@@ -102,6 +102,7 @@ cuda_add_executable(
   ./tests/equals.cu
   ./tests/make_assoc_relations_tests.cu
   ./tests/numeric_stability_tests.cu
+  ./tests/nomination_tests.cu
 )
 
 target_link_libraries(
