@@ -58,6 +58,7 @@ cuda_add_library(
   ./include/regulus/type_traits.hpp
   ./include/regulus/utils
   ./include/regulus/vector.hpp
+  ./include/regulus/loc.hpp
 
   ./include/regulus/algorithm/build_root_tetrahedron.hpp
   ./include/regulus/algorithm/insphere.hpp
@@ -72,6 +73,7 @@ cuda_add_library(
   ./include/regulus/utils/make_point.hpp
   ./include/regulus/utils/numeric_limits.hpp
   ./include/regulus/utils/round_to.hpp
+  ./include/regulus/utils/make_rand_range.hpp
 )
 
 target_include_directories(

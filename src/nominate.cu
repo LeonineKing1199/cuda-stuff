@@ -6,7 +6,6 @@
 #include <thrust/transform.h>
 #include <thrust/functional.h>
 #include <thrust/iterator/zip_iterator.h>
-#include <thrust/iterator/iterator_traits.h>
 
 #include "regulus/algorithm/nominate.hpp"
 

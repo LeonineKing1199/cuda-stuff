@@ -1,3 +1,4 @@
+#include <thrust/reduce.h>
 #include <thrust/extrema.h>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
@@ -6,6 +7,7 @@
 #include "regulus/array.hpp"
 #include "regulus/algorithm/location.hpp"
 #include "regulus/algorithm/nominate.hpp"
+#include "regulus/utils/make_rand_range.hpp"
 
 #include <catch.hpp>
 
@@ -42,7 +44,7 @@ TEST_CASE("Nominating points...")
 
     for (size_t i = 0; i < assoc_size; ++i) {
       if (h_nm[h_pa[i]]) {
-        if (nominated_cnt[h_ta[i]] > 1) {
+        if (++nominated_cnt[h_ta[i]] > 1) {
           found_duplicate = true;
         }
         ++num_nominated;
@@ -51,5 +53,9 @@ TEST_CASE("Nominating points...")
 
     REQUIRE(found_duplicate == false);
     REQUIRE(num_nominated > 0);
+    REQUIRE((
+      thrust::reduce(
+        nominated_cnt.begin(),
+        nominated_cnt.end()) > 0));
   }
 }

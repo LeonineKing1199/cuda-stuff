@@ -19,12 +19,12 @@ namespace regulus
     {
       static
       __host__ __device__
-      auto get(tetra_t const& tetra) -> int
+      auto get(tetra_t const& tetra) -> typename tetra_t::value_type
       { return tetra[0]; }
 
       static
       __host__ __device__
-      void set(tetra_t& tetra, int const value)
+      void set(tetra_t& tetra, typename tetra_t::value_type const value)
       { tetra[0] = value; }
     };
 
@@ -33,12 +33,12 @@ namespace regulus
     {
       static
       __host__ __device__
-      auto get(tetra_t const& tetra) -> int
+      auto get(tetra_t const& tetra) -> typename tetra_t::value_type
       { return tetra[1]; }
 
       static
       __host__ __device__
-      void set(tetra_t& tetra, int const value)
+      void set(tetra_t& tetra, typename tetra_t::value_type const value)
       { tetra[1] = value; }
     };
 
@@ -47,12 +47,12 @@ namespace regulus
     {
       static
       __host__ __device__
-      auto get(tetra_t const& tetra) -> int
+      auto get(tetra_t const& tetra) -> typename tetra_t::value_type
       { return tetra[2]; }
 
       static
       __host__ __device__
-      void set(tetra_t& tetra, int const value)
+      void set(tetra_t& tetra, typename tetra_t::value_type const value)
       { tetra[2] = value; }
     };
 
@@ -61,12 +61,12 @@ namespace regulus
     {
       static
       __host__ __device__
-      auto get(tetra_t const& tetra) -> int
+      auto get(tetra_t const& tetra) -> typename tetra_t::value_type
       { return tetra[3]; }
 
       static
       __host__ __device__
-      void set(tetra_t& tetra, int const value)
+      void set(tetra_t& tetra, typename tetra_t::value_type const value)
       { tetra[3] = value; }
     };
   }

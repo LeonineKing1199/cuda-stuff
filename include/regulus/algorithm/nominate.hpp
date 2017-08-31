@@ -2,7 +2,7 @@
 #define REGULUS_ALGORITHM_NOMINATE_HPP_
 
 #include <thrust/device_vector.h>
-#include "regulus/algorithm/location.hpp"
+#include "regulus/loc.hpp"
 
 namespace regulus
 {

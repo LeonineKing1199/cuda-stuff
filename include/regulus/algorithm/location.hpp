@@ -3,19 +3,14 @@
 
 #include <climits>
 
+#include "regulus/loc.hpp"
 #include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/point_traits.hpp"
 #include "regulus/algorithm/orient.hpp"
-#include "regulus/utils/numeric_limits.hpp"
 
 namespace regulus
 {
-  using loc_t = uint8_t;
-
-  constexpr
-  loc_t outside_v = numeric_limits<loc_t>::max();
-
   template <
     typename Point,
     typename = enable_if_t<is_point<Point>::value>
