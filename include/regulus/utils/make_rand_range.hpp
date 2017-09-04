@@ -2,6 +2,7 @@
 #define REGULUS_UTILS_MAKE_RANGE_RANGE_HPP_
 
 #include <ctime>
+#include <cstring>
 #include <type_traits>
 #include <thrust/random/linear_congruential_engine.h>
 #include <thrust/random/uniform_int_distribution.h>
@@ -24,7 +25,7 @@ namespace regulus
 
     auto seed       = result_type{0};
     auto const time = std::time(nullptr);
-    memcpy(
+    std::memcpy(
       std::addressof(seed),
       std::addressof(time),
       sizeof(seed));

@@ -48,7 +48,10 @@ namespace
       auto const a_ta = get<0>(a);
       auto const b_ta = get<0>(b);
 
-      return a_ta == b_ta;
+      auto const a_pa = get<1>(a);
+      auto const b_pa = get<1>(b);
+
+      return a_ta == b_ta && a_pa != b_pa;
     }
   };
 
