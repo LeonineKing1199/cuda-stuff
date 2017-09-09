@@ -3,6 +3,7 @@
 
 #include <ctime>
 #include <cstring>
+#include <cstddef>
 #include <type_traits>
 #include <thrust/random/linear_congruential_engine.h>
 #include <thrust/random/uniform_int_distribution.h>
@@ -16,9 +17,9 @@ namespace regulus
     typename Integral,
     typename OutputIterator>
   auto make_rand_range(
-    size_t   const num_vals,
-    Integral const min,
-    Integral const max,
+    std::size_t const num_vals,
+    Integral    const min,
+    Integral    const max,
     OutputIterator output) -> void
   {
     using result_type = typename rng_engine_t::result_type;
@@ -35,7 +36,7 @@ namespace regulus
     auto dist =
       thrust::random::uniform_int_distribution<Integral>{min, max};
 
-    for (size_t i = 0; i < num_vals; ++i) {
+    for (std::size_t i = 0; i < num_vals; ++i) {
       *output = dist(urng);
       ++output;
     }

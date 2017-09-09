@@ -74,6 +74,8 @@ cuda_add_library(
   ./include/regulus/utils/numeric_limits.hpp
   ./include/regulus/utils/round_to.hpp
   ./include/regulus/utils/make_rand_range.hpp
+
+  ./include/regulus/views/array_view.hpp
 )
 
 target_include_directories(
@@ -107,6 +109,7 @@ cuda_add_executable(
   ./tests/nomination_tests.cu
   ./tests/bigger_nomination_tests.cu
   ./tests/rand_tests.cu
+  ./tests/array_view_tests.cu
 )
 
 target_link_libraries(
