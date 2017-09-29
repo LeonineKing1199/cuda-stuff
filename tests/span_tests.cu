@@ -1,3 +1,4 @@
+#include <array>
 #include <thrust/host_vector.h>
 
 #include "regulus/views/span.hpp"
@@ -105,5 +106,22 @@ TEST_CASE("Our span type")
       auto s = int_span{p, p};
       REQUIRE((s.data() == nullptr && s.length() == 0));
     }
+  }
+
+  SECTION("should support copy, move and assign semantics")
+  {
+    auto s1 = int_span{};
+    REQUIRE(s1.empty());
+
+    auto arr = std::array<int, 3>{3, 4, 5};
+
+    auto s2 = int_const_span{arr};
+    REQUIRE((s2.length() == 3 && s2.data() == arr.data()));
+
+    s2 = s1;
+    REQUIRE(s2.empty());
+
+    s2 = int_const_span{arr};
+    REQUIRE((s2.length() == 3 && s2.data() == arr.data()));
   }
 }
