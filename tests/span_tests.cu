@@ -1,4 +1,5 @@
 #include <array>
+#include <algorithm>
 #include <thrust/host_vector.h>
 
 #include "regulus/views/span.hpp"
@@ -123,5 +124,61 @@ TEST_CASE("Our span type")
 
     s2 = int_const_span{arr};
     REQUIRE((s2.length() == 3 && s2.data() == arr.data()));
+
+    auto x = int_span{arr};
+    auto y = std::move(x);
+    REQUIRE((y.data() == arr.data() && y.size() == arr.size()));
+  }
+
+  SECTION("make_span")
+  {
+    auto arr = regulus::array<int, 4>{1, 2, 3, 4};
+
+    auto s1 = regulus::make_span(arr.data(), arr.size());
+    auto s2 = regulus::make_span(arr.begin(), arr.end());
+    auto s3 = regulus::make_span(arr);
+
+    REQUIRE((s1.data() == arr.data() && s1.size() == arr.size()));
+    REQUIRE((s2.data() == arr.data() && s2.size() == arr.size()));
+    REQUIRE((s3.data() == arr.data() && s3.size() == arr.size()));
+
+    auto s4 = regulus::make_span(s1);
+
+    REQUIRE((s4.data() == arr.data() && s4.size() == arr.size()));
+
+    auto const val = int{1337};
+
+    s4[0] = val;
+
+    REQUIRE((s1[0] == val && s2[0] == val && s3[0] == val));
+  }
+
+  SECTION("front and back access")
+  {
+    auto data = regulus::array<int, 4>{1, 2, 3, 4};
+    auto s    = regulus::make_span(data);
+
+    REQUIRE(s.front() == 1);
+    REQUIRE(s.back()  == 4);
+
+    s.front() = 1337;
+    s.back()  = 7331;
+
+    REQUIRE((s[0] == 1337 && s[3] == 7331));
+  }
+
+  SECTION("begin/end traversal")
+  {
+    auto arr     = regulus::array<int, 4>{3, 2, 4, 1};
+    auto const s = regulus::make_span(arr);
+
+    std::sort(s.begin(), s.end());
+
+    REQUIRE((arr == regulus::array<int, 4>{1, 2, 3, 4}));
+
+    auto const cs = int_const_span{arr};
+
+    REQUIRE((*cs.cbegin() == 1));
+    REQUIRE((cs.cbegin() + cs.size() == cs.cend()));
   }
 }
