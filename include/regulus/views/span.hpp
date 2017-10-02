@@ -11,10 +11,10 @@ namespace regulus
   {
   public:
     using value_type      = typename std::remove_cv<T>::type;
-    using pointer         = value_type*;
-    using const_pointer   = value_type const*;
-    using reference       = value_type&;
-    using const_reference = value_type const&;
+    using pointer         = T*;
+    using const_pointer   = T const*;
+    using reference       = T&;
+    using const_reference = T const&;
     using size_type       = std::size_t;
     using iterator        = pointer;
     using const_iterator  = const_pointer;
@@ -33,14 +33,14 @@ namespace regulus
 
     // pointer + size_type constructor
     constexpr __host__ __device__
-    span(pointer const p, size_type const s)
+    span(pointer const p, size_type const s) noexcept
     : p_{p}, size_{s}
     {}
 
     // pointer range constructor
     constexpr __host__ __device__
-    span(pointer const first, pointer const last)
-    : p_{first}, size_{static_cast<size_type>(last - first)}
+    span(pointer const begin, pointer const end)
+    : p_{begin}, size_{static_cast<size_type>(end - begin)}
     {}
 
     // contiguous container constructor
@@ -49,6 +49,13 @@ namespace regulus
       typename Container,
       typename = typename std::enable_if<!std::is_same<Container, span>::value>::type>
     span(Container& c)
+    : p_{c.data()}, size_{static_cast<size_type>(c.size())}
+    {}
+
+    template <
+      typename Container,
+      typename = typename std::enable_if<!std::is_same<Container, span>::value>::type>
+    span(Container const& c)
     : p_{c.data()}, size_{static_cast<size_type>(c.size())}
     {}
 
@@ -133,14 +140,16 @@ namespace regulus
     }
   };
 
+  // make_span()
+
   template <typename T>
-  auto make_span(T* p, std::size_t size) noexcept -> span<T>
+  auto make_span(T* const p, std::size_t const size) noexcept -> span<T>
   {
     return {p, size};
   }
 
   template <typename T>
-  auto make_span(T* begin, T* end) noexcept -> span<T>
+  auto make_span(T* const begin, T* const end) noexcept -> span<T>
   {
     return {begin, static_cast<std::size_t>(end - begin)};
   }
@@ -149,7 +158,28 @@ namespace regulus
   auto make_span(Container& c) noexcept
   -> span<typename Container::value_type>
   {
-    return {c.data(), c.size()};
+    return {c};
+  }
+
+  // make_const_span
+
+  template <typename T>
+  auto make_const_span(T const* const p, std::size_t const size) noexcept -> span<T const>
+  {
+    return {p, size};
+  }
+
+  template <typename T>
+  auto make_const_span(T const* const begin, T const* const end) noexcept -> span<T const>
+  {
+    return {begin, static_cast<std::size_t>(end - begin)};
+  }
+
+  template <typename Container>
+  auto make_const_span(Container const& c) noexcept
+  -> span<typename Container::value_type const>
+  {
+    return {c};
   }
 }
 
