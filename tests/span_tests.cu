@@ -1,11 +1,62 @@
 #include <array>
 #include <algorithm>
-#include <thrust/host_vector.h>
 
-#include "regulus/views/span.hpp"
+#include <thrust/sort.h>
+#include <thrust/functional.h>
+#include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
+#include <thrust/execution_policy.h>
+#include <thrust/transform_reduce.h>
+#include <thrust/iterator/zip_iterator.h>
+
 #include "regulus/array.hpp"
+#include "regulus/views/span.hpp" // <-- thing we're actually testing
+#include "regulus/utils/make_rand_range.hpp"
 
 #include <catch.hpp>
+
+namespace
+{
+  // sort a device vector, dv, of integers
+  // (non-blocking)
+  auto device_sort(regulus::span<int> dv) -> void
+  {
+    thrust::sort(
+      thrust::device,
+      dv.begin(), dv.end());
+  }
+
+  // there is a thrust::is_sorted out there but to this extent,
+  // we're also able to play with our span type and see how useful
+  // taking a subspan can be
+  auto is_sorted(
+    regulus::span<int const> const dv) -> bool
+  {
+    if (dv.size() < 2) {
+      return false;
+    }
+
+    auto const range_a = dv.subspan(0, dv.size() - 1);
+    auto const range_b = dv.subspan(1, dv.size());
+
+    auto const begin = thrust::make_zip_iterator(
+      thrust::make_tuple(
+        range_a.begin(), range_b.begin()));
+
+    auto const end = begin + range_a.size();
+
+    return range_a.size() == thrust::transform_reduce(
+      thrust::device,
+      begin, end,
+      [] __device__ (thrust::tuple<int, int> const t) -> int
+      {
+        return (
+          thrust::get<0>(t) <= thrust::get<1>(t) ? 1 : 0);
+      },
+      int{0},
+      thrust::plus<int>{});
+  }
+}
 
 TEST_CASE("Our span type")
 {
@@ -227,5 +278,30 @@ TEST_CASE("Our span type")
     REQUIRE((cs.cbegin() + cs.size() == cs.cend()));
   }
 
+  SECTION("should support Thrust to some extent")
+  {
+    auto const init = [](void) -> thrust::host_vector<int>
+    {
+      auto const num_vals = std::size_t{1000};
+      auto const min      = int{0};
+      auto const max      = int{1000};
 
+      auto tmp_buffer = thrust::host_vector<int>{num_vals, -1};
+      regulus::make_rand_range(
+        num_vals,
+        min, max,
+        tmp_buffer.begin());
+      return tmp_buffer;
+    };
+
+    auto data = thrust::device_vector<int>{init()};
+    auto v    = regulus::make_span(data);
+
+    REQUIRE(v.size() == 1000);
+    REQUIRE(!is_sorted(v));
+
+    device_sort(v);
+
+    REQUIRE(is_sorted(v));
+  }
 }

@@ -2,7 +2,6 @@
 #define REGULUS_VIEWS_SPAN_HPP_
 
 #include <cstddef>
-#include <type_traits>
 
 namespace regulus
 {
@@ -10,11 +9,11 @@ namespace regulus
   struct span
   {
   public:
-    using value_type      = typename std::remove_cv<T>::type;
-    using pointer         = T*;
-    using const_pointer   = T const*;
-    using reference       = T&;
-    using const_reference = T const&;
+    using value_type      = T;
+    using pointer         = value_type*;
+    using const_pointer   = value_type const*;
+    using reference       = value_type&;
+    using const_reference = value_type const&;
     using size_type       = std::size_t;
     using iterator        = pointer;
     using const_iterator  = const_pointer;
@@ -41,6 +40,12 @@ namespace regulus
     constexpr __host__ __device__
     span(pointer const begin, pointer const end)
     : p_{begin}, size_{static_cast<size_type>(end - begin)}
+    {}
+
+    // thrust::device_vector constructor
+    template <typename T>
+    span(thrust::device_vector<T>& dv)
+    : p_{dv.data().get()}, size_{dv.size()}
     {}
 
     // contiguous container constructor
@@ -133,23 +138,38 @@ namespace regulus
       return p_ + size_;
     }
 
+    // span::cend
     constexpr __host__ __device__
     auto cend(void) const noexcept -> const_iterator
     {
       return p_ + size_;
+    }
+
+    // span mutations
+
+    constexpr __host__ __device__
+    auto subspan(
+      size_type const begin,
+      size_type const end) const -> span
+    {
+      return {p_ + begin, p_ + end};
     }
   };
 
   // make_span()
 
   template <typename T>
-  auto make_span(T* const p, std::size_t const size) noexcept -> span<T>
+  auto make_span(
+    T*          const p,
+    std::size_t const size) noexcept -> span<T>
   {
     return {p, size};
   }
 
   template <typename T>
-  auto make_span(T* const begin, T* const end) noexcept -> span<T>
+  auto make_span(
+    T* const begin,
+    T* const end) noexcept -> span<T>
   {
     return {begin, static_cast<std::size_t>(end - begin)};
   }
@@ -164,13 +184,17 @@ namespace regulus
   // make_const_span
 
   template <typename T>
-  auto make_const_span(T const* const p, std::size_t const size) noexcept -> span<T const>
+  auto make_const_span(
+    T const*    const p,
+    std::size_t const size) noexcept -> span<T const>
   {
     return {p, size};
   }
 
   template <typename T>
-  auto make_const_span(T const* const begin, T const* const end) noexcept -> span<T const>
+  auto make_const_span(
+    T const* const begin,
+    T const* const end) noexcept -> span<T const>
   {
     return {begin, static_cast<std::size_t>(end - begin)};
   }
