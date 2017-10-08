@@ -16,3 +16,6 @@ types that can be found in the GSL and Google's Abseil (mostly
 Abseil). Unlike the GSL span, compile-time spans are not optimized
 in size down to a single pointer.
 
+Parts of the code are direct translations of the Abseil code into
+my style so most of the credit belongs to the Abseil people and their
+implementation.

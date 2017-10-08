@@ -2,6 +2,7 @@
 #define REGULUS_VIEWS_SPAN_HPP_
 
 #include <cstddef>
+#include <type_traits>
 
 namespace regulus
 {
@@ -19,6 +20,45 @@ namespace regulus
     using const_iterator  = const_pointer;
 
   private:
+    template <bool B, typename U = void>
+    using enable_if_t = typename std::enable_if<B, U>::type;
+
+    template <typename U>
+    using decay_t = typename std::decay<U>::type;
+
+    // Abseil enable_if stuff
+    template <typename U>
+    using enable_if_mutable_view =
+      enable_if_t<!std::is_const<T>::value, U>;
+
+    template <typename U>
+    using enable_if_const_view =
+      enable_if_t<std::is_const<T>::value, U>;
+
+    template <typename C>
+    using has_size =
+      std::is_integral<
+        decay_t<
+          decltype(std::declval<C&>().size())>>;
+
+    template <typename C>
+    constexpr static
+    auto get_data(C& c) noexcept -> decltype(c.data())
+    {
+      return c.data();
+    }
+
+    template <typename C>
+    using has_data =
+      std::is_convertible<
+        decay_t<decltype(get_data(std::declval<C&>()))>, T*>;
+
+    template <typename C>
+    using enable_if_container =
+      enable_if_t<
+        has_data<C>::value && has_size<C>::value, C>;
+
+
     pointer   p_;
     size_type size_;
 
@@ -51,16 +91,18 @@ namespace regulus
     // contiguous container constructor
     // (uses anything with .data() and .size())
     template <
-      typename Container,
-      typename = typename std::enable_if<!std::is_same<Container, span>::value>::type>
-    span(Container& c)
+      typename C,
+      typename = enable_if_container<C>,
+      typename = enable_if_mutable_view<C>>
+    span(C& c)
     : p_{c.data()}, size_{static_cast<size_type>(c.size())}
     {}
 
     template <
-      typename Container,
-      typename = typename std::enable_if<!std::is_same<Container, span>::value>::type>
-    span(Container const& c)
+      typename C,
+      typename = enable_if_container<C>,
+      typename = enable_if_const_view<C>>
+    span(C const& c)
     : p_{c.data()}, size_{static_cast<size_type>(c.size())}
     {}
 

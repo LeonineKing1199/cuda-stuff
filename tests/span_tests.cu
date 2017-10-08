@@ -33,7 +33,7 @@ namespace
     regulus::span<int const> const dv) -> bool
   {
     if (dv.size() < 2) {
-      return false;
+      return true;
     }
 
     auto const range_a = dv.subspan(0, dv.size() - 1);
@@ -295,13 +295,12 @@ TEST_CASE("Our span type")
     };
 
     auto data = thrust::device_vector<int>{init()};
-    auto v    = regulus::make_span(data);
 
-    REQUIRE(v.size() == 1000);
-    REQUIRE(!is_sorted(v));
+    REQUIRE(data.size() == 1000);
+    REQUIRE(!is_sorted(data));
 
-    device_sort(v);
+    device_sort(data);
 
-    REQUIRE(is_sorted(v));
+    REQUIRE(is_sorted(data));
   }
 }
