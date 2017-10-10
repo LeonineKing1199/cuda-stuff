@@ -1,1 +1,0 @@
-cuda-memcheck --leak-check full ..\build-debug\regulus.exe

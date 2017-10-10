@@ -5,12 +5,14 @@
 #include <thrust/distance.h>
 #include <thrust/transform.h>
 #include <thrust/functional.h>
+#include <thrust/device_vector.h>
+#include <thrust/execution_policy.h>
 #include <thrust/iterator/zip_iterator.h>
 
 #include "regulus/algorithm/nominate.hpp"
 
-using zip_tuple_t  = thrust::tuple<ptrdiff_t, ptrdiff_t, regulus::loc_t>;
-using ta_pa_pair_t = thrust::tuple<ptrdiff_t, ptrdiff_t>;
+using zip_tuple_t  = thrust::tuple<std::ptrdiff_t, std::ptrdiff_t, regulus::loc_t>;
+using ta_pa_pair_t = thrust::tuple<std::ptrdiff_t, std::ptrdiff_t>;
 
 namespace
 {
@@ -55,7 +57,7 @@ namespace
     }
   };
 
-  struct count_by_pa : public thrust::unary_function<ptrdiff_t const, void>
+  struct count_by_pa : public thrust::unary_function<std::ptrdiff_t const, void>
   {
     unsigned* pa_ids;
 
@@ -66,7 +68,7 @@ namespace
     {}
 
     __device__
-    auto operator()(ptrdiff_t const pt_idx) -> void
+    auto operator()(std::ptrdiff_t const pt_idx) -> void
     {
       atomicAdd(pa_ids + pt_idx, 1);
     }
@@ -97,16 +99,16 @@ namespace regulus
   // is attempting to fracture a tetrahedron that's being fractured
   // by another point
   auto nominate(
-    size_t const assoc_size,
-    thrust::device_vector<ptrdiff_t>& pa,
-    thrust::device_vector<ptrdiff_t>& ta,
-    thrust::device_vector<loc_t>    & la,
-    thrust::device_vector<bool>     & nm) -> void
+    std::size_t const    assoc_size,
+    span<std::ptrdiff_t> pa,
+    span<std::ptrdiff_t> ta,
+    span<loc_t>          la,
+    span<bool>           nm) -> void
   {
     // allocate buffers that we'll use to write our filtered view
     // of pa and ta to
-    auto pa_copy = thrust::device_vector<ptrdiff_t>{assoc_size, -1};
-    auto ta_copy = thrust::device_vector<ptrdiff_t>{assoc_size, -1};
+    auto pa_copy = thrust::device_vector<std::ptrdiff_t>{assoc_size, -1};
+    auto ta_copy = thrust::device_vector<std::ptrdiff_t>{assoc_size, -1};
 
     // allocate storage for the point counts for both views
     auto pa_id_count      = thrust::device_vector<unsigned>{nm.size(), 0};
@@ -130,12 +132,14 @@ namespace regulus
 
     // first sort everything by ta
     thrust::sort(
+      thrust::device,
       zip_begin, zip_begin + assoc_size,
       sort_by_ta{});
 
     // then filter out all pairs of (ta, pa)
     // such that ta is unique across the board
     auto pair_copy_end = thrust::unique_copy(
+      thrust::device,
       pair_begin, pair_begin + assoc_size,
       pair_copy_begin,
       unique_by_ta{});
@@ -143,16 +147,19 @@ namespace regulus
     // next perform the point counts across our original
     // pa and our filtered version, pa_copy
     thrust::for_each(
+      thrust::device,
       pa.begin(), pa.end(),
       count_by_pa{pa_id_count.data().get()});
 
     thrust::for_each(
+      thrust::device,
       pa_copy.begin(),
       pa_copy.begin() + thrust::distance(pair_copy_begin, pair_copy_end),
       count_by_pa{pa_id_copy_count.data().get()});
 
     // finally, compare counts and write it to our array, nm
     thrust::transform(
+      thrust::device,
       pa_id_count.begin(), pa_id_count.end(),
       pa_id_copy_count.begin(),
       nm.begin(),

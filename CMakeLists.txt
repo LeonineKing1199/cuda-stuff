@@ -2,15 +2,13 @@ cmake_minimum_required(VERSION 3.7)
 
 project(regulus)
 
-find_package(CUDA 8.0 REQUIRED)
+find_package(CUDA 9.0 REQUIRED)
 
 # Find the Catch header and create an interface lib from it
 find_path(CATCH_INCLUDE_DIR catch.hpp)
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
-set(CMAKE_CXX_STANDARD 11)
-set(CUDA_SEPARABLE_COMPILATION ON)
 set(COMPUTE_CAPABILITY 61)
 
 list(
@@ -66,6 +64,7 @@ cuda_add_library(
   ./include/regulus/algorithm/make_assoc_relations.hpp
   ./include/regulus/algorithm/nominate.hpp
   ./include/regulus/algorithm/orient.hpp
+  ./include/regulus/algorithm/fract_locations.hpp
 
   ./include/regulus/utils/dist_from_plane.hpp
   ./include/regulus/utils/equals.hpp
@@ -76,6 +75,14 @@ cuda_add_library(
   ./include/regulus/utils/make_rand_range.hpp
 
   ./include/regulus/views/span.hpp
+)
+
+set_target_properties(
+  regulus_core
+
+  PROPERTIES
+  CXX_STANDARD 14
+  CUDA_SEPARABLE_COMPILATION ON
 )
 
 target_include_directories(

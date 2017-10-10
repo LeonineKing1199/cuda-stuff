@@ -1,17 +1,17 @@
 #ifndef REGULUS_ALGORITHM_NOMINATE_HPP_
 #define REGULUS_ALGORITHM_NOMINATE_HPP_
 
-#include <thrust/device_vector.h>
 #include "regulus/loc.hpp"
+#include "regulus/views/span.hpp"
 
 namespace regulus
 {
   auto nominate(
-    size_t const assoc_size,
-    thrust::device_vector<ptrdiff_t>& pa,
-    thrust::device_vector<ptrdiff_t>& ta,
-    thrust::device_vector<loc_t>    & la,
-    thrust::device_vector<bool>     & nm) -> void;
+    std::size_t const    assoc_size,
+    span<std::ptrdiff_t> pa,
+    span<std::ptrdiff_t> ta,
+    span<loc_t>          la,
+    span<bool>           nm) -> void;
 }
 
 #endif // REGULUS_ALGORITHM_NOMINATE_HPP_
