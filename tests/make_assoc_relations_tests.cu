@@ -28,6 +28,7 @@
 
 
 #include "regulus/point.hpp"
+#include "regulus/views/span.hpp"
 #include "regulus/algorithm/location.hpp"
 #include "regulus/algorithm/build_root_tetrahedron.hpp"
 #include "regulus/algorithm/make_assoc_relations.hpp"
@@ -51,10 +52,10 @@ namespace
   };
 
   struct is_zero
-    : public thrust::unary_function<ptrdiff_t const , bool>
+    : public thrust::unary_function<std::ptrdiff_t const , bool>
   {
     __host__ __device__
-    auto operator()(ptrdiff_t const x) -> bool
+    auto operator()(std::ptrdiff_t const x) -> bool
     {
       return x == 0;
     }
@@ -68,8 +69,8 @@ TEST_CASE("Making the initial set of association relations should work")
     using point_t = double3;
     using regulus::loc_t;
 
-    auto const grid_length = size_t{9};
-    auto const num_pts     = size_t{grid_length * grid_length * grid_length};
+    auto const grid_length = std::size_t{9};
+    auto const num_pts     = std::size_t{grid_length * grid_length * grid_length};
 
     auto h_pts = thrust::host_vector<point_t>{};
     h_pts.reserve(num_pts);
@@ -87,14 +88,19 @@ TEST_CASE("Making the initial set of association relations should work")
 
     auto const num_assocs = 4 * num_pts;
 
-    auto pa = thrust::device_vector<ptrdiff_t>{num_assocs, -1};
-    auto ta = thrust::device_vector<ptrdiff_t>{num_assocs, -1};
+    auto pa = thrust::device_vector<std::ptrdiff_t>{num_assocs, -1};
+    auto ta = thrust::device_vector<std::ptrdiff_t>{num_assocs, -1};
     auto la = thrust::device_vector<loc_t>{num_assocs, regulus::numeric_limits<loc_t>::max()};
+
+    using regulus::make_span;
+    using regulus::make_const_span;
 
     regulus::make_assoc_relations<point_t>(
       root_vertices,
-      d_pts,
-      pa, ta, la);
+      make_const_span(d_pts),
+      make_span(pa),
+      make_span(ta),
+      make_span(la));
 
     cudaDeviceSynchronize();
 
@@ -103,7 +109,7 @@ TEST_CASE("Making the initial set of association relations should work")
     REQUIRE((
       thrust::equal(
         pa.begin(), pa.begin() + num_pts,
-        thrust::make_counting_iterator(ptrdiff_t{0}),
-        thrust::equal_to<ptrdiff_t>{})));
+        thrust::make_counting_iterator(std::ptrdiff_t{0}),
+        thrust::equal_to<std::ptrdiff_t>{})));
   }
 }

@@ -5,11 +5,13 @@
 #include <thrust/tuple.h>
 #include <thrust/transform.h>
 #include <thrust/device_vector.h>
+#include <thrust/execution_policy.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/iterator/counting_iterator.h>
 
 #include "regulus/array.hpp"
 #include "regulus/is_point.hpp"
+#include "regulus/views/span.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/algorithm/location.hpp"
 
@@ -20,8 +22,8 @@ namespace regulus
     template <typename Point>
     struct get_loc_code
       : public thrust::unary_function<
-          thrust::tuple<Point, size_t> const,
-          thrust::tuple<ptrdiff_t, ptrdiff_t, loc_t>
+          thrust::tuple<Point, std::size_t> const,
+          thrust::tuple<std::ptrdiff_t, std::ptrdiff_t, loc_t>
     >
     {
       Point const a;
@@ -39,8 +41,8 @@ namespace regulus
       {}
 
       __host__ __device__
-      auto operator()(thrust::tuple<Point, size_t> const pt_and_index)
-      -> thrust::tuple<ptrdiff_t, ptrdiff_t, loc_t>
+      auto operator()(thrust::tuple<Point, std::size_t> const pt_and_index)
+      -> thrust::tuple<std::ptrdiff_t, std::ptrdiff_t, loc_t>
       {
         using thrust::get;
 
@@ -63,7 +65,7 @@ namespace regulus
 
         return thrust::make_tuple(
           get<1>(pt_and_index),
-          ptrdiff_t{0},
+          std::ptrdiff_t{0},
           loc(a, b, c, d, p));
       }
     };
@@ -74,17 +76,16 @@ namespace regulus
     typename = enable_if_t<is_point<Point>::value>
   >
   auto make_assoc_relations(
-    array<Point, 4>              const  vtx,
-    thrust::device_vector<Point> const& pts,
-    thrust::device_vector<ptrdiff_t>  & pa,
-    thrust::device_vector<ptrdiff_t>  & ta,
-    thrust::device_vector<loc_t>      & la)
-  -> void
+    array<Point, 4>      const vtx,
+    span<Point const>    const pts,
+    span<std::ptrdiff_t> const pa,
+    span<std::ptrdiff_t> const ta,
+    span<loc_t>          const la) -> void
   {
     auto const begin = thrust::make_zip_iterator(
       thrust::make_tuple(
         pts.begin(),
-        thrust::make_counting_iterator(size_t{0})));
+        thrust::make_counting_iterator(std::size_t{0})));
 
     auto zip_output = thrust::make_zip_iterator(
       thrust::make_tuple(
@@ -93,6 +94,7 @@ namespace regulus
         la.begin()));
 
     thrust::transform(
+      thrust::device,
       begin, begin + pts.size(),
       zip_output,
       detail::get_loc_code<Point>{

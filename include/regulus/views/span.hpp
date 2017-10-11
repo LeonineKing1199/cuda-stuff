@@ -219,9 +219,14 @@ namespace regulus
 
   template <typename Container>
   auto make_span(Container& c) noexcept
-  -> span<typename Container::value_type>
   {
-    return {c};
+    return make_span(c.data(), c.size());
+  }
+
+  template <typename T>
+  auto make_span(thrust::device_vector<T>& v) noexcept
+  {
+    return make_span(v.data().get(), v.size());
   }
 
   // make_const_span
@@ -244,9 +249,14 @@ namespace regulus
 
   template <typename Container>
   auto make_const_span(Container const& c) noexcept
-  -> span<typename Container::value_type const>
   {
-    return {c};
+    return make_span(c.data(), c.size());
+  }
+
+  template <typename T>
+  auto make_const_span(thrust::device_vector<T> const& v) noexcept
+  {
+    return make_span<T const>(v.data().get(), v.size());
   }
 }
 

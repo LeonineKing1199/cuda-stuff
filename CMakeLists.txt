@@ -27,6 +27,7 @@ if (MSVC)
 
       # this is specific to the Ninja build tool
       --compiler-options "/FS"
+      --compiler-options "/permissive-"
       -D_SCL_SECURE_NO_WARNINGS
     )
 
@@ -40,6 +41,7 @@ cuda_add_library(
   regulus_core
   STATIC
   ./src/nominate.cu
+  ./src/fract_locations.cu
 
   ./include/regulus/access.hpp
   ./include/regulus/algorithm
