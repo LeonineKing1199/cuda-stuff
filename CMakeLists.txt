@@ -119,6 +119,7 @@ cuda_add_executable(
   ./tests/bigger_nomination_tests.cu
   ./tests/rand_tests.cu
   ./tests/span_tests.cu
+  ./tests/fract_locations_tests.cu
 )
 
 target_link_libraries(
