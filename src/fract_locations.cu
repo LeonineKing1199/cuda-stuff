@@ -30,7 +30,7 @@ namespace regulus
       [=] __device__ (auto const pa_la_pair) -> std::ptrdiff_t
       {
         return nm[get<0>(pa_la_pair)]
-          ? __popc(get<1>(pa_la_pair))
+          ? (__popc(get<1>(pa_la_pair)) - 1)
           : 0;
       },
       thrust::plus<std::ptrdiff_t>{});
