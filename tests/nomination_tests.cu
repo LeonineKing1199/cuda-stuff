@@ -22,14 +22,17 @@ TEST_CASE("Nominating points...")
     auto const ta_data = array_t{0, 1, 2, 3, 2, 5, 6, 7, 8, 1, 8};
     auto const pa_data = array_t{0, 0, 0, 0, 2, 2, 3, 3, 3, 4, 4};
 
-    auto ta = thrust::device_vector<std::ptrdiff_t>{ta_data.begin(), ta_data.end()};
-    auto pa = thrust::device_vector<std::ptrdiff_t>{pa_data.begin(), pa_data.end()};
-    auto la = thrust::device_vector<regulus::loc_t>{assoc_size, regulus::outside_v};
-    auto nm = thrust::device_vector<bool>{
-      static_cast<std::size_t>(1 + *thrust::max_element(pa_data.begin(), pa_data.end())),
+    using thrust::device_vector;
+    using thrust::max_element;
+
+    auto ta = device_vector<std::ptrdiff_t>{ta_data.begin(), ta_data.end()};
+    auto pa = device_vector<std::ptrdiff_t>{pa_data.begin(), pa_data.end()};
+    auto la = device_vector<regulus::loc_t>{ta.size(), regulus::outside_v};
+    auto nm = device_vector<bool>{
+      static_cast<std::size_t>(1 + *max_element(pa_data.begin(), pa_data.end())),
       false};
 
-    regulus::nominate(assoc_size, pa, ta, la, nm);
+    regulus::nominate(pa, ta, la, nm);
     cudaDeviceSynchronize();
 
     auto h_ta = thrust::host_vector<std::ptrdiff_t>{ta};
@@ -37,7 +40,7 @@ TEST_CASE("Nominating points...")
     auto h_nm = thrust::host_vector<bool>{nm};
 
     auto nominated_cnt = thrust::host_vector<unsigned>{
-      static_cast<std::size_t>(1 + *thrust::max_element(h_ta.begin(), h_ta.end())), 0};
+      static_cast<std::size_t>(1 + *max_element(h_ta.begin(), h_ta.end())), 0};
 
     auto found_duplicate = false;
     auto num_nominated   = int{0};

@@ -11,81 +11,6 @@
 
 #include "regulus/algorithm/nominate.hpp"
 
-using zip_tuple_t  = thrust::tuple<std::ptrdiff_t, std::ptrdiff_t, regulus::loc_t>;
-using ta_pa_pair_t = thrust::tuple<std::ptrdiff_t, std::ptrdiff_t>;
-
-namespace
-{
-  struct sort_by_ta : public thrust::binary_function<zip_tuple_t const,
-                                                     zip_tuple_t const,
-                                                     bool>
-  {
-    __host__ __device__
-    auto operator()(zip_tuple_t const a, zip_tuple_t const b) -> bool
-    {
-      using thrust::get;
-
-      auto const a_ta = get<0>(a);
-      auto const b_ta = get<0>(b);
-
-      auto const a_pa = get<1>(a);
-      auto const b_pa = get<1>(b);
-
-      return (
-        a_ta == b_ta
-        ? (a_pa < b_pa)
-        : (a_ta < b_ta));
-    }
-  };
-
-  struct unique_by_ta : public thrust::binary_function<ta_pa_pair_t const,
-                                                       ta_pa_pair_t const,
-                                                       bool>
-  {
-    __host__ __device__
-    auto operator()(ta_pa_pair_t const a, ta_pa_pair_t const b) -> bool
-    {
-      using thrust::get;
-
-      auto const a_ta = get<0>(a);
-      auto const b_ta = get<0>(b);
-
-      auto const a_pa = get<1>(a);
-      auto const b_pa = get<1>(b);
-
-      return a_ta == b_ta && a_pa != b_pa;
-    }
-  };
-
-  struct count_by_pa : public thrust::unary_function<std::ptrdiff_t const, void>
-  {
-    unsigned* pa_ids;
-
-    count_by_pa(void) = delete;
-    count_by_pa(count_by_pa const& cpy) = default;
-    count_by_pa(unsigned* _pa_ids)
-      : pa_ids{_pa_ids}
-    {}
-
-    __device__
-    auto operator()(std::ptrdiff_t const pt_idx) -> void
-    {
-      atomicAdd(pa_ids + pt_idx, 1);
-    }
-  };
-
-  struct is_nominated : public thrust::binary_function<unsigned const,
-                                                       unsigned const,
-                                                       bool>
-  {
-    __host__ __device__
-    auto operator()(unsigned const a, unsigned const b) -> bool
-    {
-      return (a > 0) && (a == b);
-    }
-  };
-}
-
 namespace regulus
 {
   // nominate points by first sorting our tuple of
@@ -99,12 +24,15 @@ namespace regulus
   // is attempting to fracture a tetrahedron that's being fractured
   // by another point
   auto nominate(
-    std::size_t const    assoc_size,
-    span<std::ptrdiff_t> pa,
-    span<std::ptrdiff_t> ta,
-    span<loc_t>          la,
-    span<bool>           nm) -> void
+    span<std::ptrdiff_t> const pa,
+    span<std::ptrdiff_t> const ta,
+    span<loc_t>          const la,
+    span<bool>           const nm) -> void
   {
+    using thrust::get;
+
+    auto const assoc_size = pa.size();
+
     // allocate buffers that we'll use to write our filtered view
     // of pa and ta to
     auto pa_copy = thrust::device_vector<std::ptrdiff_t>{assoc_size, -1};
@@ -134,7 +62,19 @@ namespace regulus
     thrust::sort(
       thrust::device,
       zip_begin, zip_begin + assoc_size,
-      sort_by_ta{});
+      [] __device__ (auto const a, auto const b) -> bool
+      {
+        auto const a_ta = get<0>(a);
+        auto const b_ta = get<0>(b);
+
+        auto const a_pa = get<1>(a);
+        auto const b_pa = get<1>(b);
+
+        return (
+          a_ta == b_ta
+          ? (a_pa < b_pa)
+          : (a_ta < b_ta));
+      });
 
     // then filter out all pairs of (ta, pa)
     // such that ta is unique across the board
@@ -142,20 +82,35 @@ namespace regulus
       thrust::device,
       pair_begin, pair_begin + assoc_size,
       pair_copy_begin,
-      unique_by_ta{});
+      [] __device__ (auto const a, auto const b) -> bool
+      {
+        auto const a_ta = get<0>(a);
+        auto const b_ta = get<0>(b);
+
+        auto const a_pa = get<1>(a);
+        auto const b_pa = get<1>(b);
+
+        return a_ta == b_ta && a_pa != b_pa;
+      });
 
     // next perform the point counts across our original
     // pa and our filtered version, pa_copy
     thrust::for_each(
       thrust::device,
       pa.begin(), pa.end(),
-      count_by_pa{pa_id_count.data().get()});
+      [pa_ids = pa_id_count.data().get()] __device__ (auto const pa_id) -> void
+      {
+        atomicAdd(pa_ids + pa_id, 1);
+      });
 
     thrust::for_each(
       thrust::device,
       pa_copy.begin(),
       pa_copy.begin() + thrust::distance(pair_copy_begin, pair_copy_end),
-      count_by_pa{pa_id_copy_count.data().get()});
+      [pa_ids = pa_id_copy_count.data().get()] __device__ (auto const pa_id) -> void
+      {
+        atomicAdd(pa_ids + pa_id, 1);
+      });
 
     // finally, compare counts and write it to our array, nm
     thrust::transform(
@@ -163,6 +118,9 @@ namespace regulus
       pa_id_count.begin(), pa_id_count.end(),
       pa_id_copy_count.begin(),
       nm.begin(),
-      is_nominated{});
+      [] __device__ (auto const a, auto const b) -> bool
+      {
+        return (a > 0) && (a == b);
+      });
   }
 }

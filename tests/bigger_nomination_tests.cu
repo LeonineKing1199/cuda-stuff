@@ -45,7 +45,7 @@ TEST_CASE("Our point nomination routine...")
       1 + static_cast<std::size_t>(*thrust::max_element(pa.begin(), pa.end())),
       false};
 
-    regulus::nominate(assoc_size, pa, ta, la, nm);
+    regulus::nominate(pa, ta, la, nm);
     cudaDeviceSynchronize();
 
     auto h_ta = thrust::host_vector<std::ptrdiff_t>{ta};

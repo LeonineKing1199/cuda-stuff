@@ -7,11 +7,10 @@
 namespace regulus
 {
   auto nominate(
-    std::size_t const    assoc_size,
-    span<std::ptrdiff_t> pa,
-    span<std::ptrdiff_t> ta,
-    span<loc_t>          la,
-    span<bool>           nm) -> void;
+    span<std::ptrdiff_t> const pa,
+    span<std::ptrdiff_t> const ta,
+    span<loc_t>          const la,
+    span<bool>           const nm) -> void;
 }
 
 #endif // REGULUS_ALGORITHM_NOMINATE_HPP_
