@@ -1,5 +1,3 @@
-#include "regulus/tetra.hpp"
-#include "regulus/access.hpp"
 #include "regulus/point.hpp"
 #include "regulus/algorithm/orient.hpp"
 #include "regulus/algorithm/location.hpp"
@@ -9,24 +7,6 @@
 
 TEST_CASE("Our tetrahedral implementation")
 {
-  SECTION("Out default tetrahedron type should be settable and gettable")
-  {
-    using regulus::set;
-    using regulus::get;
-
-    auto tetra = regulus::tetra_t{};
-
-    set<0>(tetra, 0);
-    set<1>(tetra, 1);
-    set<2>(tetra, 2);
-    set<3>(tetra, 3);
-
-    REQUIRE(get<0>(tetra) == 0);
-    REQUIRE(get<1>(tetra) == 1);
-    REQUIRE(get<2>(tetra) == 2);
-    REQUIRE(get<3>(tetra) == 3);
-  }
-
   using regulus::orientation;
 
   using real    = double;

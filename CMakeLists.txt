@@ -43,8 +43,6 @@ cuda_add_library(
   ./src/nominate.cu
   ./src/fract_locations.cu
 
-  ./include/regulus/access.hpp
-  ./include/regulus/algorithm
   ./include/regulus/array.hpp
   ./include/regulus/globals.hpp
   ./include/regulus/is_point.hpp
@@ -53,8 +51,6 @@ cuda_add_library(
   ./include/regulus/orientation.hpp
   ./include/regulus/point.hpp
   ./include/regulus/point_traits.hpp
-  ./include/regulus/tetra.hpp
-  ./include/regulus/tetra_traits.hpp
   ./include/regulus/type_traits.hpp
   ./include/regulus/utils
   ./include/regulus/vector.hpp
@@ -67,6 +63,7 @@ cuda_add_library(
   ./include/regulus/algorithm/nominate.hpp
   ./include/regulus/algorithm/orient.hpp
   ./include/regulus/algorithm/fract_locations.hpp
+  ./include/regulus/algorithm/fracture.hpp
 
   ./include/regulus/utils/dist_from_plane.hpp
   ./include/regulus/utils/equals.hpp
