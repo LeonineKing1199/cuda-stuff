@@ -42,6 +42,7 @@ cuda_add_library(
   STATIC
   ./src/nominate.cu
   ./src/fract_locations.cu
+  ./src/fracture.cu
 
   ./include/regulus/array.hpp
   ./include/regulus/globals.hpp
@@ -55,6 +56,7 @@ cuda_add_library(
   ./include/regulus/utils
   ./include/regulus/vector.hpp
   ./include/regulus/loc.hpp
+  ./include/regulus/tetra.hpp
 
   ./include/regulus/algorithm/build_root_tetrahedron.hpp
   ./include/regulus/algorithm/insphere.hpp
@@ -117,6 +119,7 @@ cuda_add_executable(
   ./tests/rand_tests.cu
   ./tests/span_tests.cu
   ./tests/fract_locations_tests.cu
+  ./tests/fracture_tests.cu
 )
 
 target_link_libraries(

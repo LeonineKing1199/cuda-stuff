@@ -1,9 +1,5 @@
-#ifndef REGULUS_ALGORITHM_FRACTURE_HPP_
-#define REGULUS_ALGORITHM_FRACTURE_HPP_
-
-#include "regulus/loc.hpp"
-#include "regulus/tetra.hpp"
-#include "regulus/views/span.hpp"
+#include "regulus/globals.hpp"
+#include "regulus/algorithm/fracture.hpp"
 
 namespace regulus
 {
@@ -14,7 +10,10 @@ namespace regulus
     span<loc_t          const> const la,
     span<bool           const> const nm,
     span<std::ptrdiff_t const> const fl,
-    span<tetra_t>              const mesh);
-}
+    span<tetra_t>              const mesh)
+  {
+    for (auto const tid = get_tid; tid < pa.size(); tid += grid_stride()) {
 
-#endif // REGULUS_ALGORITHM_FRACTURE_HPP_
+    }
+  }
+}
