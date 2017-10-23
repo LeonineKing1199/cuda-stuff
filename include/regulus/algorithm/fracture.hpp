@@ -9,6 +9,7 @@ namespace regulus
 {
   __global__
   void fracture_kernel(
+    std::size_t                const num_tetra,
     span<std::ptrdiff_t const> const pa,
     span<std::ptrdiff_t const> const ta,
     span<loc_t          const> const la,
