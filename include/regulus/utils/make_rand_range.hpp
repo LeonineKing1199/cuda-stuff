@@ -12,7 +12,7 @@ namespace regulus
 {
   using rng_engine_t = thrust::random::minstd_rand;
 
-  // Write `num_vals` elements in the range of [min, max] to `output`
+  // Sequentially write `num_vals` elements in the range of [min, max] to `output`
   template <
     typename Integral,
     typename OutputIterator>
@@ -24,15 +24,9 @@ namespace regulus
   {
     using result_type = typename rng_engine_t::result_type;
 
-    auto seed       = result_type{0};
-    auto const time = std::time(nullptr);
-    std::memcpy(
-      std::addressof(seed),
-      std::addressof(time),
-      sizeof(seed));
+    auto const time = static_cast<result_type>(std::time(nullptr));
 
-
-    auto urng = rng_engine_t{seed};
+    auto urng = rng_engine_t{time};
     auto dist =
       thrust::random::uniform_int_distribution<Integral>{min, max};
 

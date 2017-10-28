@@ -9,9 +9,9 @@
 
 #include <catch.hpp>
 
-TEST_CASE("Our fracture routine")
+TEST_CASE("Our fracture routine...")
 {
-  SECTION("1-to-4 fracture")
+  SECTION("... should work for a basic 1-to-4 fracture")
   {
     using std::size_t;
     using std::ptrdiff_t;
@@ -49,5 +49,10 @@ TEST_CASE("Our fracture routine")
     REQUIRE((h_mesh[1] == regulus::tetra_t{0, 2, 3, 4}));
     REQUIRE((h_mesh[2] == regulus::tetra_t{0, 3, 1, 4}));
     REQUIRE((h_mesh[3] == regulus::tetra_t{0, 1, 2, 4}));
+  }
+
+  SECTION("... should work with a significantly larger data set")
+  {
+
   }
 }

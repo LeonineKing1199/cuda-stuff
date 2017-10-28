@@ -4,10 +4,9 @@
 #include <thrust/device_vector.h>
 #include <thrust/execution_policy.h>
 
+#include "regulus/loc.hpp"
 #include "regulus/array.hpp"
-#include "regulus/algorithm/location.hpp"
 #include "regulus/algorithm/nominate.hpp"
-#include "regulus/utils/make_rand_range.hpp"
 
 #include <catch.hpp>
 
