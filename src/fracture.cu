@@ -67,7 +67,7 @@ namespace regulus
       auto const tetra = mesh[ta_id];
       auto const loc   = la[tid];
 
-      auto write_idx = pa_id;
+      auto write_idx = ta_id;
 
       for (auto i = 0; i < num_faces; ++i) {
         if (!is_bit_set(loc, i)) { continue; }
@@ -81,7 +81,7 @@ namespace regulus
 
         mesh[write_idx] = tmp;
 
-        if (write_idx == pa_id) {
+        if (write_idx == ta_id) {
           auto const offset = (tid == 0 ? 0 : fl[tid -1]);
           write_idx = num_tetra + offset;
         } else {
