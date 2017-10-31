@@ -39,21 +39,19 @@ namespace
         make_array(0, 3, 1), // 2
         make_array(0, 1, 2)  // 3
     };
-}
 
-namespace regulus
-{
+
   __global__
   void fracture_kernel(
-    std::size_t                const num_tetra,
-    span<std::ptrdiff_t const> const pa,
-    span<std::ptrdiff_t const> const ta,
-    span<loc_t          const> const la,
-    span<bool           const> const nm,
-    span<std::ptrdiff_t const> const fl,
-    span<tetra_t>              const mesh)
+    std::size_t                         const num_tetra,
+    regulus::span<std::ptrdiff_t const> const pa,
+    regulus::span<std::ptrdiff_t const> const ta,
+    regulus::span<regulus::loc_t const> const la,
+    regulus::span<bool           const> const nm,
+    regulus::span<std::ptrdiff_t const> const fl,
+    regulus::span<regulus::tetra_t>     const mesh)
   {
-    for (auto tid = get_tid(); tid < pa.size(); tid += grid_stride()) {
+    for (auto tid = regulus::get_tid(); tid < pa.size(); tid += regulus::grid_stride()) {
       auto const pa_id        = pa[tid];
       auto const is_nominated = nm[pa_id];
 
@@ -77,7 +75,7 @@ namespace regulus
         auto const c = tetra[fiv[i][2]];
         auto const d = pa_id;
 
-        auto const tmp = tetra_t{a, b, c, d};
+        auto const tmp = regulus::tetra_t{a, b, c, d};
 
         mesh[write_idx] = tmp;
 
@@ -89,5 +87,20 @@ namespace regulus
         }
       }
     }
+  }
+}
+
+namespace regulus
+{
+  auto fracture(
+    std::size_t                const num_tetra,
+    span<std::ptrdiff_t const> const pa,
+    span<std::ptrdiff_t const> const ta,
+    span<loc_t          const> const la,
+    span<bool           const> const nm,
+    span<std::ptrdiff_t const> const fl,
+    span<tetra_t>              const mesh) -> void
+  {
+    fracture_kernel<<<bpg, tpb>>>(num_tetra, pa, ta, la, nm, fl, mesh);
   }
 }
