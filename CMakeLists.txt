@@ -46,6 +46,7 @@ cuda_add_library(
   ./src/nominate.cu
   ./src/fract_locations.cu
   ./src/fracture.cu
+  ./src/mark_nominated_tetra.cu
 )
 
 set_target_properties(
@@ -91,6 +92,7 @@ if (DEFINED CATCH_INCLUDE_DIR)
     ./tests/span_tests.cu
     ./tests/fract_locations_tests.cu
     ./tests/fracture_tests.cu
+    ./tests/mark_nominated_tetra_tests.cu
   )
 
   target_link_libraries(

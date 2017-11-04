@@ -89,6 +89,12 @@ namespace regulus
     : p_{dv.data().get()}, size_{dv.size()}
     {}
 
+    // thrust::device_vector const constructor
+    template <typename T>
+    span(thrust::device_vector<T> const& dv)
+    : p_{dv.data().get()}, size_{dv.size()}
+    {}
+
     // contiguous container constructor
     // (uses anything with .data() and .size())
     template <
