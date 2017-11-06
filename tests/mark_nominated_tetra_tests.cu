@@ -2,6 +2,7 @@
 #include <thrust/device_vector.h>
 
 #include "regulus/array.hpp"
+#include "regulus/algorithm/assoc_locations.hpp"
 #include "regulus/algorithm/mark_nominated_tetra.hpp"
 
 #include <catch.hpp>
@@ -20,6 +21,7 @@ TEST_CASE("Marking which tetrahedra were nominated...")
     auto const pa = thrust::device_vector<ptrdiff_t>{pa_data.begin(), pa_data.end()};
     auto const nm = thrust::device_vector<bool>{nm_data.begin(), nm_data.end()};
 
+    auto al = thrust::device_vector<ptrdiff_t>{ta.size(), -1};
     auto nt = thrust::device_vector<ptrdiff_t>{7, -1};
 
     regulus::mark_nominated_tetra(ta, pa, nm, nt);
@@ -34,5 +36,25 @@ TEST_CASE("Marking which tetrahedra were nominated...")
     REQUIRE((h_nt[4] ==  5));
     REQUIRE((h_nt[5] ==  6));
     REQUIRE((h_nt[6] ==  7));
+
+    // it should also support calculating the new association tuple
+    // write-back ids
+    // we now know which tuples we need to recalculate the association
+    // information for
+
+    regulus::assoc_locations(ta, nt, al);
+    cudaDeviceSynchronize();
+
+    auto const h_al = thrust::host_vector<ptrdiff_t>{al};
+
+    REQUIRE((h_al[0] == 0));
+    REQUIRE((h_al[1] == 0));
+    REQUIRE((h_al[2] == 0));
+    REQUIRE((h_al[3] == 4));
+    REQUIRE((h_al[4] == 4));
+    REQUIRE((h_al[5] == 4));
+    REQUIRE((h_al[6] == 4));
+    REQUIRE((h_al[7] == 4));
+    REQUIRE((h_al[8] == 8));
   }
 }

@@ -47,6 +47,7 @@ cuda_add_library(
   ./src/fract_locations.cu
   ./src/fracture.cu
   ./src/mark_nominated_tetra.cu
+  ./src/assoc_locations.cu
 )
 
 set_target_properties(
