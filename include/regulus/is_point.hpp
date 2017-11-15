@@ -24,7 +24,9 @@ namespace regulus
   >
   {};
 
-
+  template <typename Point>
+  inline constexpr
+  bool is_point_v = is_point<Point>::value;
 }
 
 #endif // REGULUS_IS_POINT_HPP_

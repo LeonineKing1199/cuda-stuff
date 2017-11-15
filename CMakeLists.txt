@@ -6,10 +6,8 @@ find_package(CUDA 9.0 REQUIRED)
 
 # Find the Catch header and create an interface lib from it
 find_path(CATCH_INCLUDE_DIR catch.hpp)
-if (DEFINED CATCH_INCLUDE_DIR)
-  add_library(Catch INTERFACE)
-  target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
-endif()
+add_library(Catch INTERFACE)
+target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
 # TODO: abstract this out into a toolchain file
 set(COMPUTE_CAPABILITY 61)
@@ -73,46 +71,45 @@ target_link_libraries(
 )
 
 # Assemble the testing binary
-if (DEFINED CATCH_INCLUDE_DIR)
-  cuda_add_executable(
-    regulus_tests
+cuda_add_executable(
+  regulus_tests
 
-    ./debug/main.cu
+  ./debug/main.cu
 
-    ./tests/array_tests.cu
-    ./tests/build_root_tetrahedron_tests.cu
-    ./tests/vector_tests.cu
-    ./tests/matrix_tests.cu
-    ./tests/tetra_tests.cu
-    ./tests/equals.cu
-    ./tests/make_assoc_relations_tests.cu
-    ./tests/numeric_stability_tests.cu
-    ./tests/nomination_tests.cu
-    ./tests/bigger_nomination_tests.cu
-    ./tests/rand_tests.cu
-    ./tests/span_tests.cu
-    ./tests/fract_locations_tests.cu
-    ./tests/fracture_tests.cu
-    ./tests/mark_nominated_tetra_tests.cu
-  )
+  ./tests/array_tests.cu
+  ./tests/build_root_tetrahedron_tests.cu
+  ./tests/vector_tests.cu
+  ./tests/matrix_tests.cu
+  ./tests/tetra_tests.cu
+  ./tests/equals.cu
+  ./tests/make_assoc_relations_tests.cu
+  ./tests/numeric_stability_tests.cu
+  ./tests/nomination_tests.cu
+  ./tests/bigger_nomination_tests.cu
+  ./tests/rand_tests.cu
+  ./tests/span_tests.cu
+  ./tests/fract_locations_tests.cu
+  ./tests/fracture_tests.cu
+  ./tests/mark_nominated_tetra_tests.cu
+  ./tests/redistribute_pts_tests.cu
+)
 
-  target_link_libraries(
-    regulus_tests
+target_link_libraries(
+  regulus_tests
 
-    Catch
-    regulus_core
-  )
+  Catch
+  regulus_core
+)
 
-  # add some CTest functionality as well
-  # unfortunately, only the Catch binary is run so as far as
-  # CTest knows, only one test is actually run
-  # see: https://github.com/philsquared/Catch/blob/master/contrib/ParseAndAddCatchTests.cmake
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
+# add some CTest functionality as well
+# unfortunately, only the Catch binary is run so as far as
+# CTest knows, only one test is actually run
+# see: https://github.com/philsquared/Catch/blob/master/contrib/ParseAndAddCatchTests.cmake
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake.modules/")
 
-  enable_testing()
-  include(ParseAndAddCatchTests)
-  ParseAndAddCatchTests(regulus_tests)
-endif()
+enable_testing()
+include(ParseAndAddCatchTests)
+ParseAndAddCatchTests(regulus_tests)
 
 # Generate the demo/release binary
 cuda_add_executable(
