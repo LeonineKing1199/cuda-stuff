@@ -8,66 +8,68 @@
 // : warning C4244: '+=': conversion from '__int64' to 'int', possible loss of data
 #pragma warning(disable: 4244)
 
+#include <thrust/functional.h>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
-#include <thrust/logical.h>
-#include <thrust/functional.h>
+#include <thrust/transform_reduce.h>
+
 #include <thrust/iterator/counting_iterator.h>
+#include <thrust/iterator/constant_iterator.h>
 
 #pragma warning(pop)
 
 #elif
 
+#include <thrust/functional.h>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
-#include <thrust/logical.h>
-#include <thrust/functional.h>
+#include <thrust/transform_reduce.h>
+
 #include <thrust/iterator/counting_iterator.h>
+#include <thrust/iterator/constant_iterator.h>
 
 #endif
 
-
 #include "regulus/point.hpp"
+
 #include "regulus/views/span.hpp"
-#include "regulus/algorithm/location.hpp"
-#include "regulus/algorithm/build_root_tetrahedron.hpp"
-#include "regulus/algorithm/make_assoc_relations.hpp"
-#include "regulus/utils/gen_cartesian_domain.hpp"
+
 #include "regulus/utils/numeric_limits.hpp"
+#include "regulus/utils/gen_cartesian_domain.hpp"
+
+#include "regulus/algorithm/location.hpp"
+#include "regulus/algorithm/make_assoc_relations.hpp"
+#include "regulus/algorithm/build_root_tetrahedron.hpp"
 
 #include <catch.hpp>
 
-namespace
+using std::size_t;
+using std::ptrdiff_t;
+
+using regulus::span;
+using regulus::loc_t;
+
+using point_t = double3;
+
+auto is_valid_locs(span<loc_t const> const la) -> bool
 {
-  using regulus::loc_t;
-
-  struct contained
-    : public thrust::unary_function<
-      loc_t const, // input
-      bool>        // ouput
-  {
-    __host__ __device__
-    auto operator()(loc_t const loc) -> bool
-    { return loc > 0 && loc != regulus::outside_v; }
-  };
-
-  struct is_zero
-    : public thrust::unary_function<std::ptrdiff_t const , bool>
-  {
-    __host__ __device__
-    auto operator()(std::ptrdiff_t const x) -> bool
+  auto const num_valid = thrust::transform_reduce(
+    thrust::device,
+    la.begin(), la.end(),
+    [] __device__ (loc_t const loc) -> size_t
     {
-      return x == 0;
-    }
-  };
+      return (loc > 0 && loc != regulus::outside_v ? 1 : 0);
+    },
+    size_t{0},
+    thrust::plus<size_t>{});
+
+  return num_valid == la.size();
 }
 
 TEST_CASE("Making the initial set of association relations should work")
 {
   SECTION("Cartesian set")
   {
-    using point_t = double3;
-    using regulus::loc_t;
 
     auto const grid_length = std::size_t{9};
     auto const num_pts     = std::size_t{grid_length * grid_length * grid_length};
@@ -104,8 +106,15 @@ TEST_CASE("Making the initial set of association relations should work")
 
     cudaDeviceSynchronize();
 
-    REQUIRE((thrust::all_of(la.begin(), la.begin() + num_pts, contained{})));
-    REQUIRE((thrust::all_of(ta.begin(), ta.begin() + num_pts, is_zero{})));
+    REQUIRE((
+      is_valid_locs(
+        make_const_span(la).subspan(0, num_pts))));
+
+    REQUIRE((
+      thrust::equal(
+        ta.begin(), ta.begin() + num_pts,
+        thrust::make_constant_iterator(ptrdiff_t{0}))));
+
     REQUIRE((
       thrust::equal(
         pa.begin(), pa.begin() + num_pts,

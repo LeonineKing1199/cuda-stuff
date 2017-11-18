@@ -13,65 +13,65 @@
 // : warning C4244: '+=': conversion from '__int64' to 'int', possible loss of data
 #pragma warning(disable: 4244)
 
+#include <thrust/functional.h>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
-#include <thrust/functional.h>
-#include <thrust/uninitialized_copy.h>
 #include <thrust/execution_policy.h>
-#include <thrust/logical.h>
+#include <thrust/transform_reduce.h>
+#include <thrust/uninitialized_copy.h>
 
 #pragma warning(pop)
 
 #elif
 
+#include <thrust/functional.h>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
-#include <thrust/functional.h>
-#include <thrust/uninitialized_copy.h>
 #include <thrust/execution_policy.h>
-#include <thrust/logical.h>
+#include <thrust/transform_reduce.h>
+#include <thrust/uninitialized_copy.h>
 
 #endif
 
 #include "regulus/point.hpp"
-#include "regulus/algorithm/build_root_tetrahedron.hpp"
+
+#include "regulus/views/span.hpp"
+
 #include "regulus/utils/gen_cartesian_domain.hpp"
+
+#include "regulus/algorithm/orient.hpp"
 #include "regulus/algorithm/location.hpp"
+#include "regulus/algorithm/build_root_tetrahedron.hpp"
 
 #include <catch.hpp>
 
-namespace
+using std::size_t;
+using std::ptrdiff_t;
+
+using regulus::span;
+using regulus::array;
+
+using point_t = double3;
+
+auto pts_are_contained(
+  array<point_t, 4>   const vtx,
+  span<point_t const> const pts) -> bool
 {
-  using point_t = regulus::point_t<double>;
-
-  template <typename Point>
-  struct relative_loc : public thrust::unary_function<Point const, bool>
-  {
-    regulus::array<Point, 4> vertices;
-
-    relative_loc(void) = delete;
-    relative_loc(regulus::array<Point, 4> const vtx)
+  auto const tmp = thrust::transform_reduce(
+    thrust::device,
+    pts.begin(), pts.end(),
+    [=] __device__ (point_t const p) -> size_t
     {
-      thrust::uninitialized_copy(
-        thrust::seq,
-        vtx.begin(), vtx.end(),
-        vertices.begin());
-    }
+      auto const tmp =
+         regulus::loc(vtx[0], vtx[1], vtx[2], vtx[3], p);
 
-    __host__ __device__
-    auto operator()(Point const p) -> bool
-    {
-      auto const tmp = loc(
-        vertices[0],
-        vertices[1],
-        vertices[2],
-        vertices[3],
-        p);
+      return (tmp < 16 ? 1 : 0);
+    },
+    size_t{0},
+    thrust::plus<size_t>{});
 
-      return tmp < 16;
-    }
-  };
-} // anonymous namespace
+  return tmp == pts.size();
+}
 
 TEST_CASE("Building the all-encompassing global tetrahedron... ")
 {
@@ -87,8 +87,8 @@ TEST_CASE("Building the all-encompassing global tetrahedron... ")
   }
 
   // copy to device and call relevant function for testing
-  auto          d_pts = thrust::device_vector<point_t>{h_pts};
-  auto const vertices =
+  auto       d_pts = thrust::device_vector<point_t>{h_pts};
+  auto const vtx   =
     regulus::build_root_tetrahedron<point_t>(
       d_pts.begin(),
       d_pts.end());
@@ -96,17 +96,15 @@ TEST_CASE("Building the all-encompassing global tetrahedron... ")
   // as a precaution, make sure the root tetrahedron we're proposing
   // is positively oriented
   REQUIRE(
-    (orient(
-      vertices[0],
-      vertices[1],
-      vertices[2],
-      vertices[3]) == regulus::orientation::positive));
+    (regulus::orient(
+      vtx[0],
+      vtx[1],
+      vtx[2],
+      vtx[3]) == regulus::orientation::positive));
 
   // and now finally ensure that each point of cartesian grid
   // is contained by the proposed all-encompassing tetrahedron
-  auto const all_are_contained = thrust::all_of(
-    d_pts.begin(), d_pts.end(),
-    relative_loc<point_t>{vertices});
+  auto const all_are_contained = pts_are_contained(vtx, d_pts);
 
   REQUIRE(all_are_contained);
 }
