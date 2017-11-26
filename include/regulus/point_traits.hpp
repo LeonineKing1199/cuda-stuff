@@ -11,9 +11,12 @@ namespace regulus {
   >
   struct point_traits
   {
-    using value_type = typename std::decay_t<decltype(std::declval<Point>().x)>;
+    using value_type = std::decay_t<decltype(std::declval<Point>().x)>;
   };
 
+
+  template <typename Point>
+  using point_traits_vt = typename point_traits<Point>::value_type;
 }
 
 #endif // REGULUS_POINT_TRAITS_HPP_

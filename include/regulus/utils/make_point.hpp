@@ -8,14 +8,13 @@ namespace regulus
 {
   template <
     typename Point,
-    typename = std::enable_if_t<is_point_v<Point>>,
-    typename Coord = typename point_traits<Point>::value_type
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   __host__ __device__
   auto make_point(
-    Coord const x,
-    Coord const y,
-    Coord const z) -> Point
+    point_traits_vt<Point> const x,
+    point_traits_vt<Point> const y,
+    point_traits_vt<Point> const z) -> Point
   {
     Point p;
     p.x = x;

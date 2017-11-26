@@ -105,7 +105,7 @@ namespace regulus
         vtx[2],
         vtx[3]});
   }
-} // regulus
+}
 
 
 #endif // REGULUS_ALGORITHM_MAKE_ASSOC_RELATIONS_HPP_
