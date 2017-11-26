@@ -7,13 +7,14 @@
 #include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/point_traits.hpp"
+
 #include "regulus/algorithm/orient.hpp"
 
 namespace regulus
 {
   template <
     typename Point,
-    typename = enable_if_t<is_point<Point>::value>
+    typename = enable_if_t<is_point_v<Point>>
   >
   __host__ __device__
   auto loc(
@@ -21,8 +22,7 @@ namespace regulus
     Point const b,
     Point const c,
     Point const d,
-    Point const p)
-  -> loc_t
+    Point const p) -> loc_t
   {
     using coord_type = typename point_traits<Point>::value_type;
 
