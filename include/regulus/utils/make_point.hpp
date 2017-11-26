@@ -1,7 +1,6 @@
 #ifndef REGULUS_UTILS_MAKE_POINT_HPP_
 #define REGULUS_UTILS_MAKE_POINT_HPP_
 
-#include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/point_traits.hpp"
 
@@ -9,7 +8,7 @@ namespace regulus
 {
   template <
     typename Point,
-    typename = enable_if_t<is_point_v<Point>>,
+    typename = std::enable_if_t<is_point_v<Point>>,
     typename Coord = typename point_traits<Point>::value_type
   >
   __host__ __device__

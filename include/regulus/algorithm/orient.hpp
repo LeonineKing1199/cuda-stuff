@@ -1,27 +1,25 @@
 #ifndef REGULUS_ALGORITHM_ORIENTATION_HPP_
 #define REGULUS_ALGORITHM_ORIENTATION_HPP_
 
-#include <cstdio>
-
-#include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
-#include "regulus/utils/equals.hpp"
-#include "regulus/point_traits.hpp"
 #include "regulus/orientation.hpp"
+#include "regulus/point_traits.hpp"
+
+#include "regulus/utils/equals.hpp"
 #include "regulus/utils/dist_from_plane.hpp"
 
 namespace regulus
 {
   template <
     typename Point,
-    typename = typename enable_if_t< is_point<Point>::value> >
+    typename = typename std::enable_if_t<is_point_v<Point>>
+  >
   __host__ __device__
   auto orient(
     Point const a,
     Point const b,
     Point const c,
-    Point const d)
-  -> orientation
+    Point const d) -> orientation
   {
     using coord_type = typename point_traits<Point>::value_type;
 

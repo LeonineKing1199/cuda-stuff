@@ -7,8 +7,7 @@ namespace regulus
 {
   template <
     typename T,
-    typename = typename enable_if_t<
-      std::is_arithmetic<T>::value>
+    typename = typename std::enable_if_t<is_arithmetic_v<T>>
   >
   struct point_t
   { T x; T y; T z; };

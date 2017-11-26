@@ -1,17 +1,16 @@
 #ifndef REGULUS_ALGORITHM_INSPHERE_HPP_
 #define REGULUS_ALGORITHM_INSPHERE_HPP_
 
-#include "regulus/type_traits.hpp"
-#include "regulus/is_point.hpp"
-#include "regulus/orientation.hpp"
 #include "regulus/matrix.hpp"
+#include "regulus/type_traits.hpp"
+#include "regulus/orientation.hpp"
 #include "regulus/point_traits.hpp"
 
 namespace regulus
 {
   template <typename Point>
   __host__ __device__
-  auto mag_squared(Point const p) 
+  auto mag_squared(Point const p)
   -> typename point_traits<Point>::value_type
   {
     return pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2);
@@ -19,7 +18,7 @@ namespace regulus
 
   template <
     typename Point,
-    typename = enable_if_t<is_point<Point>::value>
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   __host__ __device__
   auto insphere(
@@ -27,8 +26,7 @@ namespace regulus
     Point const b,
     Point const c,
     Point const d,
-    Point const p)
-  -> orientation
+    Point const p) -> orientation
   {
     using coord_type = typename point_traits<Point>::value_type;
 

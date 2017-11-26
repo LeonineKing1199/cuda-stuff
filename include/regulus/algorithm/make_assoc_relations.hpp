@@ -6,13 +6,15 @@
 #include <thrust/transform.h>
 #include <thrust/device_vector.h>
 #include <thrust/execution_policy.h>
+
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/iterator/counting_iterator.h>
 
 #include "regulus/array.hpp"
-#include "regulus/is_point.hpp"
-#include "regulus/views/span.hpp"
 #include "regulus/type_traits.hpp"
+
+#include "regulus/views/span.hpp"
+
 #include "regulus/algorithm/location.hpp"
 
 namespace regulus
@@ -73,7 +75,7 @@ namespace regulus
 
   template <
     typename Point,
-    typename = enable_if_t<is_point<Point>::value>
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   auto make_assoc_relations(
     array<Point, 4>      const vtx,

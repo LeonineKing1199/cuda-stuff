@@ -7,7 +7,6 @@
 #include "regulus/array.hpp"
 #include "regulus/tetra.hpp"
 #include "regulus/globals.hpp"
-#include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 
 #include "regulus/views/span.hpp"
@@ -31,7 +30,7 @@ namespace regulus
   {
     template <
       typename Point,
-      typename = enable_if_t<is_point_v<Point>>
+      typename = std::enable_if_t<is_point_v<Point>>
     >
     __global__
     void redistribute_pts_kernel(
@@ -118,7 +117,7 @@ namespace regulus
 
   template <
     typename Point,
-    typename = enable_if_t<is_point_v<Point>>
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   auto redistribute_pts(
     std::size_t                const assoc_size,

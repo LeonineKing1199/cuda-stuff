@@ -4,7 +4,6 @@
 #include <climits>
 
 #include "regulus/loc.hpp"
-#include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/point_traits.hpp"
 
@@ -14,7 +13,7 @@ namespace regulus
 {
   template <
     typename Point,
-    typename = enable_if_t<is_point_v<Point>>
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   __host__ __device__
   auto loc(

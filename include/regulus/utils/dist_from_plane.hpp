@@ -2,7 +2,6 @@
 #define REGULUS_UTILS_DIST_FROM_PLANE_HPP_
 
 #include "regulus/matrix.hpp"
-#include "regulus/is_point.hpp"
 #include "regulus/type_traits.hpp"
 #include "regulus/point_traits.hpp"
 
@@ -12,15 +11,14 @@ namespace regulus
   // point d from the plane spanned by abc
   template <
     typename Point,
-    typename = enable_if_t< is_point<Point>::value >
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   __host__ __device__
   auto planar_dist(
     Point const a,
     Point const b,
     Point const c,
-    Point const d)
-  -> typename point_traits<Point>::value_type
+    Point const d) -> typename point_traits<Point>::value_type
   {
     using coord_type = typename point_traits<Point>::value_type;
 

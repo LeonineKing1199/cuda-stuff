@@ -7,12 +7,12 @@
 #include <thrust/reduce.h>
 #include <thrust/distance.h>
 #include <thrust/functional.h>
+
 #include <thrust/iterator/iterator_traits.h>
 #include <thrust/iterator/transform_iterator.h>
 
 #include "regulus/array.hpp"
 #include "regulus/point_traits.hpp"
-#include "regulus/is_point.hpp"
 #include "regulus/utils/make_point.hpp"
 
 namespace regulus
@@ -65,18 +65,17 @@ namespace regulus
   template <
     typename Point,
     typename InputIterator,
-    typename = typename std::enable_if<
-      is_point<Point>::value &&
-      std::is_same<
+    typename = typename std::enable_if_t<
+      is_point_v<Point> &&
+      is_same_v<
         Point,
         thrust::iterator_traits<InputIterator>::value_type
-      >::value
-    >::type
+      >
+    >
   >
   auto build_root_tetrahedron(
     InputIterator begin,
-    InputIterator end)
-  -> array<Point, 4>
+    InputIterator end) -> array<Point, 4>
   {
     using coord_type = typename point_traits<Point>::value_type;
 
@@ -117,6 +116,6 @@ namespace regulus
       make_point<Point>( x + centroid.x,  x + centroid.y,  x + centroid.z)
     };
   }
-} // regulus
+}
 
 #endif // REGULUS_ALGORITHM_BUILD_ROOT_TETRAHEDRON_HPP_

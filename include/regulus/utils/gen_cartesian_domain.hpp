@@ -1,9 +1,8 @@
 #ifndef REGULUS_UTILS_GEN_CARTESIAN_DOMAIN_HPP_
 #define REGULUS_UTILS_GEN_CARTESIAN_DOMAIN_HPP_
 
-#include "regulus/is_point.hpp"
-#include "regulus/point_traits.hpp"
 #include "regulus/type_traits.hpp"
+#include "regulus/point_traits.hpp"
 
 #include "regulus/utils/make_point.hpp"
 
@@ -12,7 +11,7 @@ namespace regulus
   template <
     typename Point,
     typename OutputIterator,
-    typename = enable_if_t<is_point_v<Point>>
+    typename = std::enable_if_t<is_point_v<Point>>
   >
   auto gen_cartesian_domain(
     size_t const   grid_length,
