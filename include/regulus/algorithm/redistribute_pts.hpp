@@ -1,6 +1,7 @@
 #ifndef REGULUS_ALGORITHM_REDISTRIBUTE_PTS_HPP_
 #define REGULUS_ALGORITHM_REDISTRIBUTE_PTS_HPP_
 
+#include <iostream>
 #include <cstddef>
 
 #include "regulus/loc.hpp"
@@ -73,22 +74,26 @@ namespace regulus
         auto const read_ids =
           ([=] __device__ (void) -> array<ptrdiff_t, 4>
           {
-            auto const fract_loc  =
-              mesh.size() +
-              (tuple_id == 0 ? 0 : fl[tuple_id - 1]);
-
             auto const fract_size = __popc(la[tuple_id]);
 
-            auto pos = size_t{0};
             auto ids = array<ptrdiff_t, 4>{-1, -1, -1, -1};
+            ids[0] = ta_id;
 
-            ids[++pos] = ta_id;
-            for (; pos < fract_size; ++pos) {
-              ids[++pos] = fract_loc;
-              ++fract_loc;
+            auto fract_loc =
+              mesh.size() + (tuple_id == 0 ? 0 : fl[tuple_id - 1]);
+
+            for (auto pos = 1; pos < fract_size; ++pos) {
+              ids[pos] = fract_loc++;
             }
             return ids;
           })();
+
+        // printf(
+        //   "%lld %lld %lld %lld\n",
+        //   read_ids[0],
+        //   read_ids[1],
+        //   read_ids[2],
+        //   read_ids[3]);
 
         auto write_idx = assoc_size + (tid == 0 ? 0 : al[tid - 1]);
 
@@ -110,6 +115,7 @@ namespace regulus
           pa[write_idx] = pa_id;
           ta[write_idx] = idx;
           la[write_idx] = loc_v;
+          ++write_idx;
         }
       }
     }

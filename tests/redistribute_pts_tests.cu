@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <thrust/device_vector.h>
 
 #include "regulus/loc.hpp"
@@ -9,9 +11,11 @@
 
 #include "regulus/algorithm/nominate.hpp"
 #include "regulus/algorithm/fracture.hpp"
+#include "regulus/algorithm/assoc_locations.hpp"
 #include "regulus/algorithm/fract_locations.hpp"
 #include "regulus/algorithm/redistribute_pts.hpp"
 #include "regulus/algorithm/make_assoc_relations.hpp"
+#include "regulus/algorithm/mark_nominated_tetra.hpp"
 #include "regulus/algorithm/build_root_tetrahedron.hpp"
 
 #include <catch.hpp>
@@ -21,6 +25,9 @@ using std::ptrdiff_t;
 
 using thrust::host_vector;
 using thrust::device_vector;
+
+using regulus::make_span;
+using regulus::make_const_span;
 
 TEST_CASE("Point redistribution")
 {
@@ -49,6 +56,7 @@ TEST_CASE("Point redistribution")
     // we're only doing one round of insertion so at a maximum, only 4
     // tetrahedra will exist concurrently
     auto mesh = device_vector<regulus::tetra_t>{4, regulus::tetra_t{-1, -1, -1, -1}};
+    REQUIRE(mesh.size() == 4);
 
     // we use a somewhat greedy estimate for our number of
     // associations
@@ -65,6 +73,10 @@ TEST_CASE("Point redistribution")
     // manually nominate a point in the middle
     nm[num_pts / 2] = true;
 
+    point_t p = pts[num_pts / 2];
+
+    // std::cout << "{ " << p.x << ", " << p.y << ", " << p.z << " }" << "\n";
+
     auto const root_vtx =
       regulus::build_root_tetrahedron<point_t>(pts.begin(), pts.end());
 
@@ -79,23 +91,39 @@ TEST_CASE("Point redistribution")
       root_vert_idx + 2,
       root_vert_idx + 3};
 
-    auto num_tetra = size_t{1};
-
+    auto const num_tetra  = size_t{1};
     auto const assoc_size = num_pts;
 
-    auto const const_pa_view = regulus::make_const_span(pa).subspan(0, assoc_size);
-    auto const const_ta_view = regulus::make_const_span(ta).subspan(0, assoc_size);
-    auto const const_la_view = regulus::make_const_span(la).subspan(0, assoc_size);
-    auto const const_fl_view = regulus::make_const_span(fl).subspan(0, assoc_size);
+    auto nt = device_vector<ptrdiff_t>{num_tetra, -1};
+    auto al = device_vector<ptrdiff_t>{assoc_size, -1};
+
+    auto const const_pa_view = make_const_span(pa).subspan(0, assoc_size);
+    auto const const_ta_view = make_const_span(ta).subspan(0, assoc_size);
+    auto const const_la_view = make_const_span(la).subspan(0, assoc_size);
+    auto const const_fl_view = make_const_span(fl).subspan(0, assoc_size);
+
+    auto const const_old_mesh_view = make_const_span(mesh).subspan(0, 1);
 
     // write pts.size() assocations to { pa, ta, la }
     regulus::make_assoc_relations<point_t>(root_vtx, pts, pa, ta, la);
+    cudaDeviceSynchronize();
 
     regulus::fract_locations(
       const_pa_view,
       const_la_view,
       nm,
       regulus::make_span(fl).subspan(0, num_pts));
+    cudaDeviceSynchronize();
+
+    regulus::mark_nominated_tetra(
+        const_ta_view,
+        const_pa_view,
+        nm,
+        nt);
+    cudaDeviceSynchronize();
+
+    regulus::assoc_locations(const_ta_view, nt, al);
+    cudaDeviceSynchronize();
 
     regulus::fracture(
         num_tetra,
@@ -105,7 +133,18 @@ TEST_CASE("Point redistribution")
         nm,
         const_fl_view,
         mesh);
+    cudaDeviceSynchronize();
 
+    regulus::redistribute_pts<point_t>(
+      assoc_size,
+      ta,
+      pa,
+      la,
+      fl,
+      al,
+      nt,
+      const_old_mesh_view,
+      pts);
     cudaDeviceSynchronize();
   }
 }
