@@ -17,6 +17,7 @@
 #include "regulus/algorithm/make_assoc_relations.hpp"
 #include "regulus/algorithm/mark_nominated_tetra.hpp"
 #include "regulus/algorithm/build_root_tetrahedron.hpp"
+// #include "regulus/algorithm/redistribution_cleanup.hpp"
 
 #include <catch.hpp>
 
@@ -106,25 +107,19 @@ TEST_CASE("Point redistribution")
 
     // write pts.size() assocations to { pa, ta, la }
     regulus::make_assoc_relations<point_t>(root_vtx, pts, pa, ta, la);
-    cudaDeviceSynchronize();
-
     regulus::fract_locations(
       const_pa_view,
       const_la_view,
       nm,
       regulus::make_span(fl).subspan(0, num_pts));
-    cudaDeviceSynchronize();
 
     regulus::mark_nominated_tetra(
         const_ta_view,
         const_pa_view,
         nm,
         nt);
-    cudaDeviceSynchronize();
 
     regulus::assoc_locations(const_ta_view, nt, al);
-    cudaDeviceSynchronize();
-
     regulus::fracture(
         num_tetra,
         const_pa_view,
@@ -133,7 +128,6 @@ TEST_CASE("Point redistribution")
         nm,
         const_fl_view,
         mesh);
-    cudaDeviceSynchronize();
 
     regulus::redistribute_pts<point_t>(
       assoc_size,
@@ -146,5 +140,14 @@ TEST_CASE("Point redistribution")
       const_old_mesh_view,
       pts);
     cudaDeviceSynchronize();
+
+    // now we need to do some clean-up to get our data ready for processing
+    auto zip_begin = thrust::make_zip_iterator(
+      thrust::make_tuple(
+        pa.begin(), 
+        ta.begin(), 
+        la.begin()));
+
+    auto zip_end = zip_begin + pa.size();
   }
 }

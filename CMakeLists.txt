@@ -41,11 +41,12 @@ endif()
 cuda_add_library(
   regulus_core
   STATIC
-  ./src/nominate.cu
-  ./src/fract_locations.cu
-  ./src/fracture.cu
-  ./src/mark_nominated_tetra.cu
-  ./src/assoc_locations.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/nominate.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/fract_locations.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/fracture.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/mark_nominated_tetra.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/assoc_locations.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/redistribution_cleanup.cu
 )
 
 set_target_properties(
@@ -60,7 +61,7 @@ target_include_directories(
   regulus_core
 
   PUBLIC
-  ./include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CUDA_INCLUDE_DIR}
 )
 
@@ -74,24 +75,25 @@ target_link_libraries(
 cuda_add_executable(
   regulus_tests
 
-  ./debug/main.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/debug/main.cu
 
-  ./tests/array_tests.cu
-  ./tests/build_root_tetrahedron_tests.cu
-  ./tests/vector_tests.cu
-  ./tests/matrix_tests.cu
-  ./tests/tetra_tests.cu
-  ./tests/equals.cu
-  ./tests/make_assoc_relations_tests.cu
-  ./tests/numeric_stability_tests.cu
-  ./tests/nomination_tests.cu
-  ./tests/bigger_nomination_tests.cu
-  ./tests/rand_tests.cu
-  ./tests/span_tests.cu
-  ./tests/fract_locations_tests.cu
-  ./tests/fracture_tests.cu
-  ./tests/mark_nominated_tetra_tests.cu
-  ./tests/redistribute_pts_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/array_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/build_root_tetrahedron_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/vector_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/matrix_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/tetra_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/equals.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/make_assoc_relations_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/numeric_stability_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/nomination_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/bigger_nomination_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/rand_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/span_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/fract_locations_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/fracture_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/mark_nominated_tetra_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/redistribute_pts_tests.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/tests/redistribution_cleanup_tests.cu
 )
 
 target_link_libraries(
@@ -115,7 +117,7 @@ ParseAndAddCatchTests(regulus_tests)
 cuda_add_executable(
   regulus
 
-  ./release/main.cu
+  ${CMAKE_CURRENT_SOURCE_DIR}/release/main.cu
 )
 
 target_link_libraries(
