@@ -102,15 +102,15 @@ TEST_CASE("Point redistribution")
     auto al = device_vector<ptrdiff_t>{assoc_size, -1};
 
     auto const span_gen =
-      [=](auto const& container)
+      [](auto const& container, size_t const len)
       {
-        return make_const_span(container).subspan(0, assoc_size);
+        return make_const_span(container).subspan(0, len);
       };
 
-    auto const pa_const_view = span_gen(pa);
-    auto const ta_const_view = span_gen(ta);
-    auto const la_const_view = span_gen(la);
-    auto const fl_const_view = span_gen(fl);
+    auto const pa_const_view = span_gen(pa, assoc_size);
+    auto const ta_const_view = span_gen(ta, assoc_size);
+    auto const la_const_view = span_gen(la, assoc_size);
+    auto const fl_const_view = span_gen(fl, assoc_size);
 
     auto const fl_view = make_span(fl).subspan(0, assoc_size);
 
@@ -119,7 +119,11 @@ TEST_CASE("Point redistribution")
     // write `num_pts` assocations to { pa, ta, la }
     // because nm, nt and al are exactly sized, they don't need
     // any form of span slicing
-    make_assoc_relations<point_t>(root_vtx, pts, pa, ta, la);
+    make_assoc_relations<point_t>(
+      root_vtx,
+      span_gen(pts, num_pts),
+      pa, ta, la);
+
     fract_locations(
       pa_const_view,
       la_const_view,

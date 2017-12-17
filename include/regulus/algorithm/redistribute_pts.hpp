@@ -117,6 +117,11 @@ namespace regulus
           la[write_idx] = loc_v;
           ++write_idx;
         }
+
+        // remember to invalidate the tuple we read from
+        pa[tuple_id] = -1;
+        ta[tuple_id] = -1;
+        la[tuple_id] = outside_v;
       }
     }
   }
