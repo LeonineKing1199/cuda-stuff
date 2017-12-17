@@ -13,6 +13,6 @@ cmake ^
   -DCMAKE_BUILD_TYPE=%configuration_type% ^
   -G "Ninja" ^
   .. &&^
-cmake --build .
+cmake --build . --target all
 
 cd ..

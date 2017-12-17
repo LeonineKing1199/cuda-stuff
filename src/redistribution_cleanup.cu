@@ -16,13 +16,13 @@ namespace regulus
   /**
    * Unfortunately, point redistribution requires some manual
    * cleanup of the arrays.
-   * 
+   *
    * Namely, because writing the association data doesn't leave
    * perfectly contiguous valid chunks of data, we need to first
    * coalesce everything into being a single span and then we need
-   * to remove all the nominated tuples, i.e. any tuple with a 
+   * to remove all the nominated tuples, i.e. any tuple with a
    * nm[pa[id]] == true
-   * 
+   *
    * This function then returns the new size of the assocation arrays
    */
 
@@ -37,7 +37,7 @@ namespace regulus
         pa.begin(),
         ta.begin(),
         la.begin()));
-        
+
     auto zip_end = zip_begin + pa.size();
 
     auto new_zip_end = thrust::remove_if(
@@ -47,7 +47,12 @@ namespace regulus
       {
         using thrust::get;
         auto const pa_id = get<0>(std::forward<decltype(pa_ta_la)>(pa_ta_la));
-        return (pa_id < 0 || nm[pa_id]);
+        if (pa_id < 0) {
+          return true;
+        } else {
+          // return nm[pa_id];
+          return false;
+        }
       });
 
     thrust::fill(

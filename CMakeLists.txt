@@ -28,7 +28,10 @@ if (MSVC)
 
       # this is specific to the Ninja build tool
       --compiler-options "/FS"
-      --compiler-options "/permissive-"
+
+      # TODO: refactor this out into conditional version check
+      #--compiler-options "/permissive-"
+      
       -D_SCL_SECURE_NO_WARNINGS
     )
 
