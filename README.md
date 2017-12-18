@@ -12,7 +12,7 @@ they should be readily convertible to Bash scripts as well.
 
 This project requires CUDA 9.0 and above. It also relies on the
 [Catch testing framework](https://github.com/philsquared/Catch)
-and [CMake](https://cmake.org/) 3.7 or higher.
+and [CMake](https://cmake.org/) 3.8 or higher.
 
 ## Building and Testing on Windows
 

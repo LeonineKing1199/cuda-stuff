@@ -29,6 +29,14 @@ using thrust::device_vector;
 
 using namespace regulus;
 
+namespace
+{
+  auto verify_redistribution() -> bool
+  {
+    return false;
+  }
+}
+
 TEST_CASE("Point redistribution")
 {
   SECTION("should function as expected")
@@ -157,8 +165,7 @@ TEST_CASE("Point redistribution")
       const_old_mesh_view,
       pts);
 
-    redistribution_cleanup(pa, ta, la, nm);
-
-    cudaDeviceSynchronize();
+    auto const new_assoc_size = redistribution_cleanup(pa, ta, la, nm);
+    REQUIRE(new_assoc_size >= assoc_size);
   }
 }
