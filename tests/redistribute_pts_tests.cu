@@ -166,6 +166,6 @@ TEST_CASE("Point redistribution")
       pts);
 
     auto const new_assoc_size = redistribution_cleanup(pa, ta, la, nm);
-    REQUIRE(new_assoc_size >= assoc_size);
+    REQUIRE((static_cast<std::size_t>(new_assoc_size) >= assoc_size));
   }
 }

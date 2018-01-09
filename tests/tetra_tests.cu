@@ -3,6 +3,8 @@
 #include "regulus/algorithm/location.hpp"
 #include "regulus/algorithm/insphere.hpp"
 
+#include "regulus/dbldbl_point.hpp"
+
 #include <catch.hpp>
 
 TEST_CASE("Our tetrahedral implementation")
